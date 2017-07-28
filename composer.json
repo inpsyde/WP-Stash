@@ -1,0 +1,14 @@
+{
+	"name": "inpsyde/wp-stash",
+	"description": "Powerful Object Caching Backend for WordPress",
+	"license": "GPL-2.0+",
+	"type": "wordpress-muplugin",
+	"autoload": {
+		"psr-4": {
+			"Inpsyde\\WpStash\\": "inc/"
+		}
+	},
+	"require": {
+		"tedivm/stash": "^0.14.2"
+	}
+}
