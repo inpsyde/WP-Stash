@@ -1,15 +1,11 @@
 <?php # -*- coding: utf-8 -*-
 
 /**
- * Name: WP APCu Object Cache
- * Description: WordPress APCu Object Cache
- * Author: Daniel Hüsken
- * Author URI: https://dhue.de
- * Version: 1.0.0
+ * WP Stash Object Cache DropIn
  *
- * @link https://codex.wordpress.org/Function_Reference/WP_Cache
- * @link https://pecl.php.net/package/APCu
+ * This file intercepts the default WP object caching and redirects it to be handled my the WpStash MU-Plugin
  *
+ * If you're on a debugging session, you probably want to check that plugin. This file is just a courier.
  */
 
 /**

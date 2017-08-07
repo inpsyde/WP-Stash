@@ -4,6 +4,11 @@ namespace Inpsyde\WpStash;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
 
+/**
+ * Class WpStash
+ *
+ * @package Inpsyde\WpStash
+ */
 class WpStash {
 
 	/**
@@ -15,12 +20,22 @@ class WpStash {
 	 */
 	private $dropin_name;
 
+	/**
+	 * WpStash constructor.
+	 *
+	 * @param string $dropin
+	 */
 	public function __construct( string $dropin ) {
 
 		$this->dropin_path = $dropin;
 		$this->dropin_name = basename( $dropin );
 	}
 
+	/**
+	 * Spawn a new cache handler
+	 *
+	 * @return ObjectCacheProxy
+	 */
 	public static function from_config() {
 
 		$non_persistent_pool = new \Stash\Pool( new Ephemeral() );
@@ -54,6 +69,11 @@ class WpStash {
 
 	}
 
+	/**
+	 * Check if we need to inject the object-cache.php.
+	 *
+	 * Copy the file if needed
+	 */
 	public function init() {
 
 		$target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropin_name;
