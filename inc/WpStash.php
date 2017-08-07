@@ -1,7 +1,8 @@
 <?php # -*- coding: utf-8 -*-
 namespace Inpsyde\WpStash;
 
-use Stash\Driver\FileSystem;
+use Stash\Driver\Ephemeral;
+use Stash\Interfaces\DriverInterface;
 
 class WpStash {
 
@@ -20,22 +21,36 @@ class WpStash {
 		$this->dropin_name = basename( $dropin );
 	}
 
-	public static function get_driver() {
+	public static function from_config() {
 
-		if ( ! defined( 'WP_STASH_DRIVER' ) ) {
-			return new FileSystem();
-		}
+		$non_persistent_pool = new \Stash\Pool( new Ephemeral() );
+		$persistent_pool     = new \Stash\Pool( self::get_driver() );
 
-		return new FileSystem();
+		return new ObjectCacheProxy( new StashAdapter( $non_persistent_pool ), new StashAdapter( $persistent_pool ) );
 
 	}
 
-	public static function from_config() {
+	/**
+	 * Reads WP_STASH_DRIVER from wp-config.php and returns the specified cache driver, if applicable.
+	 *
+	 * Otherwise, returns an instance of the Ephemeral Cache Driver
+	 *
+	 * @return DriverInterface
+	 */
+	public static function get_driver() {
 
-		$non_persistent_pool = new \Stash\Pool( new \Stash\Driver\Ephemeral() );
-		$persistent_pool     = new \Stash\Pool( new \Stash\Driver\Apc() );
+		if ( ! defined( 'WP_STASH_DRIVER' ) ) {
+			return new Ephemeral();
+		}
+		if ( ! class_exists( $driver = WP_STASH_DRIVER ) ) {
+			return new Ephemeral();
 
-		return new ObjectCacheProxy( new StashAdapter( $non_persistent_pool ), new StashAdapter( $persistent_pool ) );
+		}
+		if ( in_array( DriverInterface::class, class_implements( $driver ) ) ) {
+			return new $driver();
+		}
+
+		return new Ephemeral();
 
 	}
 
