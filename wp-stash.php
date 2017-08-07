@@ -1,5 +1,5 @@
 <?php # -*- coding: utf-8 -*-
-/*
+/**
 Plugin Name: WP Stash
 Plugin URI:
 Description: Powerful Object Caching Backend for WordPress
@@ -35,7 +35,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\WpStash' ) ) {
 		require_once __DIR__ . '/vendor/autoload.php';
 
 	} else {
-		$admin_notice( __( 'Could not find a working autoloader for WP Starter Admin Gizmo.',
+		$admin_notice( __( 'Could not find a working autoloader for WP Stash',
 			'inpsyde-multisite-menu' ) );
 
 		return;
