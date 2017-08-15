@@ -27,5 +27,5 @@ WP_STASH_DRIVER_ARGS = a:1:{s:3:"ttl";i:3600;}
 ### wp-config.php
 ```php
 define( 'WP_STASH_DRIVER',  '\Stash\Driver\Apc' );
-define( 'WP_STASH_DRIVER_ARGS', array('ttl' => 3600 ) );
+define( 'WP_STASH_DRIVER_ARGS', serialize( array('ttl' => 3600 ) ) );
 ``` 
