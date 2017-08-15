@@ -2,6 +2,7 @@
 namespace Inpsyde\WpStash;
 
 use Stash\Driver\Ephemeral;
+use Stash\Exception\RuntimeException;
 use Stash\Interfaces\DriverInterface;
 
 /**
@@ -52,7 +53,9 @@ class WpStash {
 	 *
 	 * @return DriverInterface
 	 */
-	public static function get_driver() {
+	public static function get_driver(): DriverInterface {
+
+		$args = ( defined( 'WP_STASH_DRIVER_ARGS' ) ) ? unserialize( WP_STASH_DRIVER_ARGS ) : [];
 
 		if ( ! defined( 'WP_STASH_DRIVER' ) ) {
 			return new Ephemeral();
@@ -62,11 +65,32 @@ class WpStash {
 
 		}
 		if ( in_array( DriverInterface::class, class_implements( $driver ) ) ) {
-			return new $driver();
+			try {
+				$driver = new $driver( $args );
+
+			} catch ( RuntimeException $e ) {
+				self::admin_notice( 'WP Stash could not boot the selected driver: ' . $e->getMessage() );
+
+				return new Ephemeral();
+
+			}
+
+			return $driver;
 		}
 
 		return new Ephemeral();
 
+	}
+
+	private static function admin_notice( string $message ) {
+
+		foreach ( [ 'admin_notices', 'network_admin_notices' ] as $hook ) {
+			add_action( $hook, function () use ( $message ) {
+
+				$class = 'notice notice-error';
+				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+			} );
+		}
 	}
 
 	/**
