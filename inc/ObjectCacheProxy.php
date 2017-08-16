@@ -46,14 +46,7 @@ class ObjectCacheProxy {
 	 * @var int
 	 */
 	private $cache_hits = 0;
-	/**
-	 * The amount of times the APCu cache data was already stored in the cache.
-	 *
-	 * @since  WP 2.5.0
-	 * @access private
-	 * @var int
-	 */
-	private $apcu_cache_hits = 0;
+
 	/**
 	 * The blog prefix to prepend to keys in non-global groups.
 	 *
@@ -441,8 +434,6 @@ class ObjectCacheProxy {
 		echo "<p>";
 		echo "<strong>Cache Hits:</strong> {$this->cache_hits}<br />";
 		echo "<strong>Cache Misses:</strong> {$this->cache_misses}<br />";
-		echo "<strong>APCu Cache Hits:</strong> {$this->apcu_cache_hits}<br />";
-		echo "<strong>APCu Cache Misses:</strong> {$this->apcu_cache_misses}<br />";
 		echo "<strong>Non persistent Groups:</strong> {$non_persistent_groups}<br />";
 		echo "</p>";
 		echo '<ul>';
@@ -465,7 +456,7 @@ class ObjectCacheProxy {
 	public function switch_to_blog( $blog_id ) {
 
 		$blog_id           = (int) $blog_id;
-		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
+		$this->blog_prefix = $this->multisite ? $blog_id : '';
 	}
 
 	/**
