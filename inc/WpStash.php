@@ -62,9 +62,22 @@ class WpStash {
 		}
 		if ( ! class_exists( $driver = WP_STASH_DRIVER ) ) {
 			return new Ephemeral();
-
 		}
-		if ( in_array( DriverInterface::class, class_implements( $driver ) ) ) {
+
+		/**
+		 * php_cli can be configured entirely different from the web-facing php process.
+		 * For example, APCu might not be available.
+		 *
+		 * There's also little use for object caching during wpcli calls
+		 */
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return new Ephemeral();
+		}
+
+		if (
+			in_array( DriverInterface::class, class_implements( $driver ) )
+			&& call_user_func( [ $driver, 'isAvailable' ] )
+		) {
 			try {
 				$driver = new $driver( $args );
 

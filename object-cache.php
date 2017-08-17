@@ -9,6 +9,16 @@
  */
 
 /**
+ * php_cli can be configured entirely different from the web-facing php process.
+ * For example, APCu might not be available.
+ *
+ * There's also little use for object caching during wpcli calls
+ */
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	return;
+}
+
+/**
  * Adds data to the cache, if the cache key doesn't already exist.
  *
  * @since 2.0.0

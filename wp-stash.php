@@ -1,13 +1,14 @@
 <?php # -*- coding: utf-8 -*-
+
 /**
-Plugin Name: WP Stash
-Plugin URI:
-Description: Powerful Object Caching Backend for WordPress
-Version: 1.0
-Author: Moritz Meißelbach
-Author URI:
-License: MIT
-*/
+ * Plugin Name: WP Stash
+ * Plugin URI:
+ * Description: Powerful Object Caching Backend for WordPress
+ * Version: 1.0
+ * Author: Moritz Meißelbach
+ * Author URI:
+ * License: MIT
+ */
 
 namespace Inpsyde\WpStash;
 
@@ -27,6 +28,16 @@ $admin_notice = function ( $message ) {
 	}
 
 };
+
+/**
+ * php_cli can be configured entirely different from the web-facing php process.
+ * For example, APCu might not be available.
+ *
+ * There's also little use for object caching during wpcli calls
+ */
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	return;
+}
 
 if ( ! class_exists( __NAMESPACE__ . '\\WpStash' ) ) {
 
