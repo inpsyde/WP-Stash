@@ -119,5 +119,9 @@ class WpStash {
 
 		}
 
+		if ( is_admin() ) {
+			( new Admin() )->init();
+		}
+
 	}
 }
