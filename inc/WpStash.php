@@ -1,6 +1,7 @@
 <?php # -*- coding: utf-8 -*-
 namespace Inpsyde\WpStash;
 
+use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
 use Stash\Exception\RuntimeException;
 use Stash\Interfaces\DriverInterface;
@@ -64,16 +65,6 @@ class WpStash {
 			return new Ephemeral();
 		}
 
-		/**
-		 * php_cli can be configured entirely different from the web-facing php process.
-		 * For example, APCu might not be available.
-		 *
-		 * There's also little use for object caching during wpcli calls
-		 */
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			return new Ephemeral();
-		}
-
 		if (
 			in_array( DriverInterface::class, class_implements( $driver ) )
 			&& call_user_func( [ $driver, 'isAvailable' ] )
@@ -86,6 +77,14 @@ class WpStash {
 
 				return new Ephemeral();
 
+			}
+			/**
+			 * APCu is currently not safe to use on cli.
+			 *
+			 * @see https://github.com/tedious/Stash/issues/365
+			 */
+			if ( defined( 'WP_CLI' ) && WP_CLI && $driver instanceof Apc ) {
+				return new Ephemeral();
 			}
 
 			return $driver;

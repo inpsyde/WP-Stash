@@ -29,16 +29,6 @@ $admin_notice = function ( $message ) {
 
 };
 
-/**
- * php_cli can be configured entirely different from the web-facing php process.
- * For example, APCu might not be available.
- *
- * There's also little use for object caching during wpcli calls
- */
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	return;
-}
-
 if ( ! class_exists( __NAMESPACE__ . '\\WpStash' ) ) {
 
 	if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
