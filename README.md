@@ -34,5 +34,5 @@ define( 'WP_STASH_DRIVER_ARGS', serialize( array('ttl' => 3600 ) ) );
 
 WP Stash has the following cli commands:
 
-`wp stash flush` :  An improved version of `wp cache slush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
+`wp stash flush` :  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
