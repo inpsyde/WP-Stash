@@ -122,9 +122,18 @@ class WpStash {
 			( new Admin() )->init();
 		}
 
-		if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( 'WP_CLI' ) ) {
+		if ( $this->is_wp_cli() ) {
 			\WP_CLI::add_command( 'stash', WpCliCommand::class );
 		}
 
+	}
+
+	private function is_wp_cli() {
+
+		return
+			defined( 'WP_CLI' )
+			&& WP_CLI
+			&& class_exists( 'WP_CLI' )
+			&& class_exists( 'WP_CLI_Command' );
 	}
 }
