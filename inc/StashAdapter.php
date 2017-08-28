@@ -25,19 +25,22 @@ class StashAdapter {
 	 * @var array
 	 */
 	private $local = [];
+
 	/**
-	 * @var KeyGen
+	 * @var bool
 	 */
-	private $key_gen;
+	private $in_memory_cache;
 
 	/**
 	 * StashAdapter constructor.
 	 *
-	 * @param Pool   $pool
+	 * @param Pool $pool
+	 * @param bool $in_memory_cache
 	 */
-	public function __construct( Pool $pool ) {
+	public function __construct( Pool $pool, $in_memory_cache = true ) {
 
-		$this->pool    = $pool;
+		$this->pool            = $pool;
+		$this->in_memory_cache = $in_memory_cache;
 	}
 
 	/**
@@ -78,7 +81,10 @@ class StashAdapter {
 		}
 
 		$this->pool->save( $item );
-		$this->local[ $key ] = $data;
+		if ( $this->in_memory_cache ) {
+			$this->local[ $key ] = $data;
+
+		}
 
 		return true;
 	}
@@ -112,7 +118,7 @@ class StashAdapter {
 	 */
 	public function get( string $key ) {
 
-		if ( isset( $this->local[ $key ] ) ) {
+		if ( $this->in_memory_cache && isset( $this->local[ $key ] ) ) {
 			return $this->local[ $key ];
 		}
 		$item = $this->pool->getItem( $key );
@@ -125,7 +131,10 @@ class StashAdapter {
 
 		$result = $item->get();
 
-		$this->local[ $key ] = $result;
+		if ( $this->in_memory_cache ) {
+			$this->local[ $key ] = $result;
+
+		}
 
 		return $result;
 	}
@@ -158,7 +167,10 @@ class StashAdapter {
 	 */
 	public function delete( string $key ) {
 
-		unset( $this->local[ $key ] );
+		if ( $this->in_memory_cache ) {
+			unset( $this->local[ $key ] );
+
+		}
 
 		return $this->pool->deleteItem( $key );
 	}

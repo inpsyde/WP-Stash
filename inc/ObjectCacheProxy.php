@@ -46,14 +46,6 @@ class ObjectCacheProxy {
 	private $cache_hits = 0;
 
 	/**
-	 * Cache key prefix for multiple WordPress installations on one host
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $prefix;
-
-	/**
 	 * List of non persistent groups
 	 *
 	 * @var array
@@ -420,8 +412,9 @@ class ObjectCacheProxy {
 	 */
 	public function switch_to_blog( $blog_id ) {
 
-		if ( ! method_exists( $this->key_gen, 'switch_to_blog' ) ) {
+		if ( ! ( $this->key_gen instanceof MultisiteKeyGen ) ) {
 			return;
+
 		}
 		$this->key_gen->switch_to_blog( $blog_id );
 	}

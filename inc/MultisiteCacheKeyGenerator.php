@@ -31,10 +31,11 @@ class MultisiteCacheKeyGenerator extends CacheKeyGenerator implements MultisiteK
 		return $this->global_groups;
 	}
 
-	public function switch_to_blog( int $blog_id ) {
+	public function switch_to_blog( int $blog_id ): bool {
 
 		$this->blog_id = $blog_id;
 
+		return true;
 	}
 
 	protected function get_parts( string $key, string $group = 'default' ): array {
