@@ -45,7 +45,7 @@ class WpStash {
 		$persistent_pool     = new Pool( self::get_driver() );
 
 		return new ObjectCacheProxy(
-			new StashAdapter( $non_persistent_pool ),
+			new StashAdapter( $non_persistent_pool, false ),
 			new StashAdapter( $persistent_pool ),
 			self::get_cache_key_generator()
 		);
