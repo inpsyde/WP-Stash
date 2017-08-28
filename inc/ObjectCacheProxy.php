@@ -2,8 +2,6 @@
 
 namespace Inpsyde\WpStash;
 
-use Stash\Pool;
-
 class ObjectCacheProxy {
 
 	/**
@@ -48,24 +46,6 @@ class ObjectCacheProxy {
 	private $cache_hits = 0;
 
 	/**
-	 * The blog prefix to prepend to keys in non-global groups.
-	 *
-	 * @var int
-	 * @access private
-	 * @since  WP 3.5.0
-	 */
-	private $blog_prefix;
-
-	/**
-	 * Holds the value of `is_multisite()`
-	 *
-	 * @var bool
-	 * @access private
-	 * @since  WP 3.5.0
-	 */
-	private $multisite;
-
-	/**
 	 * Cache key prefix for multiple WordPress installations on one host
 	 *
 	 * @var string
@@ -81,10 +61,7 @@ class ObjectCacheProxy {
 	 * @since  WP 2.6.0
 	 */
 	private $non_persistent_groups = [];
-	/**
-	 * @var Pool
-	 */
-	private $pool;
+
 	/**
 	 * @var StashAdapter
 	 */
@@ -93,6 +70,10 @@ class ObjectCacheProxy {
 	 * @var StashAdapter
 	 */
 	private $persistent;
+	/**
+	 * @var KeyGen
+	 */
+	private $key_gen;
 
 	/**
 	 * Sets up object properties
@@ -101,16 +82,17 @@ class ObjectCacheProxy {
 	 *
 	 * @param StashAdapter $non_persistent
 	 * @param StashAdapter $persistent
+	 * @param KeyGen       $key_gen
 	 */
-	public function __construct( StashAdapter $non_persistent, StashAdapter $persistent ) {
-
-		global $blog_id;
-
-		$this->multisite   = is_multisite();
-		$this->blog_prefix = $this->multisite ? $blog_id . '/' : '';
+	public function __construct(
+		StashAdapter $non_persistent,
+		StashAdapter $persistent,
+		KeyGen $key_gen
+	) {
 
 		$this->non_persistent = $non_persistent;
 		$this->persistent     = $persistent;
+		$this->key_gen        = $key_gen;
 	}
 
 	/**
@@ -194,24 +176,10 @@ class ObjectCacheProxy {
 			return false;
 		}
 
-		$cache_key = $this->get_cache_key( $key, $group );
+		$cache_key = $this->key_gen->get( $key, $group );
 
 		return $this->choose_pool( $group )
 		            ->add( $cache_key, $data, $expire );
-	}
-
-	private function get_cache_key( $key, $group ) {
-
-		if ( empty( $group ) ) {
-			$group = 'default';
-		}
-		$parts = [ $group ];
-		if ( $this->multisite && ! isset( $this->global_groups[ $group ] ) ) {
-			$parts[] = $this->blog_prefix;
-		}
-		$parts[] = $key;
-
-		return '/' . implode( '/', $parts );
 	}
 
 	/**
@@ -232,16 +200,18 @@ class ObjectCacheProxy {
 	/**
 	 * Sets the list of global groups.
 	 *
-	 * @since WP 3.0.0
-	 *
 	 * @param array $groups List of groups that are global.
+	 *
+	 * @return bool
 	 */
 	public function add_global_groups( $groups ) {
 
-		$groups = (array) $groups;
+		if ( ! $this->key_gen instanceof MultisiteKeyGen ) {
+			return false;
+		}
+		$this->key_gen->add_global_groups( $groups );
 
-		$groups              = array_fill_keys( $groups, true );
-		$this->global_groups = array_merge( $this->global_groups, $groups );
+		return true;
 	}
 
 	/**
@@ -250,6 +220,8 @@ class ObjectCacheProxy {
 	 * @since WP 2.6.0
 	 *
 	 * @param array $groups List of non persistent groups.
+	 *
+	 * @return array
 	 */
 	public function add_non_persistent_groups( $groups ) {
 
@@ -257,6 +229,8 @@ class ObjectCacheProxy {
 
 		$groups                      = array_fill_keys( $groups, true );
 		$this->non_persistent_groups = array_merge( $this->non_persistent_groups, $groups );
+
+		return $this->non_persistent_groups;
 	}
 
 	/**
@@ -290,7 +264,7 @@ class ObjectCacheProxy {
 	 */
 	public function delete( $key, $group = 'default' ) {
 
-		$cache_key = $this->get_cache_key( $key, $group );
+		$cache_key = $this->key_gen->get( $key, $group );
 
 		return $this->choose_pool( $group )
 		            ->delete( $cache_key );
@@ -353,7 +327,7 @@ class ObjectCacheProxy {
 	 */
 	public function get( $key, $group = 'default', $force = false, &$found = null ) {
 
-		$cache_key = $this->get_cache_key( $key, $group );
+		$cache_key = $this->key_gen->get( $key, $group );
 
 		return $this->choose_pool( $group )
 		            ->get( $cache_key );
@@ -382,7 +356,7 @@ class ObjectCacheProxy {
 	 */
 	public function set( $key, $data, $group = 'default', $expire = 0 ) {
 
-		$cache_key = $this->get_cache_key( $key, $group );
+		$cache_key = $this->key_gen->get( $key, $group );
 
 		return $this->choose_pool( $group )
 		            ->set( $cache_key, $data, $expire );
@@ -404,7 +378,7 @@ class ObjectCacheProxy {
 	 */
 	public function replace( $key, $data, $group = 'default', $expire = 0 ) {
 
-		$cache_key = $this->get_cache_key( $key, $group );
+		$cache_key = $this->key_gen->get( $key, $group );
 
 		return $this->choose_pool( $group )
 		            ->replace( $cache_key, $data, $expire );
@@ -446,8 +420,10 @@ class ObjectCacheProxy {
 	 */
 	public function switch_to_blog( $blog_id ) {
 
-		$blog_id           = (int) $blog_id;
-		$this->blog_prefix = $this->multisite ? $blog_id : '';
+		if ( ! method_exists( $this->key_gen, 'switch_to_blog' ) ) {
+			return;
+		}
+		$this->key_gen->switch_to_blog( $blog_id );
 	}
 
 	/**

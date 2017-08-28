@@ -25,15 +25,19 @@ class StashAdapter {
 	 * @var array
 	 */
 	private $local = [];
+	/**
+	 * @var KeyGen
+	 */
+	private $key_gen;
 
 	/**
 	 * StashAdapter constructor.
 	 *
-	 * @param Pool $pool
+	 * @param Pool   $pool
 	 */
 	public function __construct( Pool $pool ) {
 
-		$this->pool = $pool;
+		$this->pool    = $pool;
 	}
 
 	/**

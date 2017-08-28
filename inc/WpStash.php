@@ -5,6 +5,7 @@ use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
 use Stash\Exception\RuntimeException;
 use Stash\Interfaces\DriverInterface;
+use Stash\Pool;
 
 /**
  * Class WpStash
@@ -40,10 +41,14 @@ class WpStash {
 	 */
 	public static function from_config() {
 
-		$non_persistent_pool = new \Stash\Pool( new Ephemeral() );
-		$persistent_pool     = new \Stash\Pool( self::get_driver() );
+		$non_persistent_pool = new Pool( new Ephemeral() );
+		$persistent_pool     = new Pool( self::get_driver() );
 
-		return new ObjectCacheProxy( new StashAdapter( $non_persistent_pool ), new StashAdapter( $persistent_pool ) );
+		return new ObjectCacheProxy(
+			new StashAdapter( $non_persistent_pool ),
+			new StashAdapter( $persistent_pool ),
+			self::get_cache_key_generator()
+		);
 
 	}
 
@@ -103,6 +108,18 @@ class WpStash {
 				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 			} );
 		}
+	}
+
+	private static function get_cache_key_generator() {
+
+		$glue = '/';
+		if ( is_multisite() ) {
+
+			return new MultisiteCacheKeyGenerator( $glue, (string) get_current_blog_id() );
+		}
+
+		return new CacheKeyGenerator( $glue );
+
 	}
 
 	/**

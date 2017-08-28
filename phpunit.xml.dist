@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="vendor/inpsyde/monkery-test-case/inc/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<php>
+		<env name="PATCHWORK_CACHE_USE_SYSTEM_TEMP_DIR" value="true" />
+	</php>
+	<testsuites>
+		<testsuite name="WP Stash php unit tests">
+			<directory suffix="Test.php">./tests/PHPUnit</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
