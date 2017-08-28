@@ -406,17 +406,8 @@ class ObjectCacheProxy {
 
 		$cache_key = $this->get_cache_key( $key, $group );
 
-		$item = $this->choose_pool( $group )
-		             ->getItem( $cache_key );
-		// Attempt to get the data
-		$data = $item->get();
-
-		// Check to see if the data was a miss.
-		if ( $item->isMiss() ) {
-			return false;
-		}
-
-		return $this->set( $key, $data, $group, (int) $expire );
+		return $this->choose_pool( $group )
+		            ->replace( $cache_key, $data, $expire );
 	}
 
 	/**
