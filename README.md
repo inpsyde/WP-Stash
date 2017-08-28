@@ -17,6 +17,14 @@ It is possible to set a Cache Driver and configuration values for it.
 
 Please consult the [the StashPHP documentation](http://www.stashphp.com/Drivers.html) for information on Driver configuration
 
+The following constants can be used for configuring WP Stash:
+
+`WP_STASH_DRIVER` - FQCN : The class name of the Stash driver you want to use. Will fall back to `Ephemeral` (pure memory cache without persistence) if unset or invalid.
+
+`WP_STASH_DRIVER_ARGS` - string: Driver constructor args as a serialized array.
+
+`WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default true.
+
 ### WP Starter
 ```
 WP_STASH_DRIVER = \Stash\Driver\Apc

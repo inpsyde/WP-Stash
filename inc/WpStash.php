@@ -41,12 +41,14 @@ class WpStash {
 	 */
 	public static function from_config() {
 
+		$in_memory_cache = ( defined( 'WP_STASH_IN_MEMORY_CACHE' ) ) ? (bool) WP_STASH_IN_MEMORY_CACHE : true;
+
 		$non_persistent_pool = new Pool( new Ephemeral() );
 		$persistent_pool     = new Pool( self::get_driver() );
 
 		return new ObjectCacheProxy(
 			new StashAdapter( $non_persistent_pool, false ),
-			new StashAdapter( $persistent_pool ),
+			new StashAdapter( $persistent_pool, $in_memory_cache ),
 			self::get_cache_key_generator()
 		);
 
