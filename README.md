@@ -12,7 +12,7 @@ After installing, it will copy an object-cache.php file to wp-content/ which wil
 
 ## Configuration
 
-You can configure WP Stah globally in the configuration file of your WordPress instance.
+You can configure WP Stash globally in the configuration file of your WordPress instance.
 It is possible to set a Cache Driver and configuration values for it.
 
 Please consult the [the StashPHP documentation](http://www.stashphp.com/Drivers.html) for information on Driver configuration
