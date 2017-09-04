@@ -1,4 +1,6 @@
 <?php # -*- coding: utf-8 -*-
+declare(strict_types=1);
+
 namespace Inpsyde\WpStash;
 
 class Admin {
@@ -39,7 +41,7 @@ class Admin {
 		] );
 
 		$admin_bar->add_menu( [
-			'id'     => "wp-stash-flush",
+			'id'     => 'wp-stash-flush',
 			'parent' => 'wp-stash',
 			'title'  => 'Flush Object Cache',
 			'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=' . self::PURGE_ACTION . $referer ),

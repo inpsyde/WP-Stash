@@ -1,4 +1,5 @@
 <?php # -*- coding: utf-8 -*-
+declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
@@ -417,19 +418,5 @@ class ObjectCacheProxy {
 
 		}
 		$this->key_gen->switch_to_blog( $blog_id );
-	}
-
-	/**
-	 * Will save the object cache before object is completely destroyed.
-	 *
-	 * Called upon object destruction, which should be when PHP ends.
-	 *
-	 * @since  WP 2.0.8
-	 *
-	 * @return bool True value. Won't be used by PHP
-	 */
-	public function __destruct() {
-
-		return true;
 	}
 }
