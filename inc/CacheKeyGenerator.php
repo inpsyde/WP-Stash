@@ -6,7 +6,7 @@ namespace Inpsyde\WpStash;
 class CacheKeyGenerator implements KeyGen
 {
 
-    public function get(string $key, string $group = 'default'): string
+    public function create(string $key, string $group = 'default'): string
     {
 
         return KeyGen::GLUE . implode(KeyGen::GLUE, [$group, $key]);

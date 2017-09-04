@@ -8,5 +8,5 @@ interface KeyGen
 
     const GLUE = '/';
 
-    public function get(string $key, string $group): string;
+    public function create(string $key, string $group): string;
 }

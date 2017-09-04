@@ -175,7 +175,7 @@ class ObjectCacheProxy
             return false;
         }
 
-        $cache_key = $this->key_gen->get((string)$key, $group);
+        $cache_key = $this->key_gen->create((string)$key, $group);
 
         return $this->choose_pool($group)
                     ->add($cache_key, $data, $expire);
@@ -267,7 +267,7 @@ class ObjectCacheProxy
     public function delete($key, $group = 'default')
     {
 
-        $cache_key = $this->key_gen->get($key, $group);
+        $cache_key = $this->key_gen->create($key, $group);
 
         return $this->choose_pool($group)
                     ->delete($cache_key);
@@ -333,7 +333,7 @@ class ObjectCacheProxy
     public function get($key, $group = 'default', $force = false, &$found = null)
     {
 
-        $cache_key = $this->key_gen->get((string)$key, $group);
+        $cache_key = $this->key_gen->create((string)$key, $group);
 
         return $this->choose_pool($group)
                     ->get($cache_key);
@@ -363,7 +363,7 @@ class ObjectCacheProxy
     public function set($key, $data, $group = 'default', $expire = 0)
     {
 
-        $cache_key = $this->key_gen->get($key, $group);
+        $cache_key = $this->key_gen->create($key, $group);
 
         return $this->choose_pool($group)
                     ->set($cache_key, $data, $expire);
@@ -385,7 +385,7 @@ class ObjectCacheProxy
     public function replace($key, $data, $group = 'default', $expire = 0)
     {
 
-        $cache_key = $this->key_gen->get($key, $group);
+        $cache_key = $this->key_gen->create($key, $group);
 
         return $this->choose_pool($group)
                     ->replace($cache_key, $data, $expire);

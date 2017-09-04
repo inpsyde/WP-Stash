@@ -48,7 +48,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
         return true;
     }
 
-    public function get(string $key, string $group): string
+    public function create(string $key, string $group): string
     {
 
         $parts = [$group, $key];
