@@ -76,7 +76,7 @@ class WpCliCommand extends \WP_CLI_Command
         $response = wp_remote_post($script_url);
 
         unlink($script_filename);
-        
+
         if ($response['response']['code'] === 200) {
             WP_CLI::success($response['body']);
 
