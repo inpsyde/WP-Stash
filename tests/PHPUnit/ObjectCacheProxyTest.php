@@ -43,7 +43,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $suspend = (bool)random_int(0, 1);
         $exists  = (bool)random_int(0, 1);
 
-        Functions::expect('wp_suspend_cache_addition')
+        Functions\expect('wp_suspend_cache_addition')
                  ->once()
                  ->andReturn($suspend);
 
