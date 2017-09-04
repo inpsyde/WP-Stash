@@ -46,7 +46,7 @@ class WpStash
     public static function from_config(): ObjectCacheProxy
     {
 
-        $in_memory_cache = (defined('WP_STASH_IN_MEMORY_CACHE')) ? (bool)WP_STASH_IN_MEMORY_CACHE : true;
+        $in_memory_cache = defined('WP_STASH_IN_MEMORY_CACHE') ? (bool)WP_STASH_IN_MEMORY_CACHE : true;
 
         $non_persistent_pool = new Pool(new Ephemeral());
         $persistent_pool     = new Pool(self::get_driver());
