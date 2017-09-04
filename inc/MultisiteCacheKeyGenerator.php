@@ -3,49 +3,59 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
-class MultisiteCacheKeyGenerator extends CacheKeyGenerator implements MultisiteKeyGen {
+class MultisiteCacheKeyGenerator implements MultisiteKeyGen
+{
 
-	/**
-	 * @var int
-	 */
-	private $blog_id;
-	/**
-	 * @var array
-	 */
-	private $global_groups;
+    /**
+     * @var int
+     */
+    private $blog_id;
+    /**
+     * @var array
+     */
+    private $global_groups;
 
-	public function __construct( string $glue, int $blog_id, array $global_groups = [] ) {
+    public function __construct(int $blog_id, array $global_groups = [])
+    {
 
-		parent::__construct( $glue );
+        $this->blog_id       = $blog_id;
+        $this->global_groups = $global_groups;
+    }
 
-		$this->blog_id       = $blog_id;
-		$this->global_groups = $global_groups;
-	}
+    public function add_global_groups($groups): array
+    {
 
-	public function add_global_groups( $groups ): array {
+        $groups = (array)$groups;
 
-		$groups = (array) $groups;
+        $groups              = array_fill_keys($groups, true);
+        $this->global_groups = array_merge($this->global_groups, $groups);
 
-		$groups              = array_fill_keys( $groups, true );
-		$this->global_groups = array_merge( $this->global_groups, $groups );
+        return $this->global_groups;
+    }
 
-		return $this->global_groups;
-	}
+    /**
+     * Replace the current blog id
+     *
+     * @param int $blog_id
+     *
+     * @return bool
+     */
+    public function switch_to_blog(int $blog_id): bool
+    {
 
-	public function switch_to_blog( int $blog_id ): bool {
+        $this->blog_id = $blog_id;
 
-		$this->blog_id = $blog_id;
+        return true;
+    }
 
-		return true;
-	}
+    public function get(string $key, string $group): string
+    {
 
-	protected function get_parts( string $key, string $group = 'default' ): array {
+        $parts = [$group, $key];
+        if ( ! isset($this->global_groups[$group])) {
+            $parts[] = $this->blog_id;
+        }
 
-		$parts = parent::get_parts( $key, $group );
-		if ( ! isset( $this->global_groups[ $group ] ) ) {
-			$parts[] = $this->blog_id;
-		}
-
-		return $parts;
-	}
+        return KeyGen::GLUE . implode(KeyGen::GLUE, $parts);
+    }
 }

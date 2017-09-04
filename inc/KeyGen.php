@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
-interface KeyGen {
+interface KeyGen
+{
 
-	public function get( string $key, string $group): string;
+    const GLUE = '/';
+
+    public function get(string $key, string $group): string;
 }

@@ -56,7 +56,6 @@ class WpStash
             new StashAdapter($persistent_pool, $in_memory_cache),
             self::get_cache_key_generator()
         );
-
     }
 
     /**
@@ -69,27 +68,24 @@ class WpStash
     public static function get_driver(): DriverInterface
     {
 
-        $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, false) : [];
+        $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, ['allowed_classes' => false]) : [];
 
-        if ( ! defined('WP_STASH_DRIVER')) {
+        if (! defined('WP_STASH_DRIVER')) {
             return new Ephemeral();
         }
-        if ( ! class_exists($driver = WP_STASH_DRIVER)) {
+        if (! class_exists($driver = WP_STASH_DRIVER)) {
             return new Ephemeral();
         }
 
-        if (
-            in_array(DriverInterface::class, class_implements($driver), true)
+        if (in_array(DriverInterface::class, class_implements($driver), true)
             && call_user_func([$driver, 'isAvailable'])
         ) {
             try {
                 $driver = new $driver($args);
-
             } catch (RuntimeException $e) {
                 self::admin_notice('WP Stash could not boot the selected driver: ' . $e->getMessage());
 
                 return new Ephemeral();
-
             }
             /**
              * APCu is currently not safe to use on cli.
@@ -104,7 +100,6 @@ class WpStash
         }
 
         return new Ephemeral();
-
     }
 
     private static function admin_notice(string $message)
@@ -119,17 +114,14 @@ class WpStash
         }
     }
 
-    private static function get_cache_key_generator()
+    private static function get_cache_key_generator(): KeyGen
     {
 
-        $glue = '/';
         if (is_multisite()) {
-
-            return new MultisiteCacheKeyGenerator($glue, get_current_blog_id());
+            return new MultisiteCacheKeyGenerator((int)get_current_blog_id());
         }
 
-        return new CacheKeyGenerator($glue);
-
+        return new CacheKeyGenerator();
     }
 
     /**
@@ -141,9 +133,8 @@ class WpStash
     {
 
         $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropin_name;
-        if ( ! file_exists($target)) {
+        if (! file_exists($target)) {
             copy($this->dropin_path, $target);
-
         }
 
         if (is_admin()) {
@@ -153,7 +144,6 @@ class WpStash
         if ($this->is_wp_cli()) {
             \WP_CLI::add_command('stash', WpCliCommand::class);
         }
-
     }
 
     private function is_wp_cli()
