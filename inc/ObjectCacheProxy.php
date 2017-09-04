@@ -186,7 +186,7 @@ class ObjectCacheProxy
      *
      * @return StashAdapter
      */
-    private function choose_pool($group)
+    private function choose_pool($group):StashAdapter
     {
 
         if (isset($this->non_persistent_groups[$group])) {
@@ -203,7 +203,7 @@ class ObjectCacheProxy
      *
      * @return bool
      */
-    public function add_global_groups($groups)
+    public function add_global_groups($groups):bool
     {
 
         if ( ! $this->key_gen instanceof MultisiteKeyGen) {
@@ -223,7 +223,7 @@ class ObjectCacheProxy
      *
      * @return array
      */
-    public function add_non_persistent_groups($groups)
+    public function add_non_persistent_groups($groups):array
     {
 
         $groups = (array)$groups;
@@ -264,7 +264,7 @@ class ObjectCacheProxy
      *
      * @return bool False if the contents weren't deleted and true on success
      */
-    public function delete($key, $group = 'default')
+    public function delete($key, $group = 'default'):bool
     {
 
         $cache_key = $this->key_gen->create((string)$key, $group);
@@ -280,7 +280,7 @@ class ObjectCacheProxy
      *
      * @return bool Always returns true
      */
-    public function flush()
+    public function flush():bool
     {
 
         $this->persistent->clear();
