@@ -18,34 +18,38 @@ use WP_CLI;
  *
  * @package wp-cli
  */
-class WpCliCommand extends \WP_CLI_Command {
+class WpCliCommand extends \WP_CLI_Command
+{
 
-	/**
-	 * Flush the object cache.
-	 *
-	 * The default WP-CLI "wp cache flush" implementation is a simple function call to wp_cache_flush(),
-	 * which is run by the cli process and whoever initiated it.
-	 *
-	 * Cache backends like APCu and Memcached are known to misbehave as they expect to be run by the http user, or need specific permissions.
-	 * Depending on the server configuration, it might be impossible to flush the object cache via CLI.
-	 *
-	 * This command will create a temporary php script, cURL it, and immediately delete it again.
-	 * That way, wp_cache_flush() is called via web request and from the http user, soit will work with all caching backends
-	 *
-	 * Errors if the object cache can't be flushed.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Flush cache.
-	 *     $ wp stash flush
-	 *     Success: WP object cache flushed successfully.
-	 */
-	public function flush( $args, $assoc_args ) {
+    /**
+     * Flush the object cache.
+     *
+     * The default WP-CLI "wp cache flush" implementation is a simple function call to wp_cache_flush(),
+     * which is run by the cli process and whoever initiated it.
+     *
+     * Cache backends like APCu and Memcached are known to misbehave as they expect to be run by the http user, or need
+     * specific permissions. Depending on the server configuration, it might be impossible to flush the object cache
+     * via CLI.
+     *
+     * This command will create a temporary php script, cURL it, and immediately delete it again.
+     * That way, wp_cache_flush() is called via web request and from the http user, soit will work with all caching
+     * backends
+     *
+     * Errors if the object cache can't be flushed.
+     *
+     * ## EXAMPLES
+     *
+     *     # Flush cache.
+     *     $ wp stash flush
+     *     Success: WP object cache flushed successfully.
+     */
+    public function flush($args, $assoc_args)
+    {
 
-		$script          = microtime() . '.php';
-		$script_filename = ABSPATH . '/' . $script;
-		$script_url      = home_url() . '/' . $script;
-		file_put_contents( $script_filename, '<?php
+        $script          = microtime() . '.php';
+        $script_filename = ABSPATH . '/' . $script;
+        $script_url      = home_url() . '/' . $script;
+        $result          = file_put_contents($script_filename, '<?php
 		if(! file_exists( "wp-load.php" ) ){
 			http_response_code( 500 );
 			echo "Could not find WordPress instance for object cache flushing via cURL request";
@@ -63,17 +67,21 @@ class WpCliCommand extends \WP_CLI_Command {
 			echo "WP loaded, now flushing object cache";
 			exit;
 		}
-		' );
-		add_filter( 'https_ssl_verify', '__return_false' );
-		$response = wp_remote_post( $script_url );
+		');
+        if ( ! $result) {
+            WP_CLI::error('Could not place the temporrary cache flusher script. Please review your file permissions');
+        }
 
-		unlink( $script_filename );
-		//WP_CLI::log( json_encode( $response ) );
-		if ( $response['response']['code'] === 200 ) {
-			WP_CLI::success( $response['body'] );
+        add_filter('https_ssl_verify', '__return_false');
+        $response = wp_remote_post($script_url);
 
-		} else {
-			WP_CLI::error( $response['body'] );
-		}
-	}
+        unlink($script_filename);
+        
+        if ($response['response']['code'] === 200) {
+            WP_CLI::success($response['body']);
+
+        } else {
+            WP_CLI::error($response['body']);
+        }
+    }
 }

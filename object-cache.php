@@ -145,13 +145,10 @@ function wp_cache_incr( $key, $offset = 1, $group = '' ) {
 
 /**
  * Sets up Object Cache Global and assigns it.
- *
- * @since 2.0.0
- * @global WP_APCu_Object_Cache $wp_object_cache WordPress Object Cache
  */
 function wp_cache_init() {
 
-	if ( ! class_exists( __NAMESPACE__ . 'Inpsyde\\WpStash\\WpStash' ) ) {
+	if ( ! class_exists( \Inpsyde\WpStash\WpStash::class ) ) {
 		require_once WP_CONTENT_DIR . '/mu-plugins/wp-stash/vendor/autoload.php';
 	}
 	$GLOBALS['wp_object_cache'] = \Inpsyde\WpStash\WpStash::from_config();
