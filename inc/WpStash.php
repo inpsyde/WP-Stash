@@ -70,10 +70,10 @@ class WpStash
 
         $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, ['allowed_classes' => false]) : [];
 
-        if (! defined('WP_STASH_DRIVER')) {
+        if ( ! defined('WP_STASH_DRIVER')) {
             return new Ephemeral();
         }
-        if (! class_exists($driver = WP_STASH_DRIVER)) {
+        if ( ! class_exists($driver = WP_STASH_DRIVER)) {
             return new Ephemeral();
         }
 
@@ -133,12 +133,14 @@ class WpStash
     {
 
         $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropin_name;
-        if (! file_exists($target)) {
+        if ( ! file_exists($target)) {
             copy($this->dropin_path, $target);
         }
 
         if (is_admin()) {
-            (new Admin())->init();
+            $admin = new Admin\Controller();
+
+            add_action('admin_init', [$admin, 'init']);
         }
 
         if ($this->is_wp_cli()) {
@@ -146,13 +148,13 @@ class WpStash
         }
     }
 
-    private function is_wp_cli()
+    private function is_wp_cli(): bool
     {
 
         return
             defined('WP_CLI')
             && WP_CLI
-            && class_exists('WP_CLI')
-            && class_exists('WP_CLI_Command');
+            && class_exists(\WP_CLI::class)
+            && class_exists(\WP_CLI_Command::class);
     }
 }

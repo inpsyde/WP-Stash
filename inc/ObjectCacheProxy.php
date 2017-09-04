@@ -267,7 +267,7 @@ class ObjectCacheProxy
     public function delete($key, $group = 'default')
     {
 
-        $cache_key = $this->key_gen->create($key, $group);
+        $cache_key = $this->key_gen->create((string)$key, $group);
 
         return $this->choose_pool($group)
                     ->delete($cache_key);
