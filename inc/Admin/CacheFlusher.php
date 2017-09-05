@@ -28,7 +28,8 @@ class CacheFlusher implements MenuItemProvider
         }
 
         wp_cache_flush();
-
+        # Fix potential SSL_shutdown:shutdown while in init in nginx
+        add_filter('https_ssl_verify', '__return_false');
         wp_redirect(wp_get_referer());
         exit;
     }

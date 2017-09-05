@@ -69,10 +69,11 @@ class WpCliCommand extends \WP_CLI_Command
 		}
 		');
         if ( ! $result) {
-            WP_CLI::error('Could not place the temporrary cache flusher script. Please review your file permissions');
+            WP_CLI::error('Could not place the temporary cache flusher script. Please review your file permissions');
         }
-
+        # Fix potential SSL_shutdown:shutdown while in init in nginx
         add_filter('https_ssl_verify', '__return_false');
+
         $response = wp_remote_post($script_url);
 
         unlink($script_filename);
