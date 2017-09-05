@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Stash\Invalidation;
 use Stash\Pool;
 
 /**
@@ -30,18 +31,18 @@ class StashAdapter {
 	/**
 	 * @var bool
 	 */
-	private $in_memory_cache;
+	private $use_in_memory_cache;
 
 	/**
 	 * StashAdapter constructor.
 	 *
 	 * @param Pool $pool
-	 * @param bool $in_memory_cache
+	 * @param bool $use_in_memory_cache
 	 */
-	public function __construct( Pool $pool, $in_memory_cache = true ) {
+	public function __construct( Pool $pool, $use_in_memory_cache = true ) {
 
-		$this->pool            = $pool;
-		$this->in_memory_cache = $in_memory_cache;
+		$this->pool                = $pool;
+		$this->use_in_memory_cache = $use_in_memory_cache;
 	}
 
 	/**
@@ -81,8 +82,10 @@ class StashAdapter {
 
 		}
 
+        $item->setInvalidationMethod(Invalidation::OLD);
+
 		$this->pool->save( $item );
-		if ( $this->in_memory_cache ) {
+		if ( $this->use_in_memory_cache ) {
 			$this->local[ $key ] = $data;
 
 		}
@@ -119,7 +122,7 @@ class StashAdapter {
 	 */
 	public function get( string $key ) {
 
-		if ( $this->in_memory_cache && isset( $this->local[ $key ] ) ) {
+		if ($this->use_in_memory_cache && isset( $this->local[ $key ] ) ) {
 			return $this->local[ $key ];
 		}
 		$item = $this->pool->getItem( $key );
@@ -132,7 +135,7 @@ class StashAdapter {
 
 		$result = $item->get();
 
-		if ( $this->in_memory_cache ) {
+		if ( $this->use_in_memory_cache ) {
 			$this->local[ $key ] = $result;
 
 		}
@@ -168,7 +171,7 @@ class StashAdapter {
 	 */
 	public function delete( string $key ) {
 
-		if ( $this->in_memory_cache ) {
+		if ( $this->use_in_memory_cache ) {
 			unset( $this->local[ $key ] );
 
 		}
@@ -204,4 +207,11 @@ class StashAdapter {
 
 		return $this->set( $key, $data, $expire );
 	}
+
+    public function __destruct()
+    {
+
+        $this->pool->commit();
+        $this->local = [];
+    }
 }
