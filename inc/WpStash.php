@@ -68,13 +68,22 @@ class WpStash
     public static function get_driver(): DriverInterface
     {
 
+        static $driver;
+        if (null !== $driver) {
+            return $driver;
+        }
         $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, ['allowed_classes' => false]) : [];
 
         if ( ! defined('WP_STASH_DRIVER')) {
-            return new Ephemeral();
+            $driver = new Ephemeral();
+
+            return $driver;
         }
         if ( ! class_exists($driver = WP_STASH_DRIVER)) {
-            return new Ephemeral();
+            $driver = new Ephemeral();
+
+            return $driver;
+
         }
 
         if (in_array(DriverInterface::class, class_implements($driver), true)
@@ -85,7 +94,10 @@ class WpStash
             } catch (RuntimeException $e) {
                 self::admin_notice('WP Stash could not boot the selected driver: ' . $e->getMessage());
 
-                return new Ephemeral();
+                $driver = new Ephemeral();
+
+                return $driver;
+
             }
             /**
              * APCu is currently not safe to use on cli.
@@ -93,13 +105,19 @@ class WpStash
              * @see https://github.com/tedious/Stash/issues/365
              */
             if (defined('WP_CLI') && WP_CLI && $driver instanceof Apc) {
-                return new Ephemeral();
+                $driver = new Ephemeral();
+
+                return $driver;
+
             }
 
             return $driver;
         }
 
-        return new Ephemeral();
+        $driver = new Ephemeral();
+
+        return $driver;
+
     }
 
     private static function admin_notice(string $message)
@@ -114,7 +132,7 @@ class WpStash
         }
     }
 
-    private static function get_cache_key_generator(): KeyGen
+    public static function get_cache_key_generator(): KeyGen
     {
 
         if (is_multisite()) {
