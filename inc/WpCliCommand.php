@@ -32,7 +32,7 @@ class WpCliCommand extends \WP_CLI_Command
      * via CLI.
      *
      * This command will create a temporary php script, cURL it, and immediately delete it again.
-     * That way, wp_cache_flush() is called via web request and from the http user, soit will work with all caching
+     * That way, wp_cache_flush() is called via web request and from the http user, so it will work with all caching
      * backends
      *
      * Errors if the object cache can't be flushed.
