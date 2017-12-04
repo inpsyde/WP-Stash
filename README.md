@@ -44,3 +44,12 @@ WP Stash has the following cli commands:
 
 `wp stash flush` :  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
+
+
+License and Copyright
+
+Copyright (c) 2017 Inpsyde GmbH.
+
+WP Stash code is licensed under MIT license.
+
+The team at Inpsyde is engineering the Web since 2006.
