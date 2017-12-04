@@ -50,6 +50,6 @@ License and Copyright
 
 Copyright (c) 2017 Inpsyde GmbH.
 
-WP Stash code is licensed under MIT license.
+_WP Stash_ code is licensed under [MIT license](https://opensource.org/licenses/MIT).
 
 The team at Inpsyde is engineering the Web since 2006.
