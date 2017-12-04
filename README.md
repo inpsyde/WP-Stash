@@ -46,10 +46,10 @@ WP Stash has the following cli commands:
 This ensures compatibility with all caching back-ends.
 
 
-License and Copyright
+## License and Copyright
 
 Copyright (c) 2017 Inpsyde GmbH.
 
 _WP Stash_ code is licensed under [MIT license](./LICENSE).
 
-The team at Inpsyde is engineering the Web since 2006.
+The team at [Inpsyde](https://inpsyde.com/) is engineering the Web since 2006.
