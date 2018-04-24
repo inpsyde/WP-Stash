@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Stash\Exception\InvalidArgumentException;
 use Stash\Invalidation;
 use Stash\Pool;
 
@@ -74,7 +75,12 @@ class StashAdapter {
 	 */
 	public function set( string $key, $data, int $expire = 0 ) {
 
-		$item = $this->pool->getItem( $key );
+        try {
+            $item = $this->pool->getItem($key);
+
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
 
 		$item->set( $data );
 		if ( $expire ) {
@@ -125,7 +131,11 @@ class StashAdapter {
 		if ($this->use_in_memory_cache && isset( $this->local[ $key ] ) ) {
 			return $this->local[ $key ];
 		}
-		$item = $this->pool->getItem( $key );
+		try{
+            $item = $this->pool->getItem( $key );
+        }catch( InvalidArgumentException $e ){
+		    return false;
+        }
 
 		// Check to see if the data was a miss.
 		if ( $item->isMiss() ) {
