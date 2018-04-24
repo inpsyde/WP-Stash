@@ -49,7 +49,7 @@ class WpStash
         $in_memory_cache = defined('WP_STASH_IN_MEMORY_CACHE') ? (bool)WP_STASH_IN_MEMORY_CACHE : true;
 
         $non_persistent_pool = new Pool(new Ephemeral());
-        $persistent_pool     = new Pool(self::get_driver());
+        $persistent_pool = new Pool(self::get_driver());
 
         return new ObjectCacheProxy(
             new StashAdapter($non_persistent_pool, false),
@@ -74,12 +74,12 @@ class WpStash
         }
         $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, ['allowed_classes' => false]) : [];
 
-        if ( ! defined('WP_STASH_DRIVER')) {
+        if (! defined('WP_STASH_DRIVER')) {
             $driver = new Ephemeral();
 
             return $driver;
         }
-        if ( ! class_exists($driver = WP_STASH_DRIVER)) {
+        if (! class_exists($driver = WP_STASH_DRIVER)) {
             $driver = new Ephemeral();
 
             return $driver;
@@ -151,7 +151,7 @@ class WpStash
     {
 
         $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropin_name;
-        if ( ! file_exists($target)) {
+        if (! file_exists($target)) {
             copy($this->dropin_path, $target);
         }
 

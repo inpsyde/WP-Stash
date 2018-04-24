@@ -31,21 +31,21 @@ class AdminBarMenu
     {
 
         $admin_bar->add_menu([
-            'id'     => self::PARENT_ID,
+            'id' => self::PARENT_ID,
             'parent' => 'top-secondary',
-            'title'  => 'WP Stash',
-            'href'   => '#',
-            'meta'   => [
+            'title' => 'WP Stash',
+            'href' => '#',
+            'meta' => [
                 'class' => 'wp-stash-admin-bar',
             ],
         ]);
         foreach ($this->menu_item_providers as $provider) {
             $item = $provider->get_item();
             $admin_bar->add_menu([
-                'id'     => $item->get_id(),
+                'id' => $item->get_id(),
                 'parent' => self::PARENT_ID,
-                'title'  => $item->get_title(),
-                'href'   => $item->get_href(),
+                'title' => $item->get_title(),
+                'href' => $item->get_href(),
             ]);
         }
     }

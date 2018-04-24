@@ -41,13 +41,13 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
     ) {
 
         $suspend = (bool)random_int(0, 1);
-        $exists  = (bool)random_int(0, 1);
+        $exists = (bool)random_int(0, 1);
 
         Functions\expect('wp_suspend_cache_addition')
-                 ->once()
-                 ->andReturn($suspend);
+            ->once()
+            ->andReturn($suspend);
 
-        if ( ! $suspend) {
+        if (! $suspend) {
             /**
              * @var MockInterface $keyGen
              */
@@ -158,7 +158,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
     public function default_test_data()
     {
 
-        $args      = [
+        $args = [
             // persistent Pool
             \Mockery::mock(StashAdapter::class),
             // non-persistent pool
@@ -166,7 +166,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
             // Keygen
             \Mockery::mock(KeyGen::class),
         ];
-        $groups    = [
+        $groups = [
             // non-persistent groups
             ['foo', 'bar'],
             // global groups

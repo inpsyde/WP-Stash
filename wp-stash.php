@@ -24,7 +24,7 @@ if (! class_exists(__NAMESPACE__ . '\\WpStash')) {
                     'Could not find a working autoloader for WP Stash',
                     'inpsyde-multisite-menu'
                 );
-                $class   = 'notice notice-error';
+                $class = 'notice notice-error';
                 printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
             });
         }
