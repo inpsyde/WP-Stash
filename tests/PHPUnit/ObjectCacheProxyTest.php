@@ -51,10 +51,10 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
             /**
              * @var MockInterface $keyGen
              */
-            $keyGen->shouldReceive('get')
+            $keyGen->shouldReceive('create')
                    ->once()
                    ->andReturn($key);
-            if (in_array($group, $nonPersistentGroups, true)) {
+            if (\in_array($group, $nonPersistentGroups, true)) {
                 $nonPersistentPool->shouldReceive('add')
                                   ->once()
                                   ->andReturn(! $exists);
