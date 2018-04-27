@@ -63,7 +63,7 @@ class WpStash
      *
      * @return DriverInterface
      */
-    private static function getDriver(): DriverInterface
+    public static function getDriver(): DriverInterface
     {
         static $driver;
         if (null !== $driver) {
