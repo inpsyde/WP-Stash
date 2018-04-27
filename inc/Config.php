@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -14,26 +14,26 @@ class Config
     /**
      * @var string
      */
-    private $driver_class_name;
+    private $driverClassName;
 
     /**
      * @var array
      */
-    private $driver_args;
+    private $driverArgs;
 
     /**
      * @var bool
      */
-    private $using_memory_cache;
+    private $usingMemoryCache;
 
     public function __construct(
-        string $driver_class_name,
-        array $driver_args,
-        bool $using_memory_cache
+        string $driverClassName,
+        array $driverArgs,
+        bool $usingMemoryCache
     ) {
-        $this->driver_class_name = $driver_class_name;
-        $this->driver_args = $driver_args;
-        $this->using_memory_cache = $using_memory_cache;
+        $this->driverClassName = $driverClassName;
+        $this->driverArgs = $driverArgs;
+        $this->usingMemoryCache = $usingMemoryCache;
     }
 
     /**
@@ -50,24 +50,24 @@ class Config
      *
      * @return Config
      */
-    public static function from_constants(): self
+    public static function fromConstants(): self
     {
         static $config;
         if (null !== $config) {
             return $config;
         }
 
-        $using_memory_cache = defined('WP_STASH_IN_MEMORY_CACHE')
+        $usingMemoryCache = \defined('WP_STASH_IN_MEMORY_CACHE')
             ? (bool) WP_STASH_IN_MEMORY_CACHE
             : true;
 
-        $driver = defined('WP_STASH_DRIVER')
+        $driver = \defined('WP_STASH_DRIVER')
             ? (string) WP_STASH_DRIVER
             : '';
 
-        $args = self::get_driver_args();
+        $args = self::getDriverArgs();
 
-        return new self($driver, $args, $using_memory_cache);
+        return new self($driver, $args, $usingMemoryCache);
     }
 
     /**
@@ -78,37 +78,37 @@ class Config
      *
      * @return array
      */
-    private static function get_driver_args(): array
+    private static function getDriverArgs(): array
     {
-        if (! defined('WP_STASH_DRIVER_ARGS') || ! is_string(WP_STASH_DRIVER_ARGS)) {
+        if (!\defined('WP_STASH_DRIVER_ARGS') || !\is_string(WP_STASH_DRIVER_ARGS)) {
             return [];
         }
-        $from_json = json_decode(WP_STASH_DRIVER_ARGS, true);
+        $fromJson = json_decode(WP_STASH_DRIVER_ARGS, true);
 
-        if (\is_array($from_json)) {
-            return $from_json;
+        if (\is_array($fromJson)) {
+            return $fromJson;
         }
 
-        $from_unserialize = unserialize(
+        $fromUnserialize = unserialize(
             WP_STASH_DRIVER_ARGS,
             ['allowed_classes' => false]
         );
 
-        return $from_unserialize ?? [];
+        return $fromUnserialize ?? [];
     }
 
-    public function stash_driver_class_name(): string
+    public function stashDriverClassName(): string
     {
-        return $this->driver_class_name;
+        return $this->driverClassName;
     }
 
-    public function stash_driver_args(): array
+    public function stashDriverArgs(): array
     {
-        return $this->driver_args;
+        return $this->driverArgs;
     }
 
-    public function using_memory_cache(): bool
+    public function usingMemoryCache(): bool
     {
-        return $this->using_memory_cache;
+        return $this->usingMemoryCache;
     }
 }

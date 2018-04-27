@@ -159,7 +159,7 @@ function wp_cache_init()
     if (! class_exists(\Inpsyde\WpStash\WpStash::class)) {
         require_once WP_CONTENT_DIR . '/mu-plugins/wp-stash/vendor/autoload.php';
     }
-    $GLOBALS['wp_object_cache'] = \Inpsyde\WpStash\WpStash::from_config();
+    $GLOBALS['wp_object_cache'] = \Inpsyde\WpStash\WpStash::fromConfig();
 }
 
 /**

@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -9,7 +9,7 @@ class ObjectCacheProxy
     /**
      * Amount of times the cache did not have the request in cache
      *
-     * @var int
+     * @var    int
      * @access public
      * @since  WP 2.0.0
      */
@@ -17,7 +17,7 @@ class ObjectCacheProxy
     /**
      * Amount of times the APCu cache did not have the request in cache
      *
-     * @var int
+     * @var    int
      * @access public
      * @since  WP 2.0.0
      */
@@ -25,7 +25,7 @@ class ObjectCacheProxy
     /**
      * List of global groups
      *
-     * @var array
+     * @var    array
      * @access protected
      * @since  WP 3.0.0
      */
@@ -33,7 +33,7 @@ class ObjectCacheProxy
     /**
      * Holds the local cached objects
      *
-     * @var array
+     * @var    array
      * @access private
      * @since  2.0.0
      */
@@ -43,14 +43,14 @@ class ObjectCacheProxy
      *
      * @since  WP 2.5.0
      * @access private
-     * @var int
+     * @var    int
      */
     private $cache_hits = 0;
 
     /**
      * List of non persistent groups
      *
-     * @var array
+     * @var    array
      * @access private
      * @since  WP 2.6.0
      */
@@ -101,7 +101,6 @@ class ObjectCacheProxy
      */
     public function __get($name)
     {
-
         return $this->$name;
     }
 
@@ -118,7 +117,6 @@ class ObjectCacheProxy
      */
     public function __set($name, $value)
     {
-
         return $this->$name = $value;
     }
 
@@ -134,7 +132,6 @@ class ObjectCacheProxy
      */
     public function __isset($name)
     {
-
         return isset($this->$name);
     }
 
@@ -148,15 +145,14 @@ class ObjectCacheProxy
      */
     public function __unset($name)
     {
-
         unset($this->$name);
     }
 
     /**
      * Adds data to the cache if it doesn't already exist.
      *
-     * @uses  WP_Object_Cache::_exists Checks to see if the cache already has data.
-     * @uses  WP_Object_Cache::set Sets the data after the checking the cache
+     * @uses WP_Object_Cache::_exists Checks to see if the cache already has data.
+     * @uses WP_Object_Cache::set Sets the data after the checking the cache
      *        contents existence.
      *
      * @since WP 2.0.0
@@ -170,7 +166,6 @@ class ObjectCacheProxy
      */
     public function add($key, $data, $group = 'default', $expire = 0)
     {
-
         if (wp_suspend_cache_addition()) {
             return false;
         }
@@ -178,7 +173,7 @@ class ObjectCacheProxy
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         return $this->choose_pool($group)
-                    ->add($cache_key, $data, $expire);
+            ->add($cache_key, $data, $expire);
     }
 
     /**
@@ -188,7 +183,6 @@ class ObjectCacheProxy
      */
     private function choose_pool($group): StashAdapter
     {
-
         if (isset($this->non_persistent_groups[$group])) {
             return $this->non_persistent;
         }
@@ -205,11 +199,10 @@ class ObjectCacheProxy
      */
     public function add_global_groups($groups): bool
     {
-
         if (! $this->key_gen instanceof MultisiteKeyGen) {
             return false;
         }
-        $this->key_gen->add_global_groups($groups);
+        $this->key_gen->addGlobalGroups($groups);
 
         return true;
     }
@@ -225,7 +218,6 @@ class ObjectCacheProxy
      */
     public function add_non_persistent_groups($groups): array
     {
-
         $groups = (array)$groups;
 
         $groups = array_fill_keys($groups, true);
@@ -247,9 +239,8 @@ class ObjectCacheProxy
      */
     public function decr($key, $offset = 1, $group = 'default')
     {
-
         return $this->choose_pool($group)
-                    ->decr($key, $offset);
+            ->decr($key, $offset);
     }
 
     /**
@@ -266,11 +257,10 @@ class ObjectCacheProxy
      */
     public function delete($key, $group = 'default'): bool
     {
-
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         return $this->choose_pool($group)
-                    ->delete($cache_key);
+            ->delete($cache_key);
     }
 
     /**
@@ -282,7 +272,6 @@ class ObjectCacheProxy
      */
     public function flush(): bool
     {
-
         $this->persistent->clear();
         $this->non_persistent->clear();
 
@@ -302,8 +291,6 @@ class ObjectCacheProxy
      */
     public function incr($key, $offset = 1, $group = 'default')
     {
-
-
         $data = $this->get($key, $group);
         if (! $data || ! is_numeric($data)) {
             return false;
@@ -332,11 +319,10 @@ class ObjectCacheProxy
      */
     public function get($key, $group = 'default', $force = false, &$found = null)
     {
-
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         return $this->choose_pool($group)
-                    ->get($cache_key);
+            ->get($cache_key);
     }
 
     /**
@@ -362,11 +348,10 @@ class ObjectCacheProxy
      */
     public function set($key, $data, $group = 'default', $expire = 0)
     {
-
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         return $this->choose_pool($group)
-                    ->set($cache_key, $data, $expire);
+            ->set($cache_key, $data, $expire);
     }
 
     /**
@@ -384,11 +369,10 @@ class ObjectCacheProxy
      */
     public function replace($key, $data, $group = 'default', $expire = 0)
     {
-
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         return $this->choose_pool($group)
-                    ->replace($cache_key, $data, $expire);
+            ->replace($cache_key, $data, $expire);
     }
 
     /**
@@ -401,7 +385,6 @@ class ObjectCacheProxy
      */
     public function stats()
     {
-
         $non_persistent_groups = implode(' ,', array_keys($this->non_persistent_groups));
 
         echo "<p>";
@@ -412,9 +395,9 @@ class ObjectCacheProxy
         echo '<ul>';
         foreach ($this->cache as $group => $cache) {
             echo "<li><strong>Group:</strong> $group - ( " . number_format(
-                    strlen(serialize($cache)) / 1024,
-                    2
-                ) . 'k )</li>';
+                strlen(serialize($cache)) / 1024,
+                2
+            ) . 'k )</li>';
         }
         echo '</ul>';
     }
@@ -430,10 +413,9 @@ class ObjectCacheProxy
      */
     public function switch_to_blog($blog_id)
     {
-
         if (! ($this->key_gen instanceof MultisiteKeyGen)) {
             return;
         }
-        $this->key_gen->switch_to_blog((int)$blog_id);
+        $this->key_gen->switchToBlog((int)$blog_id);
     }
 }

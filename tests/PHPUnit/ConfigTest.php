@@ -25,8 +25,9 @@ class ConfigTest extends BrainMonkeyWpTestCase
         array $driverArgs,
         bool $usingMemCache
     ) {
+
         $testee = new Config($className, $driverArgs, $usingMemCache);
-        $result = $testee->using_memory_cache();
+        $result = $testee->usingMemoryCache();
         $this->assertSame($usingMemCache, $result);
     }
 
@@ -42,8 +43,9 @@ class ConfigTest extends BrainMonkeyWpTestCase
         array $driverArgs,
         bool $usingMemCache
     ) {
+
         $testee = new Config($className, $driverArgs, $usingMemCache);
-        $result = $testee->stash_driver_args();
+        $result = $testee->stashDriverArgs();
         $this->assertSame($driverArgs, $result);
     }
 
@@ -59,8 +61,9 @@ class ConfigTest extends BrainMonkeyWpTestCase
         array $driverArgs,
         bool $usingMemCache
     ) {
+
         $testee = new Config($className, $driverArgs, $usingMemCache);
-        $result = $testee->stash_driver_class_name();
+        $result = $testee->stashDriverClassName();
         $this->assertSame($className, $result);
     }
 
@@ -74,15 +77,16 @@ class ConfigTest extends BrainMonkeyWpTestCase
         $usingMemCache,
         $expectedDriverArgs
     ) {
+
         define('WP_STASH_DRIVER', $className);
         define('WP_STASH_DRIVER_ARGS', $driverArgsString);
         define('WP_STASH_IN_MEMORY_CACHE', $usingMemCache);
-        $config = Config::from_constants();
+        $config = Config::fromConstants();
         $this->assertInstanceOf(Config::class, $config);
-        $driverArgs = $config->stash_driver_args();
+        $driverArgs = $config->stashDriverArgs();
         $this->assertTrue($expectedDriverArgs == $driverArgs);
-        $this->assertSame((string) $className, $config->stash_driver_class_name());
-        $this->assertSame((bool) $usingMemCache, $config->using_memory_cache());
+        $this->assertSame((string) $className, $config->stashDriverClassName());
+        $this->assertSame((bool) $usingMemCache, $config->usingMemoryCache());
     }
 
     /**
@@ -95,14 +99,15 @@ class ConfigTest extends BrainMonkeyWpTestCase
         $usingMemCache,
         $expectedDriverArgs
     ) {
+
         $className && define('WP_STASH_DRIVER', $className);
         $driverArgsString && define('WP_STASH_DRIVER_ARGS', $driverArgsString);
         $usingMemCache && define('WP_STASH_IN_MEMORY_CACHE', $usingMemCache);
-        $config = Config::from_constants();
+        $config = Config::fromConstants();
         $this->assertInstanceOf(Config::class, $config);
-        $driverArgs = $config->stash_driver_args();
+        $driverArgs = $config->stashDriverArgs();
         $this->assertTrue($expectedDriverArgs == $driverArgs);
-        $this->assertSame((string) $className, $config->stash_driver_class_name());
+        $this->assertSame((string) $className, $config->stashDriverClassName());
 
         $expectedUsingMemCache = $usingMemCache == null
             ? true
@@ -110,7 +115,7 @@ class ConfigTest extends BrainMonkeyWpTestCase
 
         $this->assertSame(
             $expectedUsingMemCache,
-            $config->using_memory_cache()
+            $config->usingMemoryCache()
         );
     }
 

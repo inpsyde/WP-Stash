@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash\Admin;
 
@@ -18,7 +18,6 @@ class AdminBarMenu
      */
     public function __construct(array $menu_items)
     {
-
         $this->menu_item_providers = $menu_items;
     }
 
@@ -29,8 +28,8 @@ class AdminBarMenu
      */
     public function render(\WP_Admin_Bar $admin_bar)
     {
-
-        $admin_bar->add_menu([
+        $admin_bar->add_menu(
+            [
             'id' => self::PARENT_ID,
             'parent' => 'top-secondary',
             'title' => 'WP Stash',
@@ -38,15 +37,18 @@ class AdminBarMenu
             'meta' => [
                 'class' => 'wp-stash-admin-bar',
             ],
-        ]);
+            ]
+        );
         foreach ($this->menu_item_providers as $provider) {
             $item = $provider->get_item();
-            $admin_bar->add_menu([
+            $admin_bar->add_menu(
+                [
                 'id' => $item->get_id(),
                 'parent' => self::PARENT_ID,
                 'title' => $item->get_title(),
                 'href' => $item->get_href(),
-            ]);
+                ]
+            );
         }
     }
 }

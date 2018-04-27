@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -47,11 +47,12 @@ class WpCliCommand extends \WP_CLI_Command
      */
     public function flush($args, $assoc_args)
     {
-
         $script = md5(microtime()) . '.php';
         $script_filename = trailingslashit(ABSPATH) . $script;
         $script_url = home_url() . '/wp/' . $script;
-        $result = file_put_contents($script_filename, '<?php
+        $result = file_put_contents(
+            $script_filename,
+            '<?php
 		if(! file_exists( "wp-load.php" ) ){
 			http_response_code( 500 );
 			echo "Could not find WordPress instance for object cache flushing via cURL request";
@@ -73,11 +74,12 @@ class WpCliCommand extends \WP_CLI_Command
 			echo "WP loaded, now flushing object cache";
 			exit;
 		}
-		');
+		'
+        );
         if (! $result) {
             WP_CLI::error('Could not place the temporary cache flusher script. Please review your file permissions');
         }
-        # Fix potential SSL_shutdown:shutdown while in init in nginx
+        // Fix potential SSL_shutdown:shutdown while in init in nginx
         add_filter('https_ssl_verify', '__return_false');
 
         $response = wp_remote_post($script_url);
@@ -86,7 +88,6 @@ class WpCliCommand extends \WP_CLI_Command
 
         if ($response['response']['code'] === 200 && isset($response['headers']['WP-Stash'])) {
             WP_CLI::success($response['body']);
-
         } else {
             if ($response['response']['code'] !== 200) {
                 WP_CLI::error($response['body']);

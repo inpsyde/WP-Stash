@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -9,28 +9,26 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
     /**
      * @var int
      */
-    private $blog_id;
+    private $blogId;
     /**
      * @var array
      */
-    private $global_groups;
+    private $globalGroups;
 
-    public function __construct(int $blog_id, array $global_groups = [])
+    public function __construct(int $blogId, array $globalGroups = [])
     {
-
-        $this->blog_id = $blog_id;
-        $this->global_groups = $global_groups;
+        $this->blogId = $blogId;
+        $this->globalGroups = $globalGroups;
     }
 
-    public function add_global_groups($groups): array
+    public function addGlobalGroups($groups): array
     {
-
         $groups = (array)$groups;
 
         $groups = array_fill_keys($groups, true);
-        $this->global_groups = array_merge($this->global_groups, $groups);
+        $this->globalGroups = array_merge($this->globalGroups, $groups);
 
-        return $this->global_groups;
+        return $this->globalGroups;
     }
 
     /**
@@ -40,20 +38,18 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
      *
      * @return bool
      */
-    public function switch_to_blog(int $blog_id): bool
+    public function switchToBlog(int $blog_id): bool
     {
-
-        $this->blog_id = $blog_id;
+        $this->blogId = $blog_id;
 
         return true;
     }
 
     public function create(string $key, string $group): string
     {
-
         $parts = [$group, $key];
-        if (! isset($this->global_groups[$group])) {
-            $parts[] = $this->blog_id;
+        if (! isset($this->globalGroups[$group])) {
+            $parts[] = $this->blogId;
         }
 
         return KeyGen::GLUE . implode(KeyGen::GLUE, $parts);

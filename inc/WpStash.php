@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -20,11 +20,11 @@ class WpStash
     /**
      * @var string
      */
-    private $dropin_path;
+    private $dropinPath;
     /**
      * @var string
      */
-    private $dropin_name;
+    private $dropinName;
 
     /**
      * WpStash constructor.
@@ -33,9 +33,8 @@ class WpStash
      */
     public function __construct(string $dropin)
     {
-
-        $this->dropin_path = $dropin;
-        $this->dropin_name = basename($dropin);
+        $this->dropinPath = $dropin;
+        $this->dropinName = basename($dropin);
     }
 
     /**
@@ -43,17 +42,17 @@ class WpStash
      *
      * @return ObjectCacheProxy
      */
-    public static function from_config(): ObjectCacheProxy
+    public static function fromConfig(): ObjectCacheProxy
     {
-        $config = Config::from_constants();
+        $config = Config::fromConstants();
 
-        $non_persistent_pool = new Pool(new Ephemeral());
-        $persistent_pool = new Pool(self::get_driver());
+        $nonPersistentPool = new Pool(new Ephemeral());
+        $persistentPool = new Pool(self::getDriver());
 
         return new ObjectCacheProxy(
-            new StashAdapter($non_persistent_pool, false),
-            new StashAdapter($persistent_pool, $config->using_memory_cache()),
-            self::get_cache_key_generator()
+            new StashAdapter($nonPersistentPool, false),
+            new StashAdapter($persistentPool, $config->usingMemoryCache()),
+            self::getCacheKeyGenerator()
         );
     }
 
@@ -64,18 +63,17 @@ class WpStash
      *
      * @return DriverInterface
      */
-    private static function get_driver(): DriverInterface
+    private static function getDriver(): DriverInterface
     {
-
         static $driver;
         if (null !== $driver) {
             return $driver;
         }
 
-        $config = Config::from_constants();
+        $config = Config::fromConstants();
 
-        $driver = $config->stash_driver_class_name();
-        $args = $config->stash_driver_args();
+        $driver = $config->stashDriverClassName();
+        $args = $config->stashDriverArgs();
         if (empty($driver)) {
             $driver = new Ephemeral();
 
@@ -93,12 +91,11 @@ class WpStash
             try {
                 $driver = new $driver($args);
             } catch (RuntimeException $e) {
-                self::admin_notice('WP Stash could not boot the selected driver: ' . $e->getMessage());
+                self::adminNotice('WP Stash could not boot the selected driver: ' . $e->getMessage());
 
                 $driver = new Ephemeral();
 
                 return $driver;
-
             }
             /**
              * APCu is currently not safe to use on cli.
@@ -109,7 +106,6 @@ class WpStash
                 $driver = new Ephemeral();
 
                 return $driver;
-
             }
 
             return $driver;
@@ -118,24 +114,24 @@ class WpStash
         $driver = new Ephemeral();
 
         return $driver;
-
     }
 
-    private static function admin_notice(string $message)
+    private static function adminNotice(string $message)
     {
-
         foreach (['admin_notices', 'network_admin_notices'] as $hook) {
-            add_action($hook, function () use ($message) {
+            add_action(
+                $hook,
+                function () use ($message) {
 
-                $class = 'notice notice-error';
-                printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
-            });
+                    $class = 'notice notice-error';
+                    printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
+                }
+            );
         }
     }
 
-    public static function get_cache_key_generator(): KeyGen
+    public static function getCacheKeyGenerator(): KeyGen
     {
-
         if (is_multisite()) {
             return new MultisiteCacheKeyGenerator((int)get_current_blog_id());
         }
@@ -150,10 +146,9 @@ class WpStash
      */
     public function init()
     {
-
-        $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropin_name;
+        $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropinName;
         if (! file_exists($target)) {
-            copy($this->dropin_path, $target);
+            copy($this->dropinPath, $target);
         }
 
         if (is_admin()) {
@@ -162,14 +157,13 @@ class WpStash
             add_action('admin_init', [$admin, 'init']);
         }
 
-        if ($this->is_wp_cli()) {
+        if ($this->isWpCli()) {
             \WP_CLI::add_command('stash', WpCliCommand::class);
         }
     }
 
-    private function is_wp_cli(): bool
+    private function isWpCli(): bool
     {
-
         return
             defined('WP_CLI')
             && WP_CLI

@@ -69,18 +69,14 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $result = $testee->add($key, $data, $group, $expire);
 
         if ($suspend) {
-
             $this->assertFalse($result);
         } else {
             if ($exists) {
                 $this->assertFalse($result);
-
             } else {
                 $this->assertTrue($result);
-
             }
         }
-
     }
 
     /**
@@ -121,7 +117,6 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         } else {
             $this->assertFalse($result);
         }
-
     }
 
     /**
@@ -152,12 +147,10 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
         $result = $testee->add_non_persistent_groups($nonPersistentGroups);
         $this->assertSame(array_fill_keys($nonPersistentGroups, true), $result);
-
     }
 
     public function default_test_data()
     {
-
         $args = [
             // persistent Pool
             \Mockery::mock(StashAdapter::class),
@@ -189,7 +182,5 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         ];
 
         return $data;
-
     }
-
 }
