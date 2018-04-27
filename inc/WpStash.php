@@ -45,45 +45,46 @@ class WpStash
      */
     public static function from_config(): ObjectCacheProxy
     {
-
-        $in_memory_cache = defined('WP_STASH_IN_MEMORY_CACHE') ? (bool)WP_STASH_IN_MEMORY_CACHE : true;
+        $config = Config::from_constants();
 
         $non_persistent_pool = new Pool(new Ephemeral());
         $persistent_pool = new Pool(self::get_driver());
 
         return new ObjectCacheProxy(
             new StashAdapter($non_persistent_pool, false),
-            new StashAdapter($persistent_pool, $in_memory_cache),
+            new StashAdapter($persistent_pool, $config->using_memory_cache()),
             self::get_cache_key_generator()
         );
     }
 
     /**
-     * Reads WP_STASH_DRIVER from wp-config.php and returns the specified cache driver, if applicable.
+     * Spawns the Driver according to the configuration of WP-Stash, if possible.
      *
      * Otherwise, returns an instance of the Ephemeral Cache Driver
      *
      * @return DriverInterface
      */
-    public static function get_driver(): DriverInterface
+    private static function get_driver(): DriverInterface
     {
 
         static $driver;
         if (null !== $driver) {
             return $driver;
         }
-        $args = defined('WP_STASH_DRIVER_ARGS') ? unserialize(WP_STASH_DRIVER_ARGS, ['allowed_classes' => false]) : [];
 
-        if (! defined('WP_STASH_DRIVER')) {
+        $config = Config::from_constants();
+
+        $driver = $config->stash_driver_class_name();
+        $args = $config->stash_driver_args();
+        if (empty($driver)) {
             $driver = new Ephemeral();
 
             return $driver;
         }
-        if (! class_exists($driver = WP_STASH_DRIVER)) {
+        if (! class_exists($driver)) {
             $driver = new Ephemeral();
 
             return $driver;
-
         }
 
         if (in_array(DriverInterface::class, class_implements($driver), true)
