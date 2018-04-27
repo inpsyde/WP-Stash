@@ -25,9 +25,9 @@ class MenuItem
     ) {
 
 
-        $this->id    = $id;
+        $this->id = $id;
         $this->title = $title;
-        $this->href  = $href;
+        $this->href = $href;
     }
 
     public function get_id(): string

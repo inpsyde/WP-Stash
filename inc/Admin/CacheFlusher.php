@@ -23,7 +23,7 @@ class CacheFlusher implements MenuItemProvider
     public function flush_cache()
     {
 
-        if ( ! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], self::PURGE_ACTION)) {
+        if (! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], self::PURGE_ACTION)) {
             wp_nonce_ays('');
         }
 

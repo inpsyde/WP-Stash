@@ -18,7 +18,7 @@ class Controller
     public function __construct()
     {
 
-        $this->cache_flusher  = new CacheFlusher();
+        $this->cache_flusher = new CacheFlusher();
         $this->admin_bar_menu = new AdminBarMenu([$this->cache_flusher]);
     }
 

@@ -1,24 +1,24 @@
 {
-  "name": "inpsyde/wp-stash",
-  "description": "Powerful Object Caching Backend for WordPress",
-  "license": "GPL-2.0+",
-  "type": "wordpress-muplugin",
-  "require": {
-    "tedivm/stash": "^0.14.2"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "*",
-    "inpsyde/monkery-test-case": "^4.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Inpsyde\\WpStash\\": "inc/"
+    "name": "inpsyde/wp-stash",
+    "description": "Powerful Object Caching Backend for WordPress",
+    "license": "GPL-2.0+",
+    "type": "wordpress-muplugin",
+    "require": {
+        "tedivm/stash": "^0.14.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "inpsyde/monkery-test-case": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Inpsyde\\WpStash\\": "inc/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Inpsyde\\WpStash\\Test\\Helper\\": "tests/Helper/",
+            "": "tests/Stubs/"
+        }
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Inpsyde\\WpStash\\Test\\Helper\\": "tests/Helper/",
-      "": "tests/Stubs/"
-    }
-  }
 }

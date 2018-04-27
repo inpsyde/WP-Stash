@@ -6,9 +6,9 @@
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
-	>
+>
 	<php>
-		<env name="PATCHWORK_CACHE_USE_SYSTEM_TEMP_DIR" value="true" />
+		<env name="PATCHWORK_CACHE_USE_SYSTEM_TEMP_DIR" value="true"/>
 	</php>
 	<testsuites>
 		<testsuite name="WP Stash php unit tests">

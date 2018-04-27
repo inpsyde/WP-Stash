@@ -85,8 +85,8 @@ class ObjectCacheProxy
     ) {
 
         $this->non_persistent = $non_persistent;
-        $this->persistent     = $persistent;
-        $this->key_gen        = $key_gen;
+        $this->persistent = $persistent;
+        $this->key_gen = $key_gen;
     }
 
     /**
@@ -186,7 +186,7 @@ class ObjectCacheProxy
      *
      * @return StashAdapter
      */
-    private function choose_pool($group):StashAdapter
+    private function choose_pool($group): StashAdapter
     {
 
         if (isset($this->non_persistent_groups[$group])) {
@@ -203,10 +203,10 @@ class ObjectCacheProxy
      *
      * @return bool
      */
-    public function add_global_groups($groups):bool
+    public function add_global_groups($groups): bool
     {
 
-        if ( ! $this->key_gen instanceof MultisiteKeyGen) {
+        if (! $this->key_gen instanceof MultisiteKeyGen) {
             return false;
         }
         $this->key_gen->add_global_groups($groups);
@@ -223,12 +223,12 @@ class ObjectCacheProxy
      *
      * @return array
      */
-    public function add_non_persistent_groups($groups):array
+    public function add_non_persistent_groups($groups): array
     {
 
         $groups = (array)$groups;
 
-        $groups                      = array_fill_keys($groups, true);
+        $groups = array_fill_keys($groups, true);
         $this->non_persistent_groups = array_merge($this->non_persistent_groups, $groups);
 
         return $this->non_persistent_groups;
@@ -264,7 +264,7 @@ class ObjectCacheProxy
      *
      * @return bool False if the contents weren't deleted and true on success
      */
-    public function delete($key, $group = 'default'):bool
+    public function delete($key, $group = 'default'): bool
     {
 
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
@@ -280,7 +280,7 @@ class ObjectCacheProxy
      *
      * @return bool Always returns true
      */
-    public function flush():bool
+    public function flush(): bool
     {
 
         $this->persistent->clear();
@@ -305,7 +305,7 @@ class ObjectCacheProxy
 
 
         $data = $this->get($key, $group);
-        if ( ! $data || ! is_numeric($data)) {
+        if (! $data || ! is_numeric($data)) {
             return false;
         }
 
@@ -431,7 +431,7 @@ class ObjectCacheProxy
     public function switch_to_blog($blog_id)
     {
 
-        if ( ! ($this->key_gen instanceof MultisiteKeyGen)) {
+        if (! ($this->key_gen instanceof MultisiteKeyGen)) {
             return;
         }
         $this->key_gen->switch_to_blog((int)$blog_id);
