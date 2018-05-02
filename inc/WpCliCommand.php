@@ -49,7 +49,7 @@ class WpCliCommand extends \WP_CLI_Command
     {
         $script = md5(microtime()) . '.php';
         $script_filename = trailingslashit(ABSPATH) . $script;
-        $script_url = home_url() . '/wp/' . $script;
+        $script_url = trailingslashit(site_url()) . $script;
         $result = file_put_contents(
             $script_filename,
             '<?php
