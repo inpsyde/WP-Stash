@@ -17,6 +17,15 @@ class StashAdapter
 {
 
     /**
+     * @var int
+     */
+    public $cache_hits = 0;
+    /**
+     * @var int
+     */
+    public $cache_misses = 0;
+
+    /**
      * Implementation of the caching backend
      *
      * @var Pool
@@ -43,6 +52,7 @@ class StashAdapter
      */
     public function __construct(Pool $pool, bool $useInMemoryCache = true)
     {
+
         $this->pool = $pool;
         $this->useInMemoryCache = $useInMemoryCache;
     }
@@ -51,13 +61,14 @@ class StashAdapter
      * Set a cache item if it's not set already.
      *
      * @param string $key
-     * @param mixed $data
-     * @param int $expire
+     * @param mixed  $data
+     * @param int    $expire
      *
      * @return bool
      */
     public function add(string $key, $data, int $expire = 0): bool
     {
+
         if ($this->pool->hasItem($key)) {
             return false;
         }
@@ -69,13 +80,14 @@ class StashAdapter
      * Set/update a cache item.
      *
      * @param string $key
-     * @param mixed $data
-     * @param int $expire
+     * @param mixed  $data
+     * @param int    $expire
      *
      * @return bool
      */
     public function set(string $key, $data, int $expire = 0): bool
     {
+
         try {
             $item = $this->pool->getItem($key);
         } catch (\InvalidArgumentException $exception) {
@@ -101,14 +113,15 @@ class StashAdapter
      * Increase a numeric cache value by the specified amount.
      *
      * @param string $key
-     * @param int $offset
+     * @param int    $offset
      *
      * @return bool
      */
     public function incr(string $key, int $offset = 1): bool
     {
+
         $data = $this->get($key);
-        if (!$data || !is_numeric($data)) {
+        if (! $data || ! is_numeric($data)) {
             return false;
         }
 
@@ -124,6 +137,7 @@ class StashAdapter
      */
     public function get(string $key)
     {
+
         if ($this->useInMemoryCache && isset($this->local[$key])) {
             return $this->local[$key];
         }
@@ -135,6 +149,8 @@ class StashAdapter
 
         // Check to see if the data was a miss.
         if ($item->isMiss()) {
+            $this->cache_misses++;
+
             return false;
         }
 
@@ -143,6 +159,7 @@ class StashAdapter
         if ($this->useInMemoryCache) {
             $this->local[$key] = $result;
         }
+        $this->cache_hits++;
 
         return $result;
     }
@@ -151,14 +168,15 @@ class StashAdapter
      * Decrease a numeric cache item by the specified amount.
      *
      * @param string $key
-     * @param int $offset
+     * @param int    $offset
      *
      * @return bool
      */
     public function decr(string $key, int $offset = 1): bool
     {
+
         $data = $this->get($key);
-        if (!$data || !is_numeric($data)) {
+        if (! $data || ! is_numeric($data)) {
             return false;
         }
 
@@ -174,6 +192,7 @@ class StashAdapter
      */
     public function delete(string $key): bool
     {
+
         if ($this->useInMemoryCache) {
             unset($this->local[$key]);
         }
@@ -186,6 +205,7 @@ class StashAdapter
      */
     public function clear()
     {
+
         $this->local = [];
         $this->pool->clear();
     }
@@ -194,15 +214,16 @@ class StashAdapter
      * Replace a cache item if it exists.
      *
      * @param string $key
-     * @param mixed $data
-     * @param int $expire
+     * @param mixed  $data
+     * @param int    $expire
      *
      * @return bool
      */
     public function replace(string $key, $data, int $expire = 0): bool
     {
+
         // Check to see if the data was a miss.
-        if (!$this->pool->hasItem($key)) {
+        if (! $this->pool->hasItem($key)) {
             return false;
         }
 
@@ -211,6 +232,7 @@ class StashAdapter
 
     public function __destruct()
     {
+
         $this->pool->commit();
         $this->local = [];
     }
