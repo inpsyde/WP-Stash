@@ -86,6 +86,11 @@ class WpCliCommand extends \WP_CLI_Command
 
         unlink($script_filename);
 
+        if(is_wp_error($response)){
+            WP_CLI::error($response->get_error_message());
+            return;
+        }
+
         if ($response['response']['code'] === 200 && isset($response['headers']['WP-Stash'])) {
             WP_CLI::success($response['body']);
         } else {
