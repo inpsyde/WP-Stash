@@ -47,6 +47,7 @@ class WpCliCommand extends \WP_CLI_Command
      */
     public function flush($args, $assoc_args)
     {
+
         $script = md5(microtime()) . '.php';
         $script_filename = trailingslashit(ABSPATH) . $script;
         $script_url = trailingslashit(site_url()) . $script;
@@ -86,8 +87,9 @@ class WpCliCommand extends \WP_CLI_Command
 
         unlink($script_filename);
 
-        if(is_wp_error($response)){
+        if (is_wp_error($response)) {
             WP_CLI::error($response->get_error_message());
+
             return;
         }
 

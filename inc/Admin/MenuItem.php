@@ -31,16 +31,19 @@ class MenuItem
 
     public function get_id(): string
     {
+
         return $this->id;
     }
 
     public function get_title(): string
     {
+
         return $this->title;
     }
 
     public function get_href(): string
     {
+
         return $this->href;
     }
 }

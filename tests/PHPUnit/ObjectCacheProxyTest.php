@@ -151,6 +151,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
 
     public function default_test_data()
     {
+
         $args = [
             // persistent Pool
             \Mockery::mock(StashAdapter::class),

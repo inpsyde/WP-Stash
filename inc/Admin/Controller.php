@@ -17,6 +17,7 @@ class Controller
 
     public function __construct()
     {
+
         $this->cache_flusher = new CacheFlusher();
         $this->admin_bar_menu = new AdminBarMenu([$this->cache_flusher]);
     }
@@ -26,6 +27,7 @@ class Controller
      */
     public function init()
     {
+
         add_action('admin_bar_menu', [$this->admin_bar_menu, 'render']);
         add_action('admin_post_' . CacheFlusher::PURGE_ACTION, [$this->cache_flusher, 'flush_cache']);
     }

@@ -17,7 +17,7 @@ if (! class_exists(WpStash::class)) {
         /** @noinspection PhpIncludeInspection */
         require_once __DIR__ . '/vendor/autoload.php';
     } else {
-        foreach ([ 'admin_notices', 'network_admin_notices' ] as $hook) {
+        foreach (['admin_notices', 'network_admin_notices'] as $hook) {
             add_action($hook, function () {
 
                 $message = 'Could not find a working autoloader for ' . __NAMESPACE__;
@@ -29,4 +29,4 @@ if (! class_exists(WpStash::class)) {
         return;
     }
 }
-( new WpStash(__DIR__ . '/object-cache.php', Config::fromConstants()) )->init();
+(new WpStash(__DIR__ . '/object-cache.php', Config::fromConstants()))->init();

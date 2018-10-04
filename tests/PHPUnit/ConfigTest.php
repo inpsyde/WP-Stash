@@ -17,8 +17,8 @@ class ConfigTest extends BrainMonkeyWpTestCase
      * @dataProvider defaultTestData
      *
      * @param string $className
-     * @param array $driverArgs
-     * @param bool $usingMemCache
+     * @param array  $driverArgs
+     * @param bool   $usingMemCache
      */
     public function testUsingMemoryCache(
         string $className,
@@ -35,8 +35,8 @@ class ConfigTest extends BrainMonkeyWpTestCase
      * @dataProvider defaultTestData
      *
      * @param string $className
-     * @param array $driverArgs
-     * @param bool $usingMemCache
+     * @param array  $driverArgs
+     * @param bool   $usingMemCache
      */
     public function testStashDriverArgs(
         string $className,
@@ -53,8 +53,8 @@ class ConfigTest extends BrainMonkeyWpTestCase
      * @dataProvider defaultTestData
      *
      * @param string $className
-     * @param array $driverArgs
-     * @param bool $usingMemCache
+     * @param array  $driverArgs
+     * @param bool   $usingMemCache
      */
     public function testStashDriverClassName(
         string $className,
@@ -85,8 +85,8 @@ class ConfigTest extends BrainMonkeyWpTestCase
         $this->assertInstanceOf(Config::class, $config);
         $driverArgs = $config->stashDriverArgs();
         $this->assertTrue($expectedDriverArgs == $driverArgs);
-        $this->assertSame((string) $className, $config->stashDriverClassName());
-        $this->assertSame((bool) $usingMemCache, $config->usingMemoryCache());
+        $this->assertSame((string)$className, $config->stashDriverClassName());
+        $this->assertSame((bool)$usingMemCache, $config->usingMemoryCache());
     }
 
     /**
@@ -107,7 +107,7 @@ class ConfigTest extends BrainMonkeyWpTestCase
         $this->assertInstanceOf(Config::class, $config);
         $driverArgs = $config->stashDriverArgs();
         $this->assertTrue($expectedDriverArgs == $driverArgs);
-        $this->assertSame((string) $className, $config->stashDriverClassName());
+        $this->assertSame((string)$className, $config->stashDriverClassName());
 
         $expectedUsingMemCache = $usingMemCache == null
             ? true
@@ -121,6 +121,7 @@ class ConfigTest extends BrainMonkeyWpTestCase
 
     public function wpConfigTestData()
     {
+
         /**
          * Reuse test data from defaultTestData(),
          * once with the arguments serialized, once json_encoded
@@ -130,15 +131,16 @@ class ConfigTest extends BrainMonkeyWpTestCase
         array_walk(
             $defaultData,
             function ($testData, $key) use (&$data) {
+
                 $jsonData = $testData;
                 $jsonData[] = $testData[1];
                 $jsonData[1] = json_encode($testData[1]);
-                $data[$key.'_json'] = $jsonData;
+                $data[$key . '_json'] = $jsonData;
 
                 $serializedData = $testData;
                 $serializedData[] = $testData[1];
                 $serializedData[1] = serialize($serializedData[1]);
-                $data[$key.'_serialized'] = $serializedData;
+                $data[$key . '_serialized'] = $serializedData;
             }
         );
 
@@ -154,6 +156,7 @@ class ConfigTest extends BrainMonkeyWpTestCase
 
     public function defaultTestData(): array
     {
+
         $data = [];
         $data['test_with_args'] = [
             'foo',

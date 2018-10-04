@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
-use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
 use Stash\Exception\RuntimeException;
 use Stash\Interfaces\DriverInterface;
@@ -33,6 +32,7 @@ class WpStash
      */
     public function __construct(string $dropin)
     {
+
         $this->dropinPath = $dropin;
         $this->dropinName = basename($dropin);
     }
@@ -44,6 +44,7 @@ class WpStash
      */
     public static function fromConfig(): ObjectCacheProxy
     {
+
         $config = Config::fromConstants();
 
         $nonPersistentPool = new Pool(new Ephemeral());
@@ -65,6 +66,7 @@ class WpStash
      */
     public static function getDriver(): DriverInterface
     {
+
         static $driver;
         if (null !== $driver) {
             return $driver;
@@ -108,6 +110,7 @@ class WpStash
 
     private static function adminNotice(string $message)
     {
+
         foreach (['admin_notices', 'network_admin_notices'] as $hook) {
             add_action(
                 $hook,
@@ -122,6 +125,7 @@ class WpStash
 
     public static function getCacheKeyGenerator(): KeyGen
     {
+
         if (is_multisite()) {
             return new MultisiteCacheKeyGenerator((int)get_current_blog_id());
         }
@@ -136,6 +140,7 @@ class WpStash
      */
     public function init()
     {
+
         $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropinName;
         if (! file_exists($target)) {
             copy($this->dropinPath, $target);
@@ -154,6 +159,7 @@ class WpStash
 
     private function isWpCli(): bool
     {
+
         return
             defined('WP_CLI')
             && WP_CLI

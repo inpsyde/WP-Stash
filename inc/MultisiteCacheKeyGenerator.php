@@ -17,12 +17,14 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
 
     public function __construct(int $blogId, array $globalGroups = [])
     {
+
         $this->blogId = $blogId;
         $this->globalGroups = $globalGroups;
     }
 
     public function addGlobalGroups($groups): array
     {
+
         $groups = (array)$groups;
 
         $groups = array_fill_keys($groups, true);
@@ -40,6 +42,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
      */
     public function switchToBlog(int $blog_id): bool
     {
+
         $this->blogId = $blog_id;
 
         return true;
@@ -47,6 +50,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
 
     public function create(string $key, string $group): string
     {
+
         $parts = [$group, $key];
         if (! isset($this->globalGroups[$group])) {
             $parts[] = $this->blogId;

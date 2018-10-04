@@ -8,6 +8,7 @@ class CacheKeyGenerator implements KeyGen
 
     public function create(string $key, string $group = 'default'): string
     {
+
         return KeyGen::GLUE . implode(KeyGen::GLUE, [$group, $key]);
     }
 }

@@ -31,6 +31,7 @@ class Config
         array $driverArgs,
         bool $usingMemoryCache
     ) {
+
         $this->driverClassName = $driverClassName;
         $this->driverArgs = $driverArgs;
         $this->usingMemoryCache = $usingMemoryCache;
@@ -52,17 +53,18 @@ class Config
      */
     public static function fromConstants(): self
     {
+
         static $config;
         if (null !== $config) {
             return $config;
         }
 
         $usingMemoryCache = \defined('WP_STASH_IN_MEMORY_CACHE')
-            ? (bool) WP_STASH_IN_MEMORY_CACHE
+            ? (bool)WP_STASH_IN_MEMORY_CACHE
             : true;
 
         $driver = \defined('WP_STASH_DRIVER')
-            ? (string) WP_STASH_DRIVER
+            ? (string)WP_STASH_DRIVER
             : '';
 
         $args = self::getDriverArgs();
@@ -80,7 +82,8 @@ class Config
      */
     private static function getDriverArgs(): array
     {
-        if (!\defined('WP_STASH_DRIVER_ARGS') || !\is_string(WP_STASH_DRIVER_ARGS)) {
+
+        if (! \defined('WP_STASH_DRIVER_ARGS') || ! \is_string(WP_STASH_DRIVER_ARGS)) {
             return [];
         }
         $fromJson = json_decode(WP_STASH_DRIVER_ARGS, true);
@@ -99,16 +102,19 @@ class Config
 
     public function stashDriverClassName(): string
     {
+
         return $this->driverClassName;
     }
 
     public function stashDriverArgs(): array
     {
+
         return $this->driverArgs;
     }
 
     public function usingMemoryCache(): bool
     {
+
         return $this->usingMemoryCache;
     }
 }

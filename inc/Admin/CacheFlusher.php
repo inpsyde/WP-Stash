@@ -9,6 +9,7 @@ class CacheFlusher implements MenuItemProvider
 
     public function get_item(): MenuItem
     {
+
         $referer = '&_wp_http_referer=' . urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
         return new MenuItem(
@@ -23,6 +24,7 @@ class CacheFlusher implements MenuItemProvider
 
     public function flush_cache()
     {
+
         if (! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], self::PURGE_ACTION)) {
             wp_nonce_ays('');
         }
