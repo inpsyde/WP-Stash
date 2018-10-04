@@ -97,16 +97,6 @@ class WpStash
 
                 return $driver;
             }
-            /**
-             * APCu is currently not safe to use on cli.
-             *
-             * @see https://github.com/tedious/Stash/issues/365
-             */
-            if (defined('WP_CLI') && WP_CLI && $driver instanceof Apc) {
-                $driver = new Ephemeral();
-
-                return $driver;
-            }
 
             return $driver;
         }
