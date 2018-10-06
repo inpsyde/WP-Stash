@@ -146,7 +146,7 @@ class WpStash
             if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
                 copy($this->dropinPath, $target);
             } else {
-                symlink($target, $this->dropinPath);
+                symlink($this->dropinPath, $target);
             }
         }
 
