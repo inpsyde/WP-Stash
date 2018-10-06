@@ -143,7 +143,11 @@ class WpStash
 
         $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropinName;
         if (! file_exists($target)) {
-            copy($this->dropinPath, $target);
+            if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+                copy($this->dropinPath, $target);
+            } else {
+                symlink($target, $this->dropinPath);
+            }
         }
 
         if (is_admin()) {
