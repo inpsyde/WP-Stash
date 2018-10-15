@@ -5,6 +5,7 @@
  * Implement `cache_hits` and `cache_misses`  so tools like Query Monitor work with it.
  * Handle possible `WP_Error` in `wp stash flush` cli command
  * Update Stash library to 15.1
+ * Symlink object-cache.php on non-windows environments. Thanks @szepeviktor
 
 #### 1.0.0
  * Initial Release
