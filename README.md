@@ -8,7 +8,45 @@ After installing, it will copy an object-cache.php file to wp-content/ which wil
 
 ## Installation
 
+This plugin is a composer package that will be installed as a `wordpress-muplugin`. As such, there are a few things to note when attempting to install it.
+Usually, MU-Plugins are single PHP files, sometimes accompanied by a subfolder containing more code. Since WP-Stash assumes it's living in a subfolder, it contains a lot of other dev-related stuff in its root folder.
+
+For WP to pick up WP-Stash as a MU-Plugin, you have to do one of the following:
+
+
+### Composer
+
+As a first step, simply require the package via composer
+
 ```composer require inpsyde/wp-stash``` 
+
+Since this package will get installed in a subfolder. WordPress will not automatically load it on its own. The following solutions exist:
+
+#### WP Starter
+
+If you are using the awesome [WP Starter](https://wecodemore.github.io/wpstarter/) package, then everything will work automatically. 
+It contains a MU-Loader which will take care of loading WP Stash
+
+#### WP Must-Use Plugin Loader
+
+[WP Must-Use Plugin Loader](https://github.com/lkwdwrd/wp-muplugin-loader) is a standalone composer package that will take care of loading mu-plugins for you.
+Just require the package and follow the usage instructions from the link to set it up.
+
+### Without Composer
+
+#### Direct upload
+
+You can technically use WP-Stash by simply extracting all files into the `wp-content/mu-plugins/` folder. However, this is pretty dirty and we strongly disencourage doing so.
+Instead, please look at the [WordPress Codex on MU-Plugins](https://codex.wordpress.org/Must_Use_Plugins) to find solutions for loading mu-plugins from folders.
+
+The easiest solution is to add a `wp-content/mu-plugins/wp-stash.php` file and put the following in it:
+
+```php
+<?php
+
+require __DIR__ . '/wp-stash/wp-stash.php';
+```
+
 
 ## Configuration
 
