@@ -6,6 +6,7 @@
  * Handle possible `WP_Error` in `wp stash flush` cli command
  * Update Stash library to 15.1
  * Symlink object-cache.php on non-windows environments. Thanks @szepeviktor
+ * Put object-cache.php in subfolder so that the root folder contains only 1 php file
 
 #### 1.0.0
  * Initial Release

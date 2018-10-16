@@ -29,4 +29,4 @@ if (! class_exists(WpStash::class)) {
         return;
     }
 }
-(new WpStash(__DIR__ . '/object-cache.php', Config::fromConstants()))->init();
+(new WpStash(__DIR__ . '/dropin/object-cache.php'))->init();
