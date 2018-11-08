@@ -51,7 +51,7 @@ final class WpStash
     {
         static $instance;
         if(!$instance){
-            $config = Config::create();
+            $config = ConfigBuilder::create();
             $instance = new self(__DIR__.'/dropin/object-cache.php', $config);
             $instance->init();
         }
