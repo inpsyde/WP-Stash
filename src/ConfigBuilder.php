@@ -101,8 +101,9 @@ final class ConfigBuilder
         // Detect if args are base64 encoded and decode them
         // This is required because setting configuration via e.G. env vars
         // does not allow to add " which invalidates JSON/serialized strings
-        if( base64_encode(base64_decode($args)) === $args ){
-            $args = base64_decode($args);
+        $decoded = base64_decode($args);
+        if (base64_encode($decoded) === $args) {
+            $args = $decoded;
         }
 
         $fromJson = json_decode($args, true);
