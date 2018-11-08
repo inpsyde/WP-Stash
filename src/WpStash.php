@@ -39,7 +39,7 @@ final class WpStash
     private function __construct(string $dropin, Config $config)
     {
         $this->config = $config;
-        $this->dropinPath = $dropin;
+        $this->dropinPath = realpath($dropin);
         $this->dropinName = basename($dropin);
     }
 
@@ -52,7 +52,7 @@ final class WpStash
         static $instance;
         if(!$instance){
             $config = ConfigBuilder::create();
-            $instance = new self(__DIR__.'/dropin/object-cache.php', $config);
+            $instance = new self(__DIR__.'/../dropin/object-cache.php', $config);
             $instance->init();
         }
 
@@ -112,6 +112,7 @@ final class WpStash
             if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
                 copy($this->dropinPath, $target);
             } else {
+                echo $target;
                 symlink($this->dropinPath, $target);
             }
         }
