@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Stash\Driver\Ephemeral;
-use Stash\Interfaces\DriverInterface;
 
 /**
  * Class ConfigBuilder
@@ -97,12 +96,11 @@ final class ConfigBuilder
      */
     private static function buildDriverArgs(string $args): array
     {
-
         // Detect if args are base64 encoded and decode them
         // This is required because setting configuration via e.G. env vars
         // does not allow to add " which invalidates JSON/serialized strings
-        $decoded = base64_decode($args);
-        if (base64_encode($decoded) === $args) {
+        $decoded = base64_decode(rtrim($args, '='), true);
+        if ($decoded !== false) {
             $args = $decoded;
         }
 
