@@ -12,7 +12,7 @@
 
 namespace Inpsyde\WpStash;
 
-if (file_exists(__DIR__.'/vendor/autoload.php')) {
+if (!class_exists(WpStash::class) && file_exists(__DIR__.'/vendor/autoload.php')) {
     /** @noinspection PhpIncludeInspection */
     require_once __DIR__.'/vendor/autoload.php';
 } else {
