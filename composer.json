@@ -4,10 +4,11 @@
     "license": "GPL-2.0+",
     "type": "wordpress-muplugin",
     "require": {
+        "php": ">=7.0",
         "tedivm/stash": "^0.15"
     },
     "require-dev": {
-        "phpunit/phpunit": "~7",
+        "phpunit/phpunit": "~6",
         "brain/monkey": "^2",
         "inpsyde/php-coding-standards": "^0.12",
         "squizlabs/php_codesniffer": "~3.2.3"
