@@ -1,8 +1,13 @@
 <?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
-namespace Inpsyde\WpStash;
+namespace Inpsyde\WpStash\Generator;
 
+/**
+ * Class CacheKeyGenerator
+ *
+ * @package Inpsyde\WpStash\Generator
+ */
 class CacheKeyGenerator implements KeyGen
 {
 

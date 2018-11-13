@@ -112,7 +112,7 @@ final class ConfigBuilder
 
         $fromUnserialize = unserialize($args, ['allowed_classes' => false]);
 
-        if (\is_array($fromJson)) {
+        if (\is_array($fromUnserialize)) {
             return $fromUnserialize;
         }
 

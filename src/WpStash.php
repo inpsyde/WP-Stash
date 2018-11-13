@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Inpsyde\WpStash\Generator\KeyGen;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
 use Stash\Pool;
@@ -94,10 +95,10 @@ final class WpStash
     public static function getCacheKeyGenerator(): KeyGen
     {
         if (is_multisite()) {
-            return new MultisiteCacheKeyGenerator((int) get_current_blog_id());
+            return new Generator\MultisiteCacheKeyGenerator((int) get_current_blog_id());
         }
 
-        return new CacheKeyGenerator();
+        return new Generator\CacheKeyGenerator();
     }
 
     /**
@@ -123,7 +124,7 @@ final class WpStash
         }
 
         if ($this->isWpCli()) {
-            \WP_CLI::add_command('stash', WpCliCommand::class);
+            \WP_CLI::add_command('stash', Cli\WpCliCommand::class);
         }
     }
 

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Inpsyde\WpStash\Generator\KeyGen;
+
 class ObjectCacheProxy
 {
 
@@ -14,6 +16,7 @@ class ObjectCacheProxy
      * @since  WP 2.0.0
      */
     public $cache_misses = 0;
+
     /**
      * Amount of times the APCu cache did not have the request in cache
      *
@@ -22,6 +25,7 @@ class ObjectCacheProxy
      * @since  WP 2.0.0
      */
     public $apcu_cache_misses = 0;
+
     /**
      * List of global groups
      *
@@ -30,6 +34,7 @@ class ObjectCacheProxy
      * @since  WP 3.0.0
      */
     protected $global_groups = [];
+
     /**
      * Holds the local cached objects
      *
@@ -38,6 +43,7 @@ class ObjectCacheProxy
      * @since  2.0.0
      */
     private $cache = [];
+
     /**
      * The amount of times the cache data was already stored in the cache.
      *
@@ -60,10 +66,12 @@ class ObjectCacheProxy
      * @var StashAdapter
      */
     private $non_persistent;
+
     /**
      * @var StashAdapter
      */
     private $persistent;
+
     /**
      * @var KeyGen
      */
@@ -76,7 +84,7 @@ class ObjectCacheProxy
      *
      * @param StashAdapter $non_persistent
      * @param StashAdapter $persistent
-     * @param KeyGen       $key_gen
+     * @param KeyGen $key_gen
      */
     public function __construct(
         StashAdapter $non_persistent,
@@ -101,7 +109,6 @@ class ObjectCacheProxy
      */
     public function __get($name)
     {
-
         return $this->$name;
     }
 
@@ -111,14 +118,13 @@ class ObjectCacheProxy
      * @since  WP 4.0.0
      * @access public
      *
-     * @param string $name  Property to set.
-     * @param mixed  $value Property value.
+     * @param string $name Property to set.
+     * @param mixed $value Property value.
      *
      * @return mixed Newly-set property.
      */
     public function __set($name, $value)
     {
-
         return $this->$name = $value;
     }
 
@@ -134,7 +140,6 @@ class ObjectCacheProxy
      */
     public function __isset($name)
     {
-
         return isset($this->$name);
     }
 
@@ -148,7 +153,6 @@ class ObjectCacheProxy
      */
     public function __unset($name)
     {
-
         unset($this->$name);
     }
 
@@ -161,24 +165,23 @@ class ObjectCacheProxy
      *
      * @since WP 2.0.0
      *
-     * @param int|string $key    What to call the contents in the cache
-     * @param mixed      $data   The contents to store in the cache
-     * @param string     $group  Where to group the cache contents
-     * @param int        $expire When to expire the cache contents
+     * @param int|string $key What to call the contents in the cache
+     * @param mixed $data The contents to store in the cache
+     * @param string $group Where to group the cache contents
+     * @param int $expire When to expire the cache contents
      *
      * @return bool False if cache key and group already exist, true on success
      */
     public function add($key, $data, $group = 'default', $expire = 0)
     {
-
         if (wp_suspend_cache_addition()) {
             return false;
         }
 
-        $cache_key = $this->key_gen->create((string)$key, (string)$group);
+        $cache_key = $this->key_gen->create((string) $key, (string) $group);
 
         return $this->choose_pool($group)
-                    ->add($cache_key, $data, $expire);
+            ->add($cache_key, $data, $expire);
     }
 
     /**
@@ -188,7 +191,6 @@ class ObjectCacheProxy
      */
     private function choose_pool($group): StashAdapter
     {
-
         if (isset($this->non_persistent_groups[$group])) {
             return $this->non_persistent;
         }
@@ -205,8 +207,7 @@ class ObjectCacheProxy
      */
     public function add_global_groups($groups): bool
     {
-
-        if (! $this->key_gen instanceof MultisiteKeyGen) {
+        if (! $this->key_gen instanceof Generator\MultisiteKeyGen) {
             return false;
         }
         $this->key_gen->addGlobalGroups($groups);
@@ -225,8 +226,7 @@ class ObjectCacheProxy
      */
     public function add_non_persistent_groups($groups): array
     {
-
-        $groups = (array)$groups;
+        $groups = (array) $groups;
 
         $groups = array_fill_keys($groups, true);
         $this->non_persistent_groups = array_merge($this->non_persistent_groups, $groups);
@@ -239,17 +239,16 @@ class ObjectCacheProxy
      *
      * @since WP 3.3.0
      *
-     * @param int|string $key    The cache key to increment
-     * @param int        $offset The amount by which to decrement the item's value. Default is 1.
-     * @param string     $group  The group the key is in.
+     * @param int|string $key The cache key to increment
+     * @param int $offset The amount by which to decrement the item's value. Default is 1.
+     * @param string $group The group the key is in.
      *
      * @return false|int False on failure, the item's new value on success.
      */
     public function decr($key, $offset = 1, $group = 'default')
     {
-
         return $this->choose_pool($group)
-                    ->decr($key, $offset);
+            ->decr($key, $offset);
     }
 
     /**
@@ -259,18 +258,17 @@ class ObjectCacheProxy
      *
      * @since WP 2.0.0
      *
-     * @param int|string $key   What the contents in the cache are called
-     * @param string     $group Where the cache contents are grouped
+     * @param int|string $key What the contents in the cache are called
+     * @param string $group Where the cache contents are grouped
      *
      * @return bool False if the contents weren't deleted and true on success
      */
     public function delete($key, $group = 'default'): bool
     {
-
-        $cache_key = $this->key_gen->create((string)$key, (string)$group);
+        $cache_key = $this->key_gen->create((string) $key, (string) $group);
 
         return $this->choose_pool($group)
-                    ->delete($cache_key);
+            ->delete($cache_key);
     }
 
     /**
@@ -282,7 +280,6 @@ class ObjectCacheProxy
      */
     public function flush(): bool
     {
-
         $this->persistent->clear();
         $this->non_persistent->clear();
 
@@ -294,15 +291,14 @@ class ObjectCacheProxy
      *
      * @since WP 3.3.0
      *
-     * @param int|string $key    The cache key to increment
-     * @param int        $offset The amount by which to increment the item's value. Default is 1.
-     * @param string     $group  The group the key is in.
+     * @param int|string $key The cache key to increment
+     * @param int $offset The amount by which to increment the item's value. Default is 1.
+     * @param string $group The group the key is in.
      *
      * @return false|int False on failure, the item's new value on success.
      */
     public function incr($key, $offset = 1, $group = 'default')
     {
-
         $data = $this->get($key, $group);
         if (! $data || ! is_numeric($data)) {
             return false;
@@ -322,20 +318,19 @@ class ObjectCacheProxy
      *
      * @since WP 2.0.0
      *
-     * @param int|string $key   What the contents in the cache are called
-     * @param string     $group Where the cache contents are grouped
-     * @param bool       $force Whether to force a refetch rather than relying on the local cache (default is false)
+     * @param int|string $key What the contents in the cache are called
+     * @param string $group Where the cache contents are grouped
+     * @param bool $force Whether to force a refetch rather than relying on the local cache (default is false)
      *
      * @return bool|mixed False on failure to retrieve contents or the cache
      *        contents on success
      */
     public function get($key, $group = 'default', $force = false, &$found = null)
     {
-
-        $cache_key = $this->key_gen->create((string)$key, (string)$group);
+        $cache_key = $this->key_gen->create((string) $key, (string) $group);
 
         $result = $this->choose_pool($group)
-                       ->get($cache_key);
+            ->get($cache_key);
 
         $this->cache_hits = $this->persistent->cache_hits + $this->non_persistent->cache_hits;
         $this->cache_misses = $this->persistent->cache_misses + $this->non_persistent->cache_misses;
@@ -357,20 +352,19 @@ class ObjectCacheProxy
      *
      * @since WP 2.0.0
      *
-     * @param int|string $key    What to call the contents in the cache
-     * @param mixed      $data   The contents to store in the cache
-     * @param string     $group  Where to group the cache contents
-     * @param int        $expire Not Used
+     * @param int|string $key What to call the contents in the cache
+     * @param mixed $data The contents to store in the cache
+     * @param string $group Where to group the cache contents
+     * @param int $expire Not Used
      *
      * @return bool Always returns true
      */
     public function set($key, $data, $group = 'default', $expire = 0)
     {
-
-        $cache_key = $this->key_gen->create((string)$key, (string)$group);
+        $cache_key = $this->key_gen->create((string) $key, (string) $group);
 
         return $this->choose_pool($group)
-                    ->set($cache_key, $data, $expire);
+            ->set($cache_key, $data, $expire);
     }
 
     /**
@@ -379,20 +373,19 @@ class ObjectCacheProxy
      * @since WP 2.0.0
      * @see   WP_Object_Cache::set()
      *
-     * @param int|string $key    What to call the contents in the cache
-     * @param mixed      $data   The contents to store in the cache
-     * @param string     $group  Where to group the cache contents
-     * @param int        $expire When to expire the cache contents
+     * @param int|string $key What to call the contents in the cache
+     * @param mixed $data The contents to store in the cache
+     * @param string $group Where to group the cache contents
+     * @param int $expire When to expire the cache contents
      *
      * @return bool False if not exists, true if contents were replaced
      */
     public function replace($key, $data, $group = 'default', $expire = 0)
     {
-
-        $cache_key = $this->key_gen->create((string)$key, (string)$group);
+        $cache_key = $this->key_gen->create((string) $key, (string) $group);
 
         return $this->choose_pool($group)
-                    ->replace($cache_key, $data, $expire);
+            ->replace($cache_key, $data, $expire);
     }
 
     /**
@@ -405,7 +398,6 @@ class ObjectCacheProxy
      */
     public function stats()
     {
-
         $non_persistent_groups = implode(' ,', array_keys($this->non_persistent_groups));
 
         echo "<p>";
@@ -415,10 +407,10 @@ class ObjectCacheProxy
         echo "</p>";
         echo '<ul>';
         foreach ($this->cache as $group => $cache) {
-            echo "<li><strong>Group:</strong> $group - ( " . number_format(
+            echo "<li><strong>Group:</strong> $group - ( ".number_format(
                     strlen(serialize($cache)) / 1024,
                     2
-                ) . 'k )</li>';
+                ).'k )</li>';
         }
         echo '</ul>';
     }
@@ -434,10 +426,9 @@ class ObjectCacheProxy
      */
     public function switch_to_blog($blog_id)
     {
-
-        if (! ($this->key_gen instanceof MultisiteKeyGen)) {
+        if (! ($this->key_gen instanceof Generator\MultisiteKeyGen)) {
             return;
         }
-        $this->key_gen->switchToBlog((int)$blog_id);
+        $this->key_gen->switchToBlog((int) $blog_id);
     }
 }

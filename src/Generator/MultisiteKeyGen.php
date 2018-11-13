@@ -1,8 +1,13 @@
 <?php // -*- coding: utf-8 -*-
 declare(strict_types=1);
 
-namespace Inpsyde\WpStash;
+namespace Inpsyde\WpStash\Generator;
 
+/**
+ * Interface MultisiteKeyGen
+ *
+ * @package Inpsyde\WpStash\Generator
+ */
 interface MultisiteKeyGen extends KeyGen
 {
 
