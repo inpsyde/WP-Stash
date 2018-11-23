@@ -1,4 +1,4 @@
-<?php // -*- coding: utf-8 -*-
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash\Admin;
 
@@ -7,16 +7,15 @@ class CacheFlusher implements MenuItemProvider
 
     const PURGE_ACTION = 'purge_cache';
 
-    public function get_item(): MenuItem
+    public function item(): MenuItem
     {
-
-        $referer = '&_wp_http_referer=' . urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+        $referer = '&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
         return new MenuItem(
             'wp-stash-flush',
             'Flush Object Cache',
             wp_nonce_url(
-                admin_url('admin-post.php?action=' . self::PURGE_ACTION . $referer),
+                admin_url('admin-post.php?action='.self::PURGE_ACTION.$referer),
                 self::PURGE_ACTION
             )
         );
@@ -24,7 +23,6 @@ class CacheFlusher implements MenuItemProvider
 
     public function flush_cache()
     {
-
         if (! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], self::PURGE_ACTION)) {
             wp_nonce_ays('');
         }

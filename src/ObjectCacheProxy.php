@@ -1,10 +1,17 @@
-<?php // -*- coding: utf-8 -*-
-declare(strict_types=1);
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
 
+// because WordPress...
+// phpcs:disable
+
+/**
+ * Class ObjectCacheProxy
+ *
+ * @package Inpsyde\WpStash
+ */
 class ObjectCacheProxy
 {
 
@@ -401,16 +408,16 @@ class ObjectCacheProxy
         $non_persistent_groups = implode(' ,', array_keys($this->non_persistent_groups));
 
         echo "<p>";
-        echo "<strong>Cache Hits:</strong> {$this->cache_hits}<br />";
-        echo "<strong>Cache Misses:</strong> {$this->cache_misses}<br />";
-        echo "<strong>Non persistent Groups:</strong> {$non_persistent_groups}<br />";
+        printf("<strong>Cache Hits:</strong> %s <br />", esc_html($this->cache_hits));
+        printf("<strong>Cache Misses:</strong> %s <br />", esc_html($this->cache_misses));
+        printf("<strong>Non persistent Groups:</strong> %s <br />", esc_html($non_persistent_groups));
         echo "</p>";
         echo '<ul>';
         foreach ($this->cache as $group => $cache) {
-            echo "<li><strong>Group:</strong> $group - ( ".number_format(
-                    strlen(serialize($cache)) / 1024,
-                    2
-                ).'k )</li>';
+            printf(
+                "<li><strong>Group:</strong> %s k</li>",
+                $group - number_format(strlen(serialize($cache)) / 1024, 2)
+            );
         }
         echo '</ul>';
     }

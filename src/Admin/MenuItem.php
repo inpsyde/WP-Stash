@@ -1,4 +1,4 @@
-<?php // -*- coding: utf-8 -*-
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash\Admin;
 
@@ -9,10 +9,12 @@ class MenuItem
      * @var string
      */
     private $id;
+
     /**
      * @var string
      */
     private $title;
+
     /**
      * @var string
      */
@@ -29,21 +31,18 @@ class MenuItem
         $this->href = $href;
     }
 
-    public function get_id(): string
+    public function id(): string
     {
-
         return $this->id;
     }
 
-    public function get_title(): string
+    public function title(): string
     {
-
         return $this->title;
     }
 
-    public function get_href(): string
+    public function href(): string
     {
-
         return $this->href;
     }
 }

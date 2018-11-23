@@ -1,9 +1,13 @@
-<?php // -*- coding: utf-8 -*-
-declare(strict_types=1);
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash\Cli;
 
 use WP_CLI;
+
+// phpcs:disable Inpsyde.CodeQuality.LineLength.TooLong
+// phpcs:disable Inpsyde.CodeQuality.NoElse.ElseFound
+// phpcs:disable Inpsyde.CodeQuality.FunctionBodyStart.WrongForSingleLineDeclaration
+// phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
 
 /**
  * Manage WP Stash.
@@ -45,14 +49,14 @@ class WpCliCommand extends \WP_CLI_Command
      *
      * @throws WP_CLI\ExitException
      */
-    public function flush($args, $assoc_args)
+    public function flush($args, $assocArgs)
     {
 
         $script = md5(microtime()) . '.php';
-        $script_filename = trailingslashit(ABSPATH) . $script;
-        $script_url = trailingslashit(site_url()) . $script;
+        $scriptFilename = trailingslashit(ABSPATH) . $script;
+        $scriptUrl = trailingslashit(site_url()) . $script;
         $result = file_put_contents(
-            $script_filename,
+            $scriptFilename,
             '<?php
 		if(! file_exists( "wp-load.php" ) ){
 			http_response_code( 500 );
@@ -83,9 +87,9 @@ class WpCliCommand extends \WP_CLI_Command
         // Fix potential SSL_shutdown:shutdown while in init in nginx
         add_filter('https_ssl_verify', '__return_false');
 
-        $response = wp_remote_post($script_url);
+        $response = wp_remote_post($scriptUrl);
 
-        unlink($script_filename);
+        unlink($scriptFilename);
 
         if (is_wp_error($response)) {
             WP_CLI::error($response->get_error_message());

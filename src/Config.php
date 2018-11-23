@@ -1,5 +1,4 @@
-<?php // -*- coding: utf-8 -*-
-declare(strict_types=1);
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash;
 
@@ -34,6 +33,7 @@ class Config
         array $driverArgs,
         bool $usingMemoryCache
     ) {
+
         $this->driverClassName = $this->prepareDriverClass($driverClassName);
         $this->driverArgs = $driverArgs;
         $this->usingMemoryCache = $usingMemoryCache;
@@ -54,6 +54,7 @@ class Config
             return Ephemeral::class;
         }
 
+        // phpcs:disable NeutronStandard.Functions.DisallowCallUserFunc.CallUserFunc
         if (! in_array(DriverInterface::class, class_implements($className), true)
             || ! call_user_func([$className, 'isAvailable'])
         ) {

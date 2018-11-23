@@ -105,7 +105,7 @@ class ObjectCacheProxyTest extends AbstractUnitTestcase
                 ->once();
         }
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
-        $result = $testee->add_global_groups($globalGroups);
+        $result = $testee->addGlobalGroups($globalGroups);
 
         if ($compatible) {
             $this->assertTrue($result);
@@ -139,7 +139,7 @@ class ObjectCacheProxyTest extends AbstractUnitTestcase
         $expire
     ) {
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
-        $result = $testee->add_non_persistent_groups($nonPersistentGroups);
+        $result = $testee->addNonPersistentGroups($nonPersistentGroups);
         $this->assertSame(array_fill_keys($nonPersistentGroups, true), $result);
     }
 

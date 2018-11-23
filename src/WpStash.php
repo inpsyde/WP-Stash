@@ -1,5 +1,4 @@
-<?php // -*- coding: utf-8 -*-
-declare(strict_types=1);
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash;
 
@@ -51,7 +50,7 @@ final class WpStash
     public static function instance(): self
     {
         static $instance;
-        if(!$instance){
+        if (! $instance) {
             $config = ConfigBuilder::create();
             $instance = new self(__DIR__.'/../dropin/object-cache.php', $config);
             $instance->init();
@@ -61,19 +60,21 @@ final class WpStash
     }
 
     /**
-     * Spawn a new cache handler
+     * Spawn a new cache handler.
+     *
+     * @throws \Stash\Exception\RuntimeException
      *
      * @return ObjectCacheProxy
      */
     public function objectCacheProxy(): ObjectCacheProxy
     {
         $nonPersistentPool = new Pool(new Ephemeral());
-        $persistentPool = new Pool($this->getDriver());
+        $persistentPool = new Pool($this->driver());
 
         return new ObjectCacheProxy(
             new StashAdapter($nonPersistentPool, false),
             new StashAdapter($persistentPool, $this->config->usingMemoryCache()),
-            $this->getCacheKeyGenerator()
+            $this->cacheKeyGenerator()
         );
     }
 
@@ -84,7 +85,7 @@ final class WpStash
      *
      * @return DriverInterface
      */
-    public function getDriver(): DriverInterface
+    public function driver(): DriverInterface
     {
         $driver = $this->config->stashDriverClassName();
         $args = $this->config->stashDriverArgs();
@@ -92,7 +93,7 @@ final class WpStash
         return new $driver($args);
     }
 
-    public static function getCacheKeyGenerator(): KeyGen
+    public static function cacheKeyGenerator(): KeyGen
     {
         if (is_multisite()) {
             return new Generator\MultisiteCacheKeyGenerator((int) get_current_blog_id());
@@ -108,14 +109,7 @@ final class WpStash
      */
     public function init()
     {
-        $target = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$this->dropinName;
-        if (! file_exists($target)) {
-            if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-                copy($this->dropinPath, $target);
-            } else {
-                symlink($this->dropinPath, $target);
-            }
-        }
+        $this->ensureDropin();
 
         if (is_admin()) {
             $admin = new Admin\Controller();
@@ -126,6 +120,20 @@ final class WpStash
         if ($this->isWpCli()) {
             \WP_CLI::add_command('stash', Cli\WpCliCommand::class);
         }
+    }
+
+    private function ensureDropin(): bool
+    {
+        $target = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$this->dropinName;
+        if (file_exists($target)) {
+            return true;
+        }
+
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+            return copy($this->dropinPath, $target);
+        }
+
+        return symlink($this->dropinPath, $target);
     }
 
     private function isWpCli(): bool

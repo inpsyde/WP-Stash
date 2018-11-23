@@ -1,5 +1,4 @@
-<?php // -*- coding: utf-8 -*-
-declare(strict_types=1);
+<?php declare(strict_types=1); // -*- coding: utf-8 -*-
 
 namespace Inpsyde\WpStash;
 
@@ -110,6 +109,7 @@ final class ConfigBuilder
             return $fromJson;
         }
 
+        // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
         $fromUnserialize = unserialize($args, ['allowed_classes' => false]);
 
         if (\is_array($fromUnserialize)) {
