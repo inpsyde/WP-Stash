@@ -5,7 +5,7 @@ namespace Inpsyde\WpStash\Tests\Unit;
 use Brain\Monkey;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractUnitTestcase extends TestCase
+abstract class AbstractUnitTestCase extends TestCase
 {
 
     /**
