@@ -7,7 +7,7 @@ use Inpsyde\WpStash\ConfigBuilder;
 use Stash\Driver\Ephemeral;
 use Stash\Driver\FileSystem;
 
-class ConfigBuilderTest extends AbstractUnitTestcase
+class ConfigBuilderTest extends AbstractUnitTestCase
 {
 
     public function testBasic()

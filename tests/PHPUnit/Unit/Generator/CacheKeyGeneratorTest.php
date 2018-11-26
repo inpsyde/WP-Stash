@@ -3,9 +3,9 @@
 namespace Inpsyde\WpStash\Tests\Unit\Generator;
 
 use Inpsyde\WpStash\Generator\CacheKeyGenerator;
-use Inpsyde\WpStash\Tests\Unit\AbstractUnitTestcase;
+use Inpsyde\WpStash\Tests\Unit\AbstractUnitTestCase;
 
-class CacheKeyGeneratorTest extends AbstractUnitTestcase
+class CacheKeyGeneratorTest extends AbstractUnitTestCase
 {
 
     public function testBasic()
