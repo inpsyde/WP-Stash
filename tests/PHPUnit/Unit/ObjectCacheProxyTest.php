@@ -1,18 +1,15 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: biont
- * Date: 28.08.17
- * Time: 10:11
- */
+<?php declare(strict_types=1); # -*- coding: utf-8 -*-
 
-namespace Inpsyde\WpStash;
+namespace Inpsyde\WpStash\Tests\Unit;
 
 use Brain\Monkey\Functions;
+use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Generator\MultisiteKeyGen;
+use Inpsyde\WpStash\ObjectCacheProxy;
+use Inpsyde\WpStash\StashAdapter;
 use Mockery\MockInterface;
-use MonkeryTestCase\BrainMonkeyWpTestCase;
 
-class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
+class ObjectCacheProxyTest extends AbstractUnitTestcase
 {
 
     /**
@@ -20,7 +17,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
      *
      * @param StashAdapter $persistentPool
      * @param StashAdapter $nonPersistentPool
-     * @param KeyGen       $keyGen
+     * @param KeyGen $keyGen
      * @param              $nonPersistentGroups
      * @param              $globalGroups
      * @param              $key
@@ -39,9 +36,8 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $group,
         $expire
     ) {
-
-        $suspend = (bool)random_int(0, 1);
-        $exists = (bool)random_int(0, 1);
+        $suspend = (bool) random_int(0, 1);
+        $exists = (bool) random_int(0, 1);
 
         Functions\expect('wp_suspend_cache_addition')
             ->once()
@@ -52,16 +48,16 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
              * @var MockInterface $keyGen
              */
             $keyGen->shouldReceive('create')
-                   ->once()
-                   ->andReturn($key);
+                ->once()
+                ->andReturn($key);
             if (\in_array($group, $nonPersistentGroups, true)) {
                 $nonPersistentPool->shouldReceive('add')
-                                  ->once()
-                                  ->andReturn(! $exists);
+                    ->once()
+                    ->andReturn(! $exists);
             } else {
                 $persistentPool->shouldReceive('add')
-                               ->once()
-                               ->andReturn(! $exists);
+                    ->once()
+                    ->andReturn(! $exists);
             }
         }
 
@@ -84,7 +80,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
      *
      * @param StashAdapter $persistentPool
      * @param StashAdapter $nonPersistentPool
-     * @param KeyGen       $keyGen
+     * @param KeyGen $keyGen
      * @param              $nonPersistentGroups
      * @param              $globalGroups
      * @param              $key
@@ -103,11 +99,10 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $group,
         $expire
     ) {
-
-        $compatible = ($keyGen instanceof MultisiteKeyGen);
+        $compatible = $keyGen instanceof MultisiteKeyGen;
         if ($compatible) {
             $keyGen->shouldReceive('add_global_groups')
-                   ->once();
+                ->once();
         }
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
         $result = $testee->add_global_groups($globalGroups);
@@ -124,7 +119,7 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
      *
      * @param StashAdapter $persistentPool
      * @param StashAdapter $nonPersistentPool
-     * @param KeyGen       $keyGen
+     * @param KeyGen $keyGen
      * @param              $nonPersistentGroups
      * @param              $globalGroups
      * @param              $key
@@ -143,7 +138,6 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
         $group,
         $expire
     ) {
-
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
         $result = $testee->add_non_persistent_groups($nonPersistentGroups);
         $this->assertSame(array_fill_keys($nonPersistentGroups, true), $result);
@@ -151,7 +145,6 @@ class ObjectCacheProxyTest extends BrainMonkeyWpTestCase
 
     public function default_test_data()
     {
-
         $args = [
             // persistent Pool
             \Mockery::mock(StashAdapter::class),

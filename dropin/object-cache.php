@@ -15,19 +15,18 @@
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::add()
  *
- * @param int|string $key    The cache key to use for retrieval later
- * @param mixed      $data   The data to add to the cache store
- * @param string     $group  The group to add the cache to
- * @param int        $expire When the cache data should be expired
+ * @param int|string $key The cache key to use for retrieval later
+ * @param mixed $data The data to add to the cache store
+ * @param string $group The group to add the cache to
+ * @param int $expire When the cache data should be expired
  *
  * @return bool False if cache key and group already exist, true on success
  */
 function wp_cache_add($key, $data, $group = '', $expire = 0)
 {
-
     global $wp_object_cache;
 
-    return $wp_object_cache->add($key, $data, $group, (int)$expire);
+    return $wp_object_cache->add($key, $data, $group, (int) $expire);
 }
 
 /**
@@ -44,7 +43,6 @@ function wp_cache_add($key, $data, $group = '', $expire = 0)
  */
 function wp_cache_close()
 {
-
     return true;
 }
 
@@ -55,15 +53,14 @@ function wp_cache_close()
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::decr()
  *
- * @param int|string $key    The cache key to increment
- * @param int        $offset The amount by which to decrement the item's value. Default is 1.
- * @param string     $group  The group the key is in.
+ * @param int|string $key The cache key to increment
+ * @param int $offset The amount by which to decrement the item's value. Default is 1.
+ * @param string $group The group the key is in.
  *
  * @return false|int False on failure, the item's new value on success.
  */
 function wp_cache_decr($key, $offset = 1, $group = '')
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->decr($key, $offset, $group);
@@ -76,14 +73,13 @@ function wp_cache_decr($key, $offset = 1, $group = '')
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::delete()
  *
- * @param int|string $key   What the contents in the cache are called
- * @param string     $group Where the cache contents are grouped
+ * @param int|string $key What the contents in the cache are called
+ * @param string $group Where the cache contents are grouped
  *
  * @return bool True on successful removal, false on failure
  */
 function wp_cache_delete($key, $group = '')
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->delete($key, $group);
@@ -100,7 +96,6 @@ function wp_cache_delete($key, $group = '')
  */
 function wp_cache_flush()
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->flush();
@@ -113,17 +108,16 @@ function wp_cache_flush()
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::get()
  *
- * @param int|string $key    What the contents in the cache are called
- * @param string     $group  Where the cache contents are grouped
- * @param bool       $force  Whether to force an update of the local cache from the persistent cache (default is false)
- * @param bool       &$found Whether key was found in the cache. Disambiguates a return of false, a storable value.
+ * @param int|string $key What the contents in the cache are called
+ * @param string $group Where the cache contents are grouped
+ * @param bool $force Whether to force an update of the local cache from the persistent cache (default is false)
+ * @param bool &$found Whether key was found in the cache. Disambiguates a return of false, a storable value.
  *
  * @return bool|mixed False on failure to retrieve contents or the cache
  *        contents on success
  */
 function wp_cache_get($key, $group = '', $force = false, &$found = null)
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->get($key, $group, $force, $found);
@@ -136,15 +130,14 @@ function wp_cache_get($key, $group = '', $force = false, &$found = null)
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::incr()
  *
- * @param int|string $key    The cache key to increment
- * @param int        $offset The amount by which to increment the item's value. Default is 1.
- * @param string     $group  The group the key is in.
+ * @param int|string $key The cache key to increment
+ * @param int $offset The amount by which to increment the item's value. Default is 1.
+ * @param string $group The group the key is in.
  *
  * @return false|int False on failure, the item's new value on success.
  */
 function wp_cache_incr($key, $offset = 1, $group = '')
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->incr($key, $offset, $group);
@@ -155,11 +148,11 @@ function wp_cache_incr($key, $offset = 1, $group = '')
  */
 function wp_cache_init()
 {
-
-    if (! class_exists(\Inpsyde\WpStash\WpStash::class)) {
-        require_once WP_CONTENT_DIR . '/mu-plugins/wp-stash/vendor/autoload.php';
+    $autoloadFile = WP_CONTENT_DIR.'/mu-plugins/wp-stash/vendor/autoload.php';
+    if (file_exists($autoloadFile)) {
+        require_once $autoloadFile;
     }
-    $GLOBALS['wp_object_cache'] = \Inpsyde\WpStash\WpStash::fromConfig();
+    $GLOBALS['wp_object_cache'] = \Inpsyde\WpStash\WpStash::instance()->objectCacheProxy();
 }
 
 /**
@@ -169,19 +162,18 @@ function wp_cache_init()
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::replace()
  *
- * @param int|string $key    What to call the contents in the cache
- * @param mixed      $data   The contents to store in the cache
- * @param string     $group  Where to group the cache contents
- * @param int        $expire When to expire the cache contents
+ * @param int|string $key What to call the contents in the cache
+ * @param mixed $data The contents to store in the cache
+ * @param string $group Where to group the cache contents
+ * @param int $expire When to expire the cache contents
  *
  * @return bool False if not exists, true if contents were replaced
  */
 function wp_cache_replace($key, $data, $group = '', $expire = 0)
 {
-
     global $wp_object_cache;
 
-    return $wp_object_cache->replace($key, $data, $group, (int)$expire);
+    return $wp_object_cache->replace($key, $data, $group, (int) $expire);
 }
 
 /**
@@ -192,19 +184,18 @@ function wp_cache_replace($key, $data, $group = '', $expire = 0)
  * @uses  $wp_object_cache Object Cache Class
  * @see   WP_Object_Cache::set()
  *
- * @param int|string $key    What to call the contents in the cache
- * @param mixed      $data   The contents to store in the cache
- * @param string     $group  Where to group the cache contents
- * @param int        $expire When to expire the cache contents
+ * @param int|string $key What to call the contents in the cache
+ * @param mixed $data The contents to store in the cache
+ * @param string $group Where to group the cache contents
+ * @param int $expire When to expire the cache contents
  *
  * @return bool False on failure, true on success
  */
 function wp_cache_set($key, $data, $group = '', $expire = 0)
 {
-
     global $wp_object_cache;
 
-    return $wp_object_cache->set($key, $data, $group, (int)$expire);
+    return $wp_object_cache->set($key, $data, $group, (int) $expire);
 }
 
 /**
@@ -218,7 +209,6 @@ function wp_cache_set($key, $data, $group = '', $expire = 0)
  */
 function wp_cache_switch_to_blog($blog_id)
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->switch_to_blog($blog_id);
@@ -233,7 +223,6 @@ function wp_cache_switch_to_blog($blog_id)
  */
 function wp_cache_add_global_groups($groups)
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->add_global_groups($groups);
@@ -248,7 +237,6 @@ function wp_cache_add_global_groups($groups)
  */
 function wp_cache_add_non_persistent_groups($groups)
 {
-
     global $wp_object_cache;
 
     return $wp_object_cache->add_non_persistent_groups($groups);
@@ -271,7 +259,6 @@ function wp_cache_add_non_persistent_groups($groups)
  */
 function wp_cache_reset()
 {
-
     _deprecated_function(__FUNCTION__, '3.5');
 
     global $wp_object_cache;

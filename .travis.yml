@@ -1,0 +1,36 @@
+language: php
+
+sudo: required
+
+stages:
+  - quality
+  - test
+
+php:
+- 7.0
+- 7.1
+- 7.2
+- nightly
+
+jobs:
+  allow_failures:
+    - env: STAGE=quality
+  include:
+    # PHPCS #####################################
+    - stage: quality
+      env: STAGE=quality
+      php: '7.1'
+      script: vendor/bin/phpcs
+    # PHPUnit ###################################
+    - stage: test
+      script: vendor/bin/phpunit
+
+before_install:
+  # disable xDebug.
+  - phpenv config-rm xdebug.ini || true
+  # update Composer.
+  - composer self-update
+
+install:
+  # install all composer dependencies.
+  - composer install

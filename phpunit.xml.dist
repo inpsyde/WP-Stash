@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-	bootstrap="vendor/inpsyde/monkery-test-case/inc/bootstrap.php"
-	backupGlobals="false"
+    bootstrap="tests/PHPUnit/bootstrap.php"
+
+    backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
@@ -12,7 +13,19 @@
 	</php>
 	<testsuites>
 		<testsuite name="WP Stash php unit tests">
-			<directory suffix="Test.php">./tests/PHPUnit</directory>
+			<directory suffix="Test.php">./tests/PHPUnit/Unit</directory>
 		</testsuite>
 	</testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <directory>tests</directory>
+                <directory>vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="tmp"/>
+    </logging>
 </phpunit>

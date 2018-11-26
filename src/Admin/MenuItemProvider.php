@@ -5,5 +5,5 @@ namespace Inpsyde\WpStash\Admin;
 interface MenuItemProvider
 {
 
-    public function get_item(): MenuItem;
+    public function item(): MenuItem;
 }

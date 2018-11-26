@@ -3,23 +3,39 @@
     "description": "Powerful Object Caching Backend for WordPress",
     "license": "GPL-2.0+",
     "type": "wordpress-muplugin",
+    "authors": [
+        {
+            "name": "Biont",
+            "email": "m.meisselbach@inpsyde.com"
+        },
+        {
+            "name": "ChriCo",
+            "email": "c.brueckner@inpsyde.com",
+            "homepage": "https://www.chrico.info"
+        }
+    ],
+    "support": {
+        "src": "https://github.com/inpsyde/WP-Stash",
+        "issues": "https://github.com/inpsyde/WP-Stash/issues"
+    },
     "require": {
+        "php": ">=7.0",
         "tedivm/stash": "^0.15"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "~6",
+        "brain/monkey": "^2",
         "inpsyde/php-coding-standards": "^0.12",
-        "inpsyde/monkery-test-case": "^5.0"
+        "squizlabs/php_codesniffer": "~3.2.3"
     },
     "autoload": {
         "psr-4": {
-            "Inpsyde\\WpStash\\": "inc/"
+            "Inpsyde\\WpStash\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Inpsyde\\WpStash\\Test\\Helper\\": "tests/Helper/",
-            "": "tests/Stubs/"
+            "Inpsyde\\WpStash\\Tests\\Unit\\": "tests/PHPUnit/Unit/"
         }
     }
 }
