@@ -5,7 +5,7 @@ namespace Inpsyde\WpStash\Tests\Unit;
 use Brain\Monkey;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractUnitTestCase extends TestCase
+abstract class AbstractUnitTestcase extends TestCase
 {
 
     /**
@@ -13,7 +13,7 @@ abstract class AbstractUnitTestCase extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         Monkey\setUp();
@@ -24,7 +24,7 @@ abstract class AbstractUnitTestCase extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Monkey\tearDown();
         parent::tearDown();

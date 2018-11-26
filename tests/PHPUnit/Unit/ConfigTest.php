@@ -6,7 +6,7 @@ use Inpsyde\WpStash\Config;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
 
-class ConfigTest extends AbstractUnitTestCase
+class ConfigTest extends AbstractUnitTestcase
 {
 
     public function testBasic()

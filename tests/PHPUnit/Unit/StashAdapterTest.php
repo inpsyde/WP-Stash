@@ -6,7 +6,7 @@ use Inpsyde\WpStash\StashAdapter;
 use Stash\Item;
 use Stash\Pool;
 
-class StashAdapterTest extends AbstractUnitTestCase
+class StashAdapterTest extends AbstractUnitTestcase
 {
 
     public function testAddItemAlreadyExists()

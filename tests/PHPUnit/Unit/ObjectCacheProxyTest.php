@@ -9,7 +9,7 @@ use Inpsyde\WpStash\ObjectCacheProxy;
 use Inpsyde\WpStash\StashAdapter;
 use Mockery\MockInterface;
 
-class ObjectCacheProxyTest extends AbstractUnitTestCase
+class ObjectCacheProxyTest extends AbstractUnitTestcase
 {
 
     /**
