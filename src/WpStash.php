@@ -125,7 +125,7 @@ final class WpStash
     private function ensureDropin(): bool
     {
         $target = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$this->dropinName;
-        if (file_exists($target)) {
+        if (is_link($target) || file_exists($target)) {
             return true;
         }
 
