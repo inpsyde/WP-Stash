@@ -1,5 +1,16 @@
 #### dev-master
 
+#### 3.0.0
+* moved classes from inc/ to src/
+* removed static methods from WpStash
+* added singleton to WpStash
+* improved usage of Config
+* added sanitization to Config::$driverClassName
+* implemented env var support.
+* allowed to support base64 decoded strings as `WP_STASH_DRIVER_ARGS` because of..
+   * security reasons
+   * working with environment vars does not allow " in values, which invalidates JSON/serialized strings
+
 #### 2.0.0
  * Catch 2 possible exceptions when something goes wrong generating a cache key
  * Reformat & Refactor to new Inpsyde Standard (Breaking change: Methods are now CamelCased!)
