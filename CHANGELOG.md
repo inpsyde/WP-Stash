@@ -1,13 +1,13 @@
 #### dev-master
 
 #### 3.0.0
-* moved classes from inc/ to src/
-* removed static methods from WpStash
-* added singleton to WpStash
-* improved usage of Config
-* added sanitization to Config::$driverClassName
-* implemented env var support.
-* allowed to support base64 decoded strings as `WP_STASH_DRIVER_ARGS` because of..
+* Moved classes from `inc/` to `src/`
+* Removed static methods from WpStash
+* Added singleton to WpStash
+* Improved usage of Config
+* Added sanitization to `Config::$driverClassName`
+* Implemented env var support.
+* Allowed to support base64 decoded strings as `WP_STASH_DRIVER_ARGS` because of..
    * security reasons
    * working with environment vars does not allow " in values, which invalidates JSON/serialized strings
 
