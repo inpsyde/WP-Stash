@@ -74,6 +74,8 @@ final class WpStash
             new Debug\ActionLogger(
                 [
                     'wpStash' => [
+                        'dropinPath' => $this->dropinPath,
+                        'dropinName' => $this->dropinName,
                         'stashDriver' => Ephemeral::class,
                     ],
                 ]
@@ -87,8 +89,8 @@ final class WpStash
                     'wpStash' => [
                         'dropinPath' => $this->dropinPath,
                         'dropinName' => $this->dropinName,
-                        'stashsDriverArgs' => $this->config->stashDriverArgs(),
                         'stashDriver' => $this->config->stashDriverClassName(),
+                        'stashDriverArgs' => $this->config->stashDriverArgs(),
                         'usingMemoryCache' => $this->config->usingMemoryCache(),
                     ],
                 ]
