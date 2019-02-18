@@ -68,8 +68,13 @@ final class WpStash
      */
     public function objectCacheProxy(): ObjectCacheProxy
     {
+        $logger = new Debug\ActionLogger();
+
         $nonPersistentPool = new Pool(new Ephemeral());
+        $nonPersistentPool->setLogger($logger);
+
         $persistentPool = new Pool($this->driver());
+        $persistentPool->setLogger($logger);
 
         return new ObjectCacheProxy(
             new StashAdapter($nonPersistentPool, false),

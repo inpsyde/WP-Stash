@@ -1,5 +1,9 @@
 #### dev-master
 
+#### 3.1.0 (not released)
+* Implementation of `Debug\ActionLogger`
+* Added new Logger to `Pool`
+
 #### 3.0.0
 * Moved classes from `inc/` to `src/`
 * Removed static methods from WpStash
