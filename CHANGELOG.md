@@ -3,6 +3,7 @@
 #### 3.1.0 (not released)
 * Implementation of `Debug\ActionLogger`
 * Added new Logger to `Pool`
+* Updated PHPUnit to version 7.
 
 #### 3.0.0
 * Moved classes from `inc/` to `src/`

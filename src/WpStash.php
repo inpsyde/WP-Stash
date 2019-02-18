@@ -68,13 +68,32 @@ final class WpStash
      */
     public function objectCacheProxy(): ObjectCacheProxy
     {
-        $logger = new Debug\ActionLogger();
 
         $nonPersistentPool = new Pool(new Ephemeral());
-        $nonPersistentPool->setLogger($logger);
+        $nonPersistentPool->setLogger(
+            new Debug\ActionLogger(
+                [
+                    'wpStash' => [
+                        'stashDriver' => Ephemeral::class,
+                    ],
+                ]
+            )
+        );
 
         $persistentPool = new Pool($this->driver());
-        $persistentPool->setLogger($logger);
+        $persistentPool->setLogger(
+            new Debug\ActionLogger(
+                [
+                    'wpStash' => [
+                        'dropinPath' => $this->dropinPath,
+                        'dropinName' => $this->dropinName,
+                        'stashsDriverArgs' => $this->config->stashDriverArgs(),
+                        'stashDriver' => $this->config->stashDriverClassName(),
+                        'usingMemoryCache' => $this->config->usingMemoryCache(),
+                    ],
+                ]
+            )
+        );
 
         return new ObjectCacheProxy(
             new StashAdapter($nonPersistentPool, false),

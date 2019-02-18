@@ -9,9 +9,16 @@ class ActionLogger implements LoggerInterface
 {
     const ACTION = 'wp-stash';
 
+    private $additionalInfo;
+
+    public function __construct(array $additionalInfo = [])
+    {
+        $this->additionalInfo = $additionalInfo;
+    }
+
     public function log($level, $message, array $context = [])
     {
-        do_action(self::ACTION . strtolower($level), $message, $context);
+        do_action(self::ACTION . strtolower($level), $message, $context + $this->additionalInfo);
     }
 
     public function emergency($message, array $context = [])
