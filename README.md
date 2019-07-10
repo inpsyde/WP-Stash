@@ -83,6 +83,7 @@ WP Stash has the following cli commands:
 `wp stash flush` :  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
 
+`wp stash purge` :   Some drivers require that maintenance action be performed regularly. The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically. While this is automatically  performed via WP cron, you can trigger the process manually with this command.
 
 ## License and Copyright
 
