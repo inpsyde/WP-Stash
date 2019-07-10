@@ -294,6 +294,17 @@ class ObjectCacheProxy
     }
 
     /**
+     * Perform Cache Pool Maintenance
+     *
+     * @return bool
+     */
+    public function purge(): bool
+    {
+
+        return $this->persistent->purge() && $this->non_persistent->purge();
+    }
+
+    /**
      * Increment numeric cache item's value
      *
      * @since WP 3.3.0

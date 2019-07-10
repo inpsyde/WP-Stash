@@ -146,6 +146,34 @@ final class WpStash
         if ($this->isWpCli()) {
             \WP_CLI::add_command('stash', Cli\WpCliCommand::class);
         }
+
+        add_action('init', function () {
+
+            $scheduledPurgeHook = 'inpsyde.wp-stash.scheduled-purge';
+
+            add_action($scheduledPurgeHook, [$this, 'purge']);
+
+            if (! wp_next_scheduled($scheduledPurgeHook)) {
+                wp_schedule_single_event(time() + HOUR_IN_SECONDS * 12, $scheduledPurgeHook);
+            }
+        });
+
+    }
+    /**
+     * Some drivers require that maintenance action be performed regular.
+     * The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically.
+     *
+     * @see http://www.stashphp.com/Integration.html#maintenance-actions
+     */
+    public function purge(): bool
+    {
+
+        global $wp_object_cache;
+        if (! $wp_object_cache instanceof ObjectCacheProxy) {
+            return false;
+        }
+
+        return $wp_object_cache->purge();
     }
 
     private function ensureDropin(): bool
