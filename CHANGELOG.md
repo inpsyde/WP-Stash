@@ -6,6 +6,7 @@
 * Updated PHPUnit to version 7.
 * Register a WP cron event that performs regular cache pool maintenance. Should fix problems with the FileSystem and Sqlite drivers
 * Add a new wp-cli command to perform pool maintenance manually
+* Add option to specify purge cron interval via `WP_STASH_PURGE_INTERVAL` setting
 
 #### 3.0.0
 * Moved classes from `inc/` to `src/`
