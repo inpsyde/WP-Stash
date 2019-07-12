@@ -154,7 +154,7 @@ final class WpStash
             add_action($scheduledPurgeHook, [$this, 'purge']);
 
             if (! wp_next_scheduled($scheduledPurgeHook)) {
-                wp_schedule_single_event(time() + HOUR_IN_SECONDS * 12, $scheduledPurgeHook);
+                wp_schedule_single_event(time() + $this->config->purgeInterval(), $scheduledPurgeHook);
             }
         });
 
