@@ -1,6 +1,6 @@
 #### dev-master
 
-#### 3.1.0 (not released)
+#### 3.1.0
 * Implementation of `Debug\ActionLogger`
 * Added new Logger to `Pool`
 * Updated PHPUnit to version 7.
