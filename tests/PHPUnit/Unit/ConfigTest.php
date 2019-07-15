@@ -14,12 +14,14 @@ class ConfigTest extends AbstractUnitTestcase
         $expectedDriver = Ephemeral::class;
         $expectedDriverArgs = [];
         $expectedUseMemory = false;
+        $purgeInterval = 1337;
 
-        $testee = new Config($expectedDriver, $expectedDriverArgs, $expectedUseMemory);
+        $testee = new Config($expectedDriver, $expectedDriverArgs, $expectedUseMemory, $purgeInterval);
 
         static::assertSame($expectedDriver, $testee->stashDriverClassName());
         static::assertSame($expectedDriverArgs, $testee->stashDriverArgs());
         static::assertSame($expectedUseMemory, $testee->usingMemoryCache());
+        static::assertSame($purgeInterval, $testee->purgeInterval());
     }
 
     public function testCustomDriver()
@@ -28,7 +30,7 @@ class ConfigTest extends AbstractUnitTestcase
         $driverStub->expects('isAvailable')->andReturnTrue();
 
         $expectedDriver = get_class($driverStub);
-        $testee = new Config($expectedDriver, [], false);
+        $testee = new Config($expectedDriver, [], false, 1);
 
         static::assertSame($expectedDriver, $testee->stashDriverClassName());
     }
@@ -38,14 +40,14 @@ class ConfigTest extends AbstractUnitTestcase
         $driverStub = \Mockery::mock(DriverInterface::class);
         $driverStub->expects('isAvailable')->andReturnFalse();
 
-        $testee = new Config(get_class($driverStub), [], false);
+        $testee = new Config(get_class($driverStub), [], false, 1);
 
         static::assertSame(Ephemeral::class, $testee->stashDriverClassName());
     }
 
     public function testCustomDriverInvalid()
     {
-        $testee = new Config(\stdClass::class, [], false);
+        $testee = new Config(\stdClass::class, [], false, 1);
 
         static::assertSame(Ephemeral::class, $testee->stashDriverClassName());
     }
@@ -53,7 +55,7 @@ class ConfigTest extends AbstractUnitTestcase
 
     public function testCustomDriverNotExists()
     {
-        $testee = new Config('non existing driver class', [], false);
+        $testee = new Config('non existing driver class', [], false, 1);
 
         static::assertSame(Ephemeral::class, $testee->stashDriverClassName());
     }

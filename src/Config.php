@@ -27,16 +27,22 @@ class Config
      * @var bool
      */
     private $usingMemoryCache;
+    /**
+     * @var int
+     */
+    private $purgeInterval;
 
     public function __construct(
         string $driverClassName,
         array $driverArgs,
-        bool $usingMemoryCache
+        bool $usingMemoryCache,
+        int $purgeInterval
     ) {
 
         $this->driverClassName = $this->prepareDriverClass($driverClassName);
         $this->driverArgs = $driverArgs;
         $this->usingMemoryCache = $usingMemoryCache;
+        $this->purgeInterval = $purgeInterval;
     }
 
     /**
@@ -77,5 +83,10 @@ class Config
     public function usingMemoryCache(): bool
     {
         return $this->usingMemoryCache;
+    }
+
+    public function purgeInterval():int
+    {
+        return $this->purgeInterval;
     }
 }

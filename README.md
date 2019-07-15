@@ -61,7 +61,9 @@ The following constants can be used for configuring WP Stash:
 
 `WP_STASH_DRIVER_ARGS` - string: Driver constructor args as a serialized array.
 
-`WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default true.
+`WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default `true`.
+
+`WP_STASH_PURGE_INTERVAL` - integer : WP Stash runs scheduled maintenance actions on the configured cache driver  every 12 hours by default. You can configure a different interval here. Default `3600*12`.
 
 ### WP Starter
 ```
@@ -83,6 +85,7 @@ WP Stash has the following cli commands:
 `wp stash flush` :  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
 
+`wp stash purge` :   Some drivers require that maintenance action be performed regularly. The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically. While this is automatically  performed via WP cron, you can trigger the process manually with this command.
 
 ## License and Copyright
 

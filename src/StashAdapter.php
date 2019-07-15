@@ -233,6 +233,18 @@ class StashAdapter
         return $this->set($key, $data, $expire);
     }
 
+    /**
+     * Perform Cache Pool maintenance
+     *
+     * @return bool
+     */
+    public function purge(): bool
+    {
+
+        return $this->pool->purge();
+
+    }
+
     public function __destruct()
     {
         $this->pool->commit();

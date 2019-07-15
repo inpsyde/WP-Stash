@@ -2,6 +2,7 @@
 
 namespace Inpsyde\WpStash\Cli;
 
+use Inpsyde\WpStash\WpStash;
 use WP_CLI;
 
 // phpcs:disable Inpsyde.CodeQuality.LineLength.TooLong
@@ -106,5 +107,26 @@ class WpCliCommand extends \WP_CLI_Command
                 WP_CLI::error('Something unexpected happened during cache flushing. Maybe try to run this command with --skip-packages to prevent plugins/themes from interfering');
             }
         }
+    }
+
+    /**
+     * Some drivers require that maintenance action be performed regular.
+     * The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically.
+     *
+     * @see http://www.stashphp.com/Integration.html#maintenance-actions
+     * @throws WP_CLI\ExitException
+     */
+    public function purge()
+    {
+
+        $result = WpStash::instance()
+                         ->purge();
+        if ($result) {
+            WP_CLI::success('Cache purged successfully');
+
+            return;
+        }
+        WP_CLI::error('Something unexpected happened during cache purging. Maybe try to run this command with --skip-packages to prevent plugins/themes from interfering');
+
     }
 }
