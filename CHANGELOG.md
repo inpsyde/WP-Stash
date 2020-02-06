@@ -1,4 +1,5 @@
 #### dev-master
+* Fix error during WordPress installation
 
 #### 3.1.0
 * Implementation of `Debug\ActionLogger`
