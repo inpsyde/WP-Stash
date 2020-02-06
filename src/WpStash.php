@@ -135,6 +135,9 @@ final class WpStash
      */
     public function init()
     {
+        if (wp_installing()) {
+            return;
+        }
         $this->ensureDropin();
 
         if (is_admin()) {
