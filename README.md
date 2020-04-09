@@ -59,7 +59,7 @@ The following constants can be used for configuring WP Stash:
 
 `WP_STASH_DRIVER` - FQCN : The class name of the Stash driver you want to use. Will fall back to `Ephemeral` (pure memory cache without persistence) if unset or invalid.
 
-`WP_STASH_DRIVER_ARGS` - string: Driver constructor args as a serialized array, JSON or Base64.
+`WP_STASH_DRIVER_ARGS` - string: Driver constructor args as a serialized array or JSON.
 
 `WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default `true`.
 
