@@ -15,6 +15,10 @@ use Stash\Pool;
 final class WpStash
 {
 
+    const SCHEDULED_PURGE_HOOK = 'inpsyde.wp-stash.scheduled-purge';
+
+    const DEFAULT_DROPIN_PATH = '/../dropin/object-cache.php';
+
     /**
      * @var Config
      */
@@ -52,7 +56,7 @@ final class WpStash
         static $instance;
         if (! $instance) {
             $config = ConfigBuilder::create();
-            $instance = new self(__DIR__.'/../dropin/object-cache.php', $config);
+            $instance = new self(__DIR__ . self::DEFAULT_DROPIN_PATH, $config);
             $instance->init();
         }
 
@@ -151,13 +155,16 @@ final class WpStash
         }
 
         add_action('init', function () {
+            add_action(
+                self::SCHEDULED_PURGE_HOOK,
+                [$this, 'purge']
+            );
 
-            $scheduledPurgeHook = 'inpsyde.wp-stash.scheduled-purge';
-
-            add_action($scheduledPurgeHook, [$this, 'purge']);
-
-            if (! wp_next_scheduled($scheduledPurgeHook)) {
-                wp_schedule_single_event(time() + $this->config->purgeInterval(), $scheduledPurgeHook);
+            if (!wp_next_scheduled(self::SCHEDULED_PURGE_HOOK)) {
+                wp_schedule_single_event(
+                    time() + $this->config->purgeInterval(),
+                    self::SCHEDULED_PURGE_HOOK
+                );
             }
         });
 
