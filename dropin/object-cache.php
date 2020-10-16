@@ -1,12 +1,27 @@
-<?php # -*- coding: utf-8 -*-
-
+<?php //phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+declare(strict_types=1);
 /**
  * WP Stash Object Cache DropIn
  *
- * This file intercepts the default WP object caching and redirects it to be handled my the WpStash MU-Plugin
+ * This file intercepts the default WP object caching and redirects it
+ * to be handled my the WpStash MU-Plugin
  *
- * If you're on a debugging session, you probably want to check that plugin. This file is just a courier.
+ * If you're in a debugging session, you probably want to check that plugin.
+ * This file is just a courier.
  */
+
+/**
+ * Sometimes you need to disable WP-Stash while keeping it installed.
+ * Adding logic to dynamically remove/replace the dropin is cumbersome, but lucky for us,
+ * WP will check if a `wp_cache_init` function exists before assuming
+ * an external object cache is present even if there is an object-cache.php dropin
+ * So we can bypass WP-Stash if this environment variable is set.
+ *
+ * @link https://github.com/WordPress/WordPress/blob/32d193f96fea928a487e51698fd1861bf6c66978/wp-includes/load.php#L649-L651
+ */
+if (getenv('WP_STASH_BYPASS') !== false) {
+    return;
+}
 
 /**
  * Adds data to the cache, if the cache key doesn't already exist.
