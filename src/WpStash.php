@@ -138,7 +138,7 @@ final class WpStash
         if (wp_installing()) {
             return;
         }
-        $this->ensureDropin();
+        $this->ensureDropIn();
 
         if (is_admin()) {
             $admin = new Admin\Controller();
@@ -160,17 +160,16 @@ final class WpStash
                 wp_schedule_single_event(time() + $this->config->purgeInterval(), $scheduledPurgeHook);
             }
         });
-
     }
     /**
      * Some drivers require that maintenance action be performed regular.
-     * The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically.
+     * The FileSystem and SQLite drivers - for example - need to remove
+     * old data as they can't do it automatically.
      *
      * @see http://www.stashphp.com/Integration.html#maintenance-actions
      */
     public function purge(): bool
     {
-
         global $wp_object_cache;
         if (! $wp_object_cache instanceof ObjectCacheProxy) {
             return false;
@@ -179,18 +178,28 @@ final class WpStash
         return $wp_object_cache->purge();
     }
 
-    private function ensureDropin(): bool
+    private function ensureDropIn(): bool
     {
         $target = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$this->dropinName;
-        if (is_link($target) || file_exists($target)) {
+        if (file_exists($target)) {
             return true;
         }
+        $dropIn = sprintf(
+            <<<'PHPCODE'
+<?php declare(strict_types=1);
 
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            return copy($this->dropinPath, $target);
-        }
+if(!file_exists('%1$s')){
+    unlink(__FILE__);
+    return;
+}
+require_once '%1$s';
 
-        return symlink($this->dropinPath, $target);
+PHPCODE
+            ,
+            $this->dropinPath
+        );
+
+        return (bool) file_put_contents($target, $dropIn);
     }
 
     private function isWpCli(): bool
