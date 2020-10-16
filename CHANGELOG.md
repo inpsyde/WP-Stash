@@ -1,4 +1,6 @@
 #### dev-master
+
+#### 3.2.0
 * Fix error during WordPress installation
 * Add `WP_STASH_BYPASS` environment variable
 * object-cache.php drop-in now merely requires the actual drop-in from the install folder. This makes it update-safe
