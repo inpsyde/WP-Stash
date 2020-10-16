@@ -63,7 +63,9 @@ The following constants can be used for configuring WP Stash:
 
 `WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default `true`.
 
-`WP_STASH_PURGE_INTERVAL` - integer : WP Stash runs scheduled maintenance actions on the configured cache driver  every 12 hours by default. You can configure a different interval here. Default `3600*12`.
+`WP_STASH_PURGE_INTERVAL` - integer : WP Stash runs scheduled maintenance actions on the configured cache driver every 12 hours by default. You can configure a different interval here. Default `3600*12`.
+
+`WP_STASH_BYPASS` - bool : Allows temporarily disabling WP-Stash and falling back to the core WP system.
 
 ### WP Starter
 ```

@@ -1,5 +1,6 @@
 #### dev-master
 * Fix error during WordPress installation
+* Add `WP_STASH_BYPASS` environment variable
 
 #### 3.1.0
 * Implementation of `Debug\ActionLogger`
