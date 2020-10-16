@@ -91,7 +91,7 @@ This ensures compatibility with all caching back-ends.
 
 ## License and Copyright
 
-Copyright (c) 2017 Inpsyde GmbH.
+Copyright (c) 2020 Inpsyde GmbH.
 
 _WP Stash_ code is licensed under [MIT license](./LICENSE).
 
