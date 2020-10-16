@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
 
@@ -127,11 +128,38 @@ class StashAdapter
     public function get(string $key)
     {
         try {
-            $item = $this->pool->getItem($key);
+            return $this->getValueFromItem($this->pool->getItem($key));
         } catch (\InvalidArgumentException $exception) {
             return false;
         }
+    }
 
+    /**
+     * @param array $keys
+     *
+     * @return array
+     * phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoGetter
+     */
+    public function getMultiple(array $keys): array
+    {
+        $result = [];
+        foreach ($this->pool->getItems($keys) as $item) {
+            /**
+             * @var ItemInterface $item
+             */
+            $result[$item->getKey()] = $this->getValueFromItem($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param ItemInterface $item
+     *
+     * @return false|mixed
+     */
+    protected function getValueFromItem(ItemInterface $item)
+    {
         // Check to see if the data was a miss.
         if ($item->isMiss()) {
             $this->cache_misses++;
@@ -139,11 +167,9 @@ class StashAdapter
             return false;
         }
 
-        $result = $item->get();
-
         $this->cache_hits++;
 
-        return $result;
+        return $item->get();
     }
 
     /**

@@ -4,6 +4,7 @@
 * object-cache.php drop-in now merely requires the actual drop-in from the install folder. This makes it update-safe
 * Add a couple of type assertion for improved IDE support in object-cache.php
 * Use Composite Driver for staggered caching instead of homebrew local memory cache.
+* Support `wp_cache_get_multiple` introduced in WP 5.5
 
 #### 3.1.0
 * Implementation of `Debug\ActionLogger`

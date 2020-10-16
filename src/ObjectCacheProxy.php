@@ -449,4 +449,15 @@ class ObjectCacheProxy
         }
         $this->key_gen->switchToBlog((int) $blog_id);
     }
+
+    /**
+     * @param $keys
+     * @param string $group
+     * @param false $force
+     * @return array
+     */
+    public function get_multiple($keys, $group = '', $force = false)
+    {
+        return $this->choose_pool($group)->getMultiple($keys);
+    }
 }
