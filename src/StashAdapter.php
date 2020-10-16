@@ -37,27 +37,13 @@ class StashAdapter
     private $pool;
 
     /**
-     * In-memory data cache which is kept in sync with the data in the caching back-end
-     *
-     * @var array
-     */
-    private $local = [];
-
-    /**
-     * @var bool
-     */
-    private $useInMemoryCache;
-
-    /**
      * StashAdapter constructor.
      *
      * @param Pool $pool
-     * @param bool $useInMemoryCache
      */
-    public function __construct(Pool $pool, bool $useInMemoryCache = true)
+    public function __construct(Pool $pool)
     {
         $this->pool = $pool;
-        $this->useInMemoryCache = $useInMemoryCache;
     }
 
     /**
@@ -107,9 +93,6 @@ class StashAdapter
         $item->setInvalidationMethod(Invalidation::OLD);
 
         $this->pool->save($item);
-        if ($this->useInMemoryCache) {
-            $this->local[$key] = $data;
-        }
 
         return true;
     }
@@ -143,9 +126,6 @@ class StashAdapter
      */
     public function get(string $key)
     {
-        if ($this->useInMemoryCache && isset($this->local[$key])) {
-            return $this->local[$key];
-        }
         try {
             $item = $this->pool->getItem($key);
         } catch (\InvalidArgumentException $exception) {
@@ -161,9 +141,6 @@ class StashAdapter
 
         $result = $item->get();
 
-        if ($this->useInMemoryCache) {
-            $this->local[$key] = $result;
-        }
         $this->cache_hits++;
 
         return $result;
@@ -196,10 +173,6 @@ class StashAdapter
      */
     public function delete(string $key): bool
     {
-        if ($this->useInMemoryCache) {
-            unset($this->local[$key]);
-        }
-
         return $this->pool->deleteItem($key);
     }
 
@@ -208,7 +181,6 @@ class StashAdapter
      */
     public function clear()
     {
-        $this->local = [];
         $this->pool->clear();
     }
 
@@ -240,14 +212,11 @@ class StashAdapter
      */
     public function purge(): bool
     {
-
         return $this->pool->purge();
-
     }
 
     public function __destruct()
     {
         $this->pool->commit();
-        $this->local = [];
     }
 }

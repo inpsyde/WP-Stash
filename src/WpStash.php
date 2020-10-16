@@ -3,6 +3,7 @@
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
+use Stash\Driver\Composite;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
 use Stash\Pool;
@@ -68,7 +69,6 @@ final class WpStash
      */
     public function objectCacheProxy(): ObjectCacheProxy
     {
-
         $nonPersistentPool = new Pool(new Ephemeral());
         $nonPersistentPool->setLogger(
             new Debug\ActionLogger(
@@ -98,8 +98,8 @@ final class WpStash
         );
 
         return new ObjectCacheProxy(
-            new StashAdapter($nonPersistentPool, false),
-            new StashAdapter($persistentPool, $this->config->usingMemoryCache()),
+            new StashAdapter($nonPersistentPool),
+            new StashAdapter($persistentPool),
             $this->cacheKeyGenerator()
         );
     }
@@ -116,7 +116,27 @@ final class WpStash
         $driver = $this->config->stashDriverClassName();
         $args = $this->config->stashDriverArgs();
 
-        return new $driver($args);
+        $driver = new $driver($args);
+
+        /**
+         * For increased performance, WP Stash will automatically wrap the selected
+         * backend into a staggered cache combined with the Ephemeral driver.
+         */
+        if ($this->config->usingMemoryCache()
+            && !$driver instanceof Composite
+            && !$driver instanceof Ephemeral
+        ) {
+            $driver = new Composite(
+                [
+                    'drivers' => [
+                        new Ephemeral(),
+                        $driver,
+                    ],
+                ]
+            );
+        }
+
+        return $driver;
     }
 
     public static function cacheKeyGenerator(): KeyGen
