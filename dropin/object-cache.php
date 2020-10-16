@@ -174,7 +174,7 @@ function wp_cache_incr($key, $offset = 1, $group = '')
  */
 function wp_cache_init()
 {
-    $autoloadFile = WP_CONTENT_DIR.'/mu-plugins/wp-stash/vendor/autoload.php';
+    $autoloadFile = __DIR__.'/../vendor/autoload.php';
     if (file_exists($autoloadFile)) {
         require_once $autoloadFile;
     }
