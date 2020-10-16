@@ -1,5 +1,8 @@
 #### dev-master
 
+#### 3.2.1
+* Fix autoloader path in non-composer environments
+
 #### 3.2.0
 * Fix error during WordPress installation
 * Add `WP_STASH_BYPASS` environment variable
