@@ -25,7 +25,7 @@ Since this package will get installed in a subfolder. WordPress will not automat
 #### WP Starter
 
 If you are using the awesome [WP Starter](https://wecodemore.github.io/wpstarter/) package, then everything will work automatically. 
-It contains a MU-Loader which will take care of loading WP Stash
+It contains a MU-Loader which will take care of loading WP Stash. Note that you MUST NOT use WPStarter's drop in functionality to copy `object-cache.php` on build time! WPStash must place the drop in file on its own. If you want to trigger WP-Stash to create the drop in file just run a command like `wp plugin list`.
 
 #### WP Must-Use Plugin Loader
 

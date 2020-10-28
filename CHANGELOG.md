@@ -1,4 +1,7 @@
+# Changelog
+
 #### dev-master
+* Fix: `wp_cache_*` functions are no longer declared on `WP_STASH_BYPASS`
 
 #### 3.2.1
 * Fix autoloader path in non-composer environments
