@@ -24,10 +24,6 @@ use Inpsyde\WpStash\WpStash;
  * @link https://github.com/WordPress/WordPress/blob/32d193f96fea928a487e51698fd1861bf6c66978/wp-includes/load.php#L649-L651
  */
 
-if (getenv('WP_STASH_BYPASS') !== false) {
-    return;
-}
-
 /**
  * Adds data to the cache, if the cache key doesn't already exist.
  *

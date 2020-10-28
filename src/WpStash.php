@@ -212,7 +212,9 @@ if(!file_exists('%1$s')){
     unlink(__FILE__);
     return;
 }
-require_once '%1$s';
+if (filter_var(getenv('WP_STASH_BYPASS'), FILTER_VALIDATE_BOOL) === false) {
+    require_once '%1$s';
+}
 
 PHPCODE
             ,
