@@ -1,6 +1,8 @@
 # Changelog
 
 #### dev-master
+
+#### 3.2.2
 * Fix: `wp_cache_*` functions are no longer declared on `WP_STASH_BYPASS`
 
 #### 3.2.1
