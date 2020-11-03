@@ -2,6 +2,9 @@
 
 #### dev-master
 
+#### 3.2.3
+* Fix: Typo in bypass logic, [#19](https://github.com/inpsyde/WP-Stash/issues/19)
+
 #### 3.2.2
 * Fix: `wp_cache_*` functions are no longer declared on `WP_STASH_BYPASS`
 
