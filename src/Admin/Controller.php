@@ -1,10 +1,13 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
 
 namespace Inpsyde\WpStash\Admin;
 
 class Controller
 {
-
     /**
      * @var AdminBarMenu
      */
@@ -33,6 +36,6 @@ class Controller
     public function init()
     {
         add_action('admin_bar_menu', [$this->adminBarMenu, 'render']);
-        add_action('admin_post_'.CacheFlusher::PURGE_ACTION, [$this->cacheFlusher, 'flush_cache']);
+        add_action('admin_post_' . CacheFlusher::PURGE_ACTION, [$this->cacheFlusher, 'flush_cache']);
     }
 }

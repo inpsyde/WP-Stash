@@ -1,4 +1,8 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
@@ -15,7 +19,6 @@ use Stash\Pool;
  */
 final class WpStash
 {
-
     /**
      * @var Config
      */
@@ -53,7 +56,7 @@ final class WpStash
         static $instance;
         if (! $instance) {
             $config = ConfigBuilder::create();
-            $instance = new self(__DIR__.'/../dropin/object-cache.php', $config);
+            $instance = new self(__DIR__ . '/../dropin/object-cache.php', $config);
             $instance->init();
         }
 
@@ -122,7 +125,8 @@ final class WpStash
          * For increased performance, WP Stash will automatically wrap the selected
          * backend into a staggered cache combined with the Ephemeral driver.
          */
-        if ($this->config->usingMemoryCache()
+        if (
+            $this->config->usingMemoryCache()
             && !$driver instanceof Composite
             && !$driver instanceof Ephemeral
         ) {
@@ -200,15 +204,17 @@ final class WpStash
 
     private function ensureDropIn(): bool
     {
-        $target = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$this->dropinName;
+        $target = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $this->dropinName;
         if (file_exists($target)) {
             return true;
         }
         $dropIn = sprintf(
             <<<'PHPCODE'
-<?php declare(strict_types=1);
+<?php
 
-if(!file_exists('%1$s')){
+declare(strict_types=1);
+
+if (!file_exists('%1$s')) {
     unlink(__FILE__);
     return;
 }
@@ -227,9 +233,9 @@ PHPCODE
     private function isWpCli(): bool
     {
         return
-            defined('WP_CLI')
-            && WP_CLI
-            && class_exists(\WP_CLI::class)
-            && class_exists(\WP_CLI_Command::class);
+        defined('WP_CLI')
+        && WP_CLI
+        && class_exists(\WP_CLI::class)
+        && class_exists(\WP_CLI_Command::class);
     }
 }

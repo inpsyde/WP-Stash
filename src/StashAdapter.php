@@ -1,4 +1,6 @@
-<?php // -*- coding: utf-8 -*-
+<?php
+
+// -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
@@ -19,7 +21,6 @@ use Stash\Pool;
  */
 class StashAdapter
 {
-
     /**
      * @var int
      */

@@ -1,4 +1,8 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
+
 
 namespace Inpsyde\WpStash\Generator;
 
@@ -9,7 +13,6 @@ namespace Inpsyde\WpStash\Generator;
  */
 class MultisiteCacheKeyGenerator implements MultisiteKeyGen
 {
-
     /**
      * @var int
      */
@@ -57,6 +60,6 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
             $parts[] = $this->blogId;
         }
 
-        return KeyGen::GLUE.implode(KeyGen::GLUE, $parts);
+        return KeyGen::GLUE . implode(KeyGen::GLUE, $parts);
     }
 }

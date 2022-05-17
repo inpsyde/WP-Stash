@@ -1,4 +1,8 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
+
 
 namespace Inpsyde\WpStash;
 
@@ -12,7 +16,6 @@ use Stash\Interfaces\DriverInterface;
  */
 class Config
 {
-
     /**
      * @var string
      */
@@ -61,7 +64,8 @@ class Config
         }
 
         // phpcs:disable NeutronStandard.Functions.DisallowCallUserFunc.CallUserFunc
-        if (! in_array(DriverInterface::class, class_implements($className), true)
+        if (
+        ! in_array(DriverInterface::class, class_implements($className), true)
             || ! call_user_func([$className, 'isAvailable'])
         ) {
             return Ephemeral::class;
@@ -85,7 +89,7 @@ class Config
         return $this->usingMemoryCache;
     }
 
-    public function purgeInterval():int
+    public function purgeInterval(): int
     {
         return $this->purgeInterval;
     }

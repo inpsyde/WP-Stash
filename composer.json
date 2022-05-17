@@ -19,7 +19,7 @@
         "issues": "https://github.com/inpsyde/WP-Stash/issues"
     },
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "tedivm/stash": "^0.17.1",
         "psr/log": "~1.0"
     },
@@ -37,6 +37,11 @@
     "autoload-dev": {
         "psr-4": {
             "Inpsyde\\WpStash\\Tests\\Unit\\": "tests/PHPUnit/Unit/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
