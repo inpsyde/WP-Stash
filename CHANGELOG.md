@@ -1,6 +1,7 @@
 # Changelog
 
 #### dev-master
+* Raise dependency versions to be compatible with PHP 8
 
 #### 3.2.3
 * Fix: Typo in bypass logic, [#19](https://github.com/inpsyde/WP-Stash/issues/19)
