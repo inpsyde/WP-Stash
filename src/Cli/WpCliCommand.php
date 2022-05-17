@@ -1,13 +1,13 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
 
-
 namespace Inpsyde\WpStash\Cli;
 
 use Inpsyde\WpStash\WpStash;
-use \WP_CLI;
+use WP_CLI;
 
 // phpcs:disable
 

@@ -1,8 +1,8 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
-
 
 namespace Inpsyde\WpStash\Generator;
 
@@ -13,7 +13,7 @@ namespace Inpsyde\WpStash\Generator;
  */
 interface KeyGen
 {
-    const GLUE = '/';
+    public const GLUE = '/';
 
     public function create(string $key, string $group): string;
 }

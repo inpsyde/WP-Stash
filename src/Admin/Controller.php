@@ -36,6 +36,9 @@ class Controller
     public function init()
     {
         add_action('admin_bar_menu', [$this->adminBarMenu, 'render']);
-        add_action('admin_post_' . CacheFlusher::PURGE_ACTION, [$this->cacheFlusher, 'flush_cache']);
+        add_action(
+            'admin_post_' . CacheFlusher::PURGE_ACTION,
+            [$this->cacheFlusher, 'flush_cache']
+        );
     }
 }

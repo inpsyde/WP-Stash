@@ -1,8 +1,8 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
-
 
 namespace Inpsyde\WpStash\Debug;
 
@@ -13,7 +13,7 @@ class ActionLogger implements LoggerInterface
 {
     use LoggerTrait;
 
-    const ACTION = 'wp-stash';
+    public const ACTION = 'wp-stash';
 
     private $additionalInfo;
 

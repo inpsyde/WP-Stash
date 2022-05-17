@@ -1,8 +1,8 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
-
 
 namespace Inpsyde\WpStash\Generator;
 
@@ -29,6 +29,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
         $this->globalGroups = $globalGroups;
     }
 
+    //phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
     public function addGlobalGroups($groups): array
     {
         $groups = (array) $groups;
