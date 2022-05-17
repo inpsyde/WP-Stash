@@ -1,14 +1,15 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
+
 
 namespace Inpsyde\WpStash\Cli;
 
 use Inpsyde\WpStash\WpStash;
-use WP_CLI;
+use \WP_CLI;
 
-// phpcs:disable Inpsyde.CodeQuality.LineLength.TooLong
-// phpcs:disable Inpsyde.CodeQuality.NoElse.ElseFound
-// phpcs:disable Inpsyde.CodeQuality.FunctionBodyStart.WrongForSingleLineDeclaration
-// phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+// phpcs:disable
 
 /**
  * Manage WP Stash.
@@ -25,7 +26,6 @@ use WP_CLI;
  */
 class WpCliCommand extends \WP_CLI_Command
 {
-
     /**
      * Flush the object cache.
      *
@@ -59,31 +59,31 @@ class WpCliCommand extends \WP_CLI_Command
         $result = file_put_contents(
             $scriptFilename,
             '<?php
-		if(! file_exists( "wp-load.php" ) ){
-			http_response_code( 500 );
-			echo "Could not find WordPress instance for object cache flushing via cURL request";
-			exit;
-		}
-		
-		// Skip stuff we do not need and could cause problems.
-		define( "SHORTINIT", true );
-		
-		require_once "wp-load.php";
-		
-		if( function_exists( "wp_cache_flush" ) ){
-			wp_cache_flush();
-			header("WP-Stash: Success");
-			echo "WP object cache flushed successfully";
-			exit;
-		}else{
-			http_response_code( 500 );
-			echo "WP loaded, now flushing object cache";
-			exit;
-		}
-		'
+            if (! file_exists("wp-load.php")) {
+                http_response_code(500);
+                echo "Could not find WordPress instance for object cache flushing via cURL request";
+                exit;
+            }
+
+        // Skip stuff we do not need and could cause problems.
+            define("SHORTINIT", true);
+
+            require_once "wp-load.php";
+
+            if (function_exists("wp_cache_flush")) {
+                wp_cache_flush();
+                header("WP-Stash: Success");
+                echo "WP object cache flushed successfully";
+                exit;
+            } else {
+                http_response_code(500);
+                echo "WP loaded, now flushing object cache";
+                exit;
+            }
+            '
         );
         if (! $result) {
-            WP_CLI::error('Could not place the temporary cache flusher script. Please review your file permissions');
+            WP_CLI::error('Could not place the temporary cache flusher script . Please review your file permissions');
         }
         // Fix potential SSL_shutdown:shutdown while in init in nginx
         add_filter('https_ssl_verify', '__return_false');
@@ -98,13 +98,13 @@ class WpCliCommand extends \WP_CLI_Command
             return;
         }
 
-        if ($response['response']['code'] === 200 && isset($response['headers']['WP-Stash'])) {
+        if ($response['response']['code'] === 200 && isset($response['headers']['WP - Stash'])) {
             WP_CLI::success($response['body']);
         } else {
             if ($response['response']['code'] !== 200) {
                 WP_CLI::error($response['body']);
             } else {
-                WP_CLI::error('Something unexpected happened during cache flushing. Maybe try to run this command with --skip-packages to prevent plugins/themes from interfering');
+                WP_CLI::error('Something unexpected happened during cache flushing . Maybe try to run this command with --skip - packages to prevent plugins / themes from interfering');
             }
         }
     }

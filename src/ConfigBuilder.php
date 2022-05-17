@@ -1,4 +1,8 @@
-<?php declare(strict_types=1); // -*- coding: utf-8 -*-
+<?php
+// -*- coding: utf-8 -*-
+
+declare(strict_types=1);
+
 
 namespace Inpsyde\WpStash;
 
@@ -11,7 +15,6 @@ use Stash\Driver\Ephemeral;
  */
 final class ConfigBuilder
 {
-
     private const PURGE_INTERVAL = 3600 * 12;
     /**
      * Reads configuration data from the following constants:

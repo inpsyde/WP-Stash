@@ -17,9 +17,9 @@ class MultisiteCacheKeyGeneratorTest extends AbstractUnitTestcase
         $testee = new MultisiteCacheKeyGenerator($expectedBlogId);
         $result = $testee->create($expectedKey, $expectedGroup);
 
-        static::assertContains($expectedKey, $result);
-        static::assertContains($expectedGroup, $result);
-        static::assertContains((string)$expectedBlogId, $result);
+        static::assertStringContainsString($expectedKey, $result);
+        static::assertStringContainsString($expectedGroup, $result);
+        static::assertStringContainsString((string)$expectedBlogId, $result);
     }
 
     public function testAddGlobalGroup()
