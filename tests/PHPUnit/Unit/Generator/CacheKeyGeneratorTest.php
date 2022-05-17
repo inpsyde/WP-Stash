@@ -14,6 +14,6 @@ class CacheKeyGeneratorTest extends AbstractUnitTestcase
 
         $expectedKey = 'foo';
 
-        static::assertContains($expectedKey, $testee->create($expectedKey));
+        static::assertStringContainsString($expectedKey, $testee->create($expectedKey));
     }
 }
