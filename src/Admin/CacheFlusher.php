@@ -12,11 +12,12 @@ class CacheFlusher implements MenuItemProvider
 
     public function item(): MenuItem
     {
+        $referer = '';
         if (isset($_SERVER, $_SERVER['REQUEST_URI'])) {
             //phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $referer = wp_unslash($_SERVER['REQUEST_URI']);
+            $referer = '&_wp_http_referer=' . urlencode($referer);
         }
-        $referer = '&_wp_http_referer=' . urlencode($referer);
 
         return new MenuItem(
             'wp-stash-flush',
@@ -35,10 +36,7 @@ class CacheFlusher implements MenuItemProvider
     public function flush_cache()
     {
         $wpNonce = filter_input(INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING);
-        if (
-            !isset($wpNonce)
-            || !wp_verify_nonce($wpNonce, self::PURGE_ACTION)
-        ) {
+        if (!$wpNonce || !wp_verify_nonce($wpNonce, self::PURGE_ACTION)) {
             wp_nonce_ays('');
         }
 
