@@ -21,9 +21,9 @@ class ObjectCacheProxy
 
     /**
      * Amount of times the cache did not have the request in cache
+     * Public because external tools (query-monitor) directly access this
      *
      * @var    int
-     * @access public
      * @since  WP 2.0.0
      */
     public $cache_misses = 0;
@@ -57,12 +57,12 @@ class ObjectCacheProxy
 
     /**
      * The amount of times the cache data was already stored in the cache.
+     * Public because external tools (query-monitor) directly access this
      *
      * @since  WP 2.5.0
-     * @access private
      * @var    int
      */
-    private $cache_hits = 0;
+    public $cache_hits = 0;
 
     /**
      * List of non persistent groups
