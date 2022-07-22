@@ -1,8 +1,8 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
-
 
 namespace Inpsyde\WpStash;
 
@@ -65,8 +65,12 @@ class Config
 
         // phpcs:disable NeutronStandard.Functions.DisallowCallUserFunc.CallUserFunc
         if (
-        ! in_array(DriverInterface::class, class_implements($className), true)
-            || ! call_user_func([$className, 'isAvailable'])
+            !in_array(
+                DriverInterface::class,
+                class_implements($className),
+                true
+            )
+            || !call_user_func([$className, 'isAvailable'])
         ) {
             return Ephemeral::class;
         }

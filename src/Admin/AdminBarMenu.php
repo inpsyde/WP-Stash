@@ -1,14 +1,14 @@
 <?php
+
 // -*- coding: utf-8 -*-
 
 declare(strict_types=1);
-
 
 namespace Inpsyde\WpStash\Admin;
 
 class AdminBarMenu
 {
-    const PARENT_ID = 'wp-stash';
+    public const PARENT_ID = 'wp-stash';
 
     /**
      * @var MenuItemProvider[]
