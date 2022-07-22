@@ -1,6 +1,9 @@
 # Changelog
 
 #### dev-master
+
+#### 3.3.0
+* Make `$cache_hits` public, so tools like Query Monitor can read it
 * Raise dependency versions to be compatible with PHP 8
 
 #### 3.2.3
