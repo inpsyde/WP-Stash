@@ -169,8 +169,6 @@ wp cache get update_core site-transient
 
 ## License and Copyright
 
-Copyright (c) 2020 Inpsyde GmbH.
-
-_WP Stash_ code is licensed under [MIT license](./LICENSE).
+Copyright (c) Inpsyde GmbH.
 
 The team at [Inpsyde](https://inpsyde.com/) is engineering the Web since 2006.
