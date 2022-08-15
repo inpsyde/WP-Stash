@@ -98,7 +98,7 @@ class WpCliCommand extends \WP_CLI_Command
             return;
         }
 
-        if ($response['response']['code'] === 200 && isset($response['headers']['WP - Stash'])) {
+        if ($response['response']['code'] === 200 && isset($response['headers']['WP-Stash'])) {
             WP_CLI::success($response['body']);
         } else {
             if ($response['response']['code'] !== 200) {
