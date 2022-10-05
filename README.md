@@ -171,4 +171,4 @@ wp cache get update_core site-transient
 
 Copyright (c) Inpsyde GmbH.
 
-The team at [Inpsyde](https://inpsyde.com/) is engineering the Web since 2006
+The team at [Inpsyde](https://inpsyde.com/) is engineering the Web since 2006.
