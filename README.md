@@ -1,17 +1,17 @@
 # WP Stash
 
 WP Stash is a bridge between StashPHP and WP's object caching drop-in support.
-It enables APCu, Redis, SQLite, Memcached and Filesystem caches, stampede protection and group invalidation.
+It enables APCu, Redis, SQLite, Memcached, and Filesystem caches, stampede protection, and group invalidation.
  
-After installing, it will copy an object-cache.php file to wp-content/ which will delegate all cache calls to its mu-plugin folder. From there, it will interface with StashPHP.
+After installing, it will copy an `object-cache.php` file to `wp-content/` which will delegate all cache calls to its mu-plugin folder. From there, it will interface with StashPHP.
 
 
 ## Installation
 
-This plugin is a composer package that will be installed as a `wordpress-muplugin`. As such, there are a few things to note when attempting to install it.
+This plugin is a Composer package that will be installed as a `wordpress-muplugin`. As such, there are a few things to note when attempting to install it.
 Usually, MU-Plugins are single PHP files, sometimes accompanied by a subfolder containing more code. Since WP-Stash assumes it's living in a subfolder, it contains a lot of other dev-related stuff in its root folder.
 
-For WP to pick up WP-Stash as a MU-Plugin, you have to do one of the following:
+For WP to pick up WP-Stash as an MU-Plugin, you have to do one of the following:
 
 
 ### Composer
@@ -25,7 +25,7 @@ Since this package will get installed in a subfolder. WordPress will not automat
 #### WP Starter
 
 If you are using the awesome [WP Starter](https://wecodemore.github.io/wpstarter/) package, then everything will work automatically. 
-It contains a MU-Loader which will take care of loading WP Stash. Note that you MUST NOT use WPStarter's drop in functionality to copy `object-cache.php` on build time! WPStash must place the drop in file on its own. If you want to trigger WP-Stash to create the drop in file just run a command like `wp plugin list`.
+It contains an MU-Loader which will take care of loading WP Stash. Note that you MUST NOT use WPStarter's drop-in functionality to copy `object-cache.php` on build time! WPStash must place the drop-in file on its own. If you want to trigger WP-Stash to create the drop-in file just run a command like `wp plugin list`.
 
 #### WP Must-Use Plugin Loader
 
@@ -36,7 +36,7 @@ Just require the package and follow the usage instructions from the link to set 
 
 #### Direct upload
 
-You can technically use WP-Stash by simply extracting all files into the `wp-content/mu-plugins/` folder. However, this is pretty dirty and we strongly disencourage doing so.
+You can technically use WP-Stash by simply extracting all files into the `wp-content/mu-plugins/` folder. However, this is pretty dirty and we strongly discourage doing so.
 Instead, please look at the [WordPress Codex on MU-Plugins](https://codex.wordpress.org/Must_Use_Plugins) to find solutions for loading mu-plugins from folders.
 
 The easiest solution is to add a `wp-content/mu-plugins/wp-stash.php` file and put the following in it:
@@ -57,7 +57,7 @@ Please consult the [the StashPHP documentation](http://www.stashphp.com/Drivers.
 
 The following constants (or environment variables) can be used for configuring WP Stash:
 
-`WP_STASH_DRIVER` - FQCN : The class name of the Stash driver you want to use. Will fall back to `Ephemeral` (pure memory cache without persistence) if unset or invalid. Available drivers are:
+`WP_STASH_DRIVER` - FQCN: The class name of the Stash driver you want to use. Will fall back to `Ephemeral` (pure memory cache without persistence) if unset or invalid. Available drivers are:
 
 * `\Stash\Driver\Apc`
 * `\Stash\Driver\FileSystem`
@@ -69,14 +69,14 @@ The following constants (or environment variables) can be used for configuring W
 
 `WP_STASH_DRIVER_ARGS` - string: Driver constructor args as a serialized array or JSON.
 
-`WP_STASH_IN_MEMORY_CACHE` - bool : If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default `true`.
+`WP_STASH_IN_MEMORY_CACHE` - bool: If enabled, keeps an in-memory version of the cache in sync. This enhances performance during a single request. Default `true`.
 
-`WP_STASH_PURGE_INTERVAL` - integer : WP Stash runs scheduled maintenance actions on the configured cache driver every 12 hours by default. You can configure a different interval here. Default `3600*12`.
+`WP_STASH_PURGE_INTERVAL` - integer: WP Stash runs scheduled maintenance actions on the configured cache driver every 12 hours by default. You can configure a different interval here. Default `3600*12`.
 
-`WP_STASH_BYPASS` - bool : Allows temporarily disabling WP-Stash and falling back to the core WP system.
+`WP_STASH_BYPASS` - bool: Allows temporarily disabling WP-Stash and falling back to the core WP system.
 
 ### Environment variables
-If you work with composer based enviroments like WPStarter you might want to use environemnt variables right away. Here are some examples:
+If you work with Composer-based environments like WPStarter you might want to use environment variables right away. Here are some examples:
 
 Caching with APC:
 ```
@@ -96,25 +96,25 @@ WP_STASH_DRIVER=\Stash\Driver\Memcache
 WP_STASH_DRIVER_ARGS='{"servers":["memcached","11211"]}'
 ```
 
-Don't cache persistently at all (cache lifes only within the script lifetime):
+Don't cache persistently at all (cache lives only within the script lifetime):
 ```
 WP_STASH_DRIVER=\Stash\Driver\Ephermal
 ```
 
 ### wp-config.php
 ```php
-define( 'WP_STASH_DRIVER',  '\Stash\Driver\Apc' );
-define( 'WP_STASH_DRIVER_ARGS', serialize( array('ttl' => 3600 ) ) );
+define('WP_STASH_DRIVER',  '\Stash\Driver\Apc');
+define('WP_STASH_DRIVER_ARGS', serialize(['ttl' => 3600]));
 ``` 
 
 ## wp-cli
 
-WP Stash has the following cli commands:
+WP Stash has the following CLI commands:
 
-`wp stash flush` :  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the cli process (which might run as a different user, or with a different configuration). 
+`wp stash flush`:  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the CLI process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
 
-`wp stash purge` :   Some drivers require that maintenance action be performed regularly. The FileSystem and SQLite drivers, as an example, need to remove old data as they can't do it automatically. While this is automatically  performed via WP cron, you can trigger the process manually with this command.
+`wp stash purge`:   Some drivers require that maintenance action be performed regularly. The FileSystem and SQLite drivers, for example, need to remove old data as they can't do it automatically. While this is automatically performed via WP cron, you can trigger the process manually with this command.
 
 
 ## Ensure your persistent cache works as expected 
@@ -139,9 +139,9 @@ wp cache get {your-user-ID} users
 )
 ```
 
-This has some limitations and might not work on some server setups depending on whether the webserver and your console user are the same.
+This has some limitations and might not work on some server setups depending on whether the web server and your console user are the same.
 
-In that case you could check if common transients are stored in the cache. First delete all transients just in case there are some left:
+In that case, you could check if common transients are stored in the cache. First, delete all transients just in case there are some left:
 ```
 wp transient delete --network --all
 Success: No transients found.
