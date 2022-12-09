@@ -174,7 +174,7 @@ class ObjectCacheProxyTest extends AbstractUnitTestcase
                 'key_2' => 'data_key_2',
             ],
             $testee->get_multiple(
-                ['key_1', 'key_2'],
+                ['key_1', 'key_2', 'key_2'],
                 'my_group'
             )
         );

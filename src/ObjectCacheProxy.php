@@ -462,6 +462,7 @@ class ObjectCacheProxy
      */
     public function get_multiple($keys, $group = '', $force = false)
     {
+        $keys = array_unique($keys);
         $cache_keys = [];
         foreach ($keys as $key) {
             $cache_keys[] = $this->key_gen->create((string) $key, (string) $group);
