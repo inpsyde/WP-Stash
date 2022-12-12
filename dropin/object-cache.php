@@ -304,7 +304,8 @@ function wp_cache_reset()
  * @param string $group Optional. Where the cache contents are grouped. Default empty.
  * @param bool   $force Optional. Whether to force an update of the local cache
  *                      from the persistent cache. Default false.
- * @return array Array of values organized into groups.
+ * @return array Array of return values, grouped by key. Each value is either
+ *               the cache contents on success, or false on failure.
  */
 function wp_cache_get_multiple($keys, $group = '', $force = false)
 {

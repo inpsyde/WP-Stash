@@ -4,10 +4,13 @@ namespace Inpsyde\WpStash\Tests\Unit;
 
 use Brain\Monkey\Functions;
 use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Generator\MultisiteCacheKeyGenerator;
 use Inpsyde\WpStash\Generator\MultisiteKeyGen;
 use Inpsyde\WpStash\ObjectCacheProxy;
 use Inpsyde\WpStash\StashAdapter;
 use Mockery\MockInterface;
+use Stash\Driver\Ephemeral;
+use Stash\Pool;
 
 class ObjectCacheProxyTest extends AbstractUnitTestcase
 {
@@ -141,6 +144,40 @@ class ObjectCacheProxyTest extends AbstractUnitTestcase
         $testee = new ObjectCacheProxy($nonPersistentPool, $persistentPool, $keyGen);
         $result = $testee->add_non_persistent_groups($nonPersistentGroups);
         $this->assertSame(array_fill_keys($nonPersistentGroups, true), $result);
+    }
+
+    public function test_get_multiple(): void
+    {
+        Functions\expect('wp_suspend_cache_addition')
+            ->twice()
+            ->andReturn(false);
+
+        $testee = new ObjectCacheProxy(
+            new StashAdapter(
+                new Pool(
+                    new Ephemeral()
+                )
+            ),
+            new StashAdapter(
+                new Pool(
+                    new Ephemeral()
+                )
+            ),
+            new MultisiteCacheKeyGenerator(1)
+        );
+
+        $testee->add('key_1', 'data_key_1', 'my_group');
+        $testee->add('key_2', 'data_key_2', 'my_group');
+        $this->assertSame(
+            [
+                'key_1' => 'data_key_1',
+                'key_2' => 'data_key_2',
+            ],
+            $testee->get_multiple(
+                ['key_1', 'key_2', 'key_2'],
+                'my_group'
+            )
+        );
     }
 
     public function default_test_data()
