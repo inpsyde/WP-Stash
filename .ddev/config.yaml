@@ -1,5 +1,5 @@
 name: wp-stash
-type: php
+type: wordpress
 docroot: .ddev/wordpress
 php_version: "8.0"
 webserver_type: nginx-fpm
@@ -13,21 +13,20 @@ database:
     version: "10.4"
 nfs_mount_enabled: false
 mutagen_enabled: false
-use_dns_when_possible: true
-composer_version: "2"
-nodejs_version: "16"
-web_environment:
-    - WP_VERSION=6.2
-    - WP_LOCALE=de_DE
-    - WP_TITLE=Inpsyde WP Stash
-    - ADMIN_USER=admin
-    - ADMIN_PASS=admin
-    - ADMIN_EMAIL=admin@example.com
-    - PLUGIN_NAME=wp-stash
-
 hooks:
     pre-start:
-        - exec-host: "mkdir -p .ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}"
+        - exec-host: mkdir -p .ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}
+use_dns_when_possible: true
+composer_version: "2"
+web_environment:
+    - ADMIN_EMAIL=admin@example.com
+    - ADMIN_PASS=admin
+    - ADMIN_USER=admin
+    - PLUGIN_NAME=wp-stash
+    - WP_LOCALE=de_DE
+    - WP_TITLE=Inpsyde WP Stash
+    - WP_VERSION=6.2
+nodejs_version: "16"
 
 # Key features of ddev's config.yaml:
 
@@ -266,3 +265,6 @@ hooks:
 # information on the commands that can be extended and the tasks you can define
 # for them. Example:
 #hooks:
+# Un-comment to emit the WP CLI version after ddev start.
+#  post-start:
+#    - exec: wp cli version

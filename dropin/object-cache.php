@@ -170,7 +170,7 @@ function wp_cache_incr($key, $offset = 1, $group = '')
  */
 function wp_cache_init()
 {
-    $autoloadFile = __DIR__.'/../vendor/autoload.php';
+    $autoloadFile = __DIR__ . '/../vendor/autoload.php';
     if (file_exists($autoloadFile)) {
         require_once $autoloadFile;
     }
@@ -313,4 +313,66 @@ function wp_cache_get_multiple($keys, $group = '', $force = false)
     assert($wp_object_cache instanceof ObjectCacheProxy);
 
     return $wp_object_cache->get_multiple($keys, $group, $force);
+}
+
+/**
+ * Removes all cache items from the in-memory runtime cache.
+ *
+ * @since 6.0.0
+ *
+ * @see WP_Object_Cache::flush()
+ *
+ * @return bool True on success, false on failure.
+ */
+function wp_cache_flush_runtime() {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+    return $wp_object_cache->flush_runtime();
+}
+
+/**
+ * Removes all cache items in a group, if the object cache implementation supports it.
+ *
+ * Before calling this function, always check for group flushing support using the
+ * `wp_cache_supports( 'flush_group' )` function.
+ *
+ * @since 6.1.0
+ *
+ * @see WP_Object_Cache::flush_group()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param string $group Name of group to remove from cache.
+ * @return bool True if group was flushed, false otherwise.
+ */
+function wp_cache_flush_group( $group ) {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+    return $wp_object_cache->flush_group($group);
+}
+
+/**
+ * Determines whether the object cache implementation supports a particular feature.
+ *
+ * @since 6.1.0
+ *
+ * @param string $feature Name of the feature to check for. Possible values include:
+ *                        'add_multiple', 'set_multiple', 'get_multiple', 'delete_multiple',
+ *                        'flush_runtime', 'flush_group'.
+ * @return bool True if the feature is supported, false otherwise.
+ */
+function wp_cache_supports($feature): bool
+{
+
+    switch ($feature) {
+        case 'add_multiple':
+        case 'set_multiple':
+        case 'get_multiple':
+        case 'delete_multiple':
+        case 'flush_runtime':
+        case 'flush_group':
+            return true;
+
+        default:
+            return false;
+    }
 }

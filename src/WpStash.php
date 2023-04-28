@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 use Stash\Driver\Composite;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
@@ -130,7 +131,7 @@ final class WpStash
             && !$driver instanceof Composite
             && !$driver instanceof Ephemeral
         ) {
-            $driver = new Composite(
+            $driver = new PersistenceAwareComposite(
                 [
                     'drivers' => [
                         new Ephemeral(),

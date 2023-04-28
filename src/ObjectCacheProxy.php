@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 
 // because WordPress...
 // phpcs:disable
@@ -438,7 +439,7 @@ class ObjectCacheProxy
     }
 
     /**
-     * Switch the interal blog id.
+     * Switch the internal blog id.
      *
      * This changes the blog id used to create keys in blog specific groups.
      *
@@ -471,5 +472,28 @@ class ObjectCacheProxy
         $items = $this->choose_pool($group)->getMultiple($cache_keys);
 
         return array_combine($keys, $items);
+    }
+
+    /**
+     * @return bool
+     */
+    public function flush_runtime(): bool
+    {
+        $this->non_persistent->clear();
+        if($this->persistent instanceof PersistenceAwareComposite){
+            $this->persistent->clearNonPersistent();
+        }
+        return true;
+    }
+
+    /**
+     * @param string $group
+     *
+     * @return bool
+     */
+    public function flush_group(string $group): bool
+    {
+        $this->choose_pool($group)->clear();
+        return true;
     }
 }
