@@ -69,6 +69,39 @@ class StashAdapter
     }
 
     /**
+     * Sets multiple items in one call if they do not yet exist
+     *
+     * @param array $data
+     * @param int $expire
+     *
+     * @return array
+     */
+    public function addMultiple(array $data, int $expire = 0): array
+    {
+        $result = [];
+        $keys = array_keys($data);
+        foreach ($this->pool->getItems($keys) as $item) {
+            $key = $item->getKey();
+            if ($this->pool->hasItem($key)) {
+                $result[$key] = false;
+                continue;
+            }
+            /**
+             * @var ItemInterface $item
+             */
+            $item->set($data[$key]);
+            if ($expire) {
+                $item->expiresAfter($expire);
+            }
+
+            $item->setInvalidationMethod(Invalidation::OLD);
+            $result[$key] = true;
+        }
+
+        return $result;
+    }
+
+    /**
      * Set/update a cache item.
      *
      * @param string $key
@@ -149,6 +182,32 @@ class StashAdapter
              * @var ItemInterface $item
              */
             $result[$item->getKey()] = $this->getValueFromItem($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $data
+     * @param int $expire
+     *
+     * @return array
+     */
+    public function setMultiple(array $data, int $expire = 0): array
+    {
+        $result = [];
+        $keys = array_keys($data);
+        foreach ($this->pool->getItems($keys) as $item) {
+            /**
+             * @var ItemInterface $item
+             */
+            $item->set($data[$item->getKey()]);
+            if ($expire) {
+                $item->expiresAfter($expire);
+            }
+
+            $item->setInvalidationMethod(Invalidation::OLD);
+            $result[$item->getKey()] = true;
         }
 
         return $result;
@@ -245,5 +304,18 @@ class StashAdapter
     public function __destruct()
     {
         $this->pool->commit();
+    }
+
+    public function deleteMultiple(array $cache_keys): array
+    {
+        $result = [];
+        foreach ($this->pool->getItems($cache_keys) as $item) {
+            /**
+             * @var ItemInterface $item
+             */
+            $result[$item->getKey()] = $item->clear();
+        }
+
+        return $result;
     }
 }
