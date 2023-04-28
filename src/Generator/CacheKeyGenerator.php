@@ -12,8 +12,13 @@ namespace Inpsyde\WpStash\Generator;
  */
 class CacheKeyGenerator implements KeyGen
 {
-    public function create(string $key, string $group = 'default'): string
+
+    public function create(string $key, string $group = KeyGen::DEFAULT_GROUP): string
     {
-        return KeyGen::GLUE . implode(KeyGen::GLUE, [$group, $key]);
+        if (empty($group)) {
+            $group = KeyGen::DEFAULT_GROUP;
+        }
+
+        return KeyGen::GLUE.implode(KeyGen::GLUE, [$group, $key]);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Inpsyde\WpStash\Generator\KeyGen;
 use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
@@ -83,14 +84,15 @@ class StashAdapter
         $keys = array_keys($data);
         foreach ($this->pool->getItems($keys) as $item) {
             $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
             if ($this->pool->hasItem($key)) {
-                $result[$key] = false;
+                $result[$wpCacheKey] = false;
                 continue;
             }
             /**
              * @var ItemInterface $item
              */
-            $item->set($data[$key]);
+            $item->set($data[$wpCacheKey]);
             if ($expire) {
                 $item->expiresAfter($expire);
             }
@@ -199,6 +201,7 @@ class StashAdapter
         $result = [];
         $keys = array_keys($data);
         foreach ($this->pool->getItems($keys) as $item) {
+            //$keyString = trim($key, '/');
             /**
              * @var ItemInterface $item
              */

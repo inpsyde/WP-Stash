@@ -558,8 +558,8 @@ class ObjectCacheProxy
     private function transform_keys_for_group(array $data, string $group): array
     {
         return $this->array_map_key(
-            function (string $key) use ($group) {
-                return $this->key_gen->create($key, $group);
+            function ($key) use ($group) {
+                return $this->key_gen->create((string)$key, $group);
             },
             $data
         );
@@ -571,16 +571,18 @@ class ObjectCacheProxy
      * @param $array
      *
      * @return mixed
-     * @see https://gist.github.com/abiusx/4ed90007ca693802cc7a56446cfd9394
      */
     private function array_map_key($callback, $array)
     {
-        return array_reduce($array, function ($carry, $val) use ($array, $callback) {
-            $key = call_user_func($callback, $val);
-            $carry[$key] = $val;
+        $result = [];
+        array_walk(
+            $array,
+            function ($val, $key) use ($callback,&$result) {
+                $result[$callback($key, $val)] = $val;
+            }
+        );
 
-            return $carry;
-        });
+        return $result;
     }
 
     /**
