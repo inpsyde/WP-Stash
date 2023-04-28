@@ -5,7 +5,7 @@ php_version: "8.0"
 webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
-xdebug_enabled: false
+xdebug_enabled: true
 additional_hostnames: []
 additional_fqdns: []
 database:
@@ -27,7 +27,9 @@ web_environment:
 
 hooks:
     pre-start:
-        - exec-host: "mkdir -p .ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}"
+        - exec-host: |
+              mkdir -p .ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}
+              mkdir -p .ddev/wordpress/wp-content/plugins/wp-stash-test-plugin
 
 # Key features of ddev's config.yaml:
 

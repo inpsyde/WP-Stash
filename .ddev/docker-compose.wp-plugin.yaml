@@ -5,3 +5,7 @@ services:
             -   source: ../
                 target: /var/www/html/.ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}
                 type: bind
+            -   source: ../wp-stash-test-plugin
+                target: /var/www/html/.ddev/wordpress/wp-content/plugins/wp-stash-test-plugin
+                type: bind
+
