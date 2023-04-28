@@ -14,7 +14,6 @@ use Stash\Driver\Composite;
  */
 class PersistenceAwareComposite extends Composite
 {
-
     public function clearNonPersistent(): void
     {
         foreach ($this->drivers as $driver) {

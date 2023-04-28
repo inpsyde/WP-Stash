@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Inpsyde WPStash">
+    <arg value="s"/>
     <file>./src</file>
     <rule ref="Inpsyde"/>
 </ruleset>

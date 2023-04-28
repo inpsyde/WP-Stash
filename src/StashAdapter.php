@@ -11,6 +11,7 @@ use Stash\Pool;
 
 // phpcs:disable Inpsyde.CodeQuality.VariablesName.SnakeCaseVar
 // phpcs:disable Inpsyde.CodeQuality.ForbiddenPublicProperty.Found
+// phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoSetter
 
 /**
  * Class StashAdapter
