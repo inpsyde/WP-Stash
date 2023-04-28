@@ -201,17 +201,18 @@ class StashAdapter
         $result = [];
         $keys = array_keys($data);
         foreach ($this->pool->getItems($keys) as $item) {
-            //$keyString = trim($key, '/');
+            $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
             /**
              * @var ItemInterface $item
              */
-            $item->set($data[$item->getKey()]);
+            $item->set($data[$wpCacheKey]);
             if ($expire) {
                 $item->expiresAfter($expire);
             }
 
             $item->setInvalidationMethod(Invalidation::OLD);
-            $result[$item->getKey()] = true;
+            $result[$wpCacheKey] = true;
         }
 
         return $result;
