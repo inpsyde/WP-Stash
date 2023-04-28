@@ -167,6 +167,25 @@ wp cache get update_core site-transient
 ...
 ```
 
+## Development
+
+This package ships a DDEV configuration containing a complete WordPress installation.
+
+To get started, run
+
+```shell
+ddev start
+```
+
+Then install WordPress with the following command:
+
+```shell
+ddev orchestrate
+```
+Now you can visit [https://wp-stash.ddev.site/](https://wp-stash.ddev.site/) and log in:
+* User: `admin`
+* Password: `admin`
+
 ## License and Copyright
 
 Copyright (c) Inpsyde GmbH.
