@@ -1,5 +1,5 @@
 name: wp-stash
-type: wordpress
+type: php
 docroot: .ddev/wordpress
 php_version: "8.0"
 webserver_type: nginx-fpm
@@ -265,6 +265,3 @@ nodejs_version: "16"
 # information on the commands that can be extended and the tasks you can define
 # for them. Example:
 #hooks:
-# Un-comment to emit the WP CLI version after ddev start.
-#  post-start:
-#    - exec: wp cli version
