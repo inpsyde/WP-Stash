@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
@@ -98,6 +99,8 @@ class StashAdapter
             }
 
             $item->setInvalidationMethod(Invalidation::OLD);
+            $this->pool->saveDeferred($item);
+
             $result[$key] = true;
         }
 
@@ -181,10 +184,12 @@ class StashAdapter
     {
         $result = [];
         foreach ($this->pool->getItems($keys) as $item) {
+            $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
             /**
              * @var ItemInterface $item
              */
-            $result[$item->getKey()] = $this->getValueFromItem($item);
+            $result[$wpCacheKey] = $this->getValueFromItem($item);
         }
 
         return $result;
@@ -212,6 +217,7 @@ class StashAdapter
             }
 
             $item->setInvalidationMethod(Invalidation::OLD);
+            $this->pool->saveDeferred($item);
             $result[$wpCacheKey] = true;
         }
 
@@ -314,6 +320,9 @@ class StashAdapter
     public function deleteMultiple(array $cache_keys): array
     {
         $result = [];
+        /**
+         * Pool::deleteItems() unfortunately does not provide the required metadata
+         */
         foreach ($this->pool->getItems($cache_keys) as $item) {
             /**
              * @var ItemInterface $item
@@ -322,5 +331,19 @@ class StashAdapter
         }
 
         return $result;
+    }
+
+    /**
+     * It would be good to be able to do this closer to the Stash API in the future.
+     * For now, there is no other way to access only the non-persistent drivers of a composite.
+     * @return void
+     */
+    public function clearNonPersistent(): void
+    {
+        $driver = $this->pool->getDriver();
+        if (!$driver instanceof PersistenceAwareComposite) {
+            return;
+        }
+        $driver->clearNonPersistent();
     }
 }

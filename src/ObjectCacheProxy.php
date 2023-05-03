@@ -508,9 +508,7 @@ class ObjectCacheProxy
     public function flush_runtime(): bool
     {
         $this->non_persistent->clear();
-        if ($this->persistent instanceof PersistenceAwareComposite) {
-            $this->persistent->clearNonPersistent();
-        }
+        $this->persistent->clearNonPersistent();
 
         return true;
     }
