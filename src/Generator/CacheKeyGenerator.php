@@ -1,6 +1,5 @@
 <?php
 
-// -*- coding: utf-8 -*-
 declare(strict_types=1);
 
 namespace Inpsyde\WpStash\Generator;
@@ -12,13 +11,12 @@ namespace Inpsyde\WpStash\Generator;
  */
 class CacheKeyGenerator implements KeyGen
 {
-
     public function create(string $key, string $group = KeyGen::DEFAULT_GROUP): string
     {
         if (empty($group)) {
             $group = KeyGen::DEFAULT_GROUP;
         }
 
-        return KeyGen::GLUE.implode(KeyGen::GLUE, [$group, $key]);
+        return KeyGen::GLUE . implode(KeyGen::GLUE, [$group, $key]);
     }
 }
