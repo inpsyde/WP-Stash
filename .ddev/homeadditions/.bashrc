@@ -5,7 +5,7 @@ source /usr/lib/git-core/git-sh-prompt
 export HISTCONTROL=erasedups
 export HISTSIZE=5000
 
-# Add global and "project root level" composer executables to the PATH
+# Add global and "project root level" Composer executables to the PATH
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 export PATH="/var/www/html/vendor/bin:$PATH"
 
