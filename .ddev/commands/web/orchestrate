@@ -3,9 +3,6 @@
 ## Usage: orchestrate
 ## Example: "ddev orchestrate"
 
-# Prevent output/interference from plugin package
-export PAYONEER_DEBUG=0
-
 mkdir -p "${DDEV_DOCROOT}"
 pushd "${DDEV_DOCROOT}"
 PLUGIN_FOLDER="${DDEV_DOCROOT}/wp-content/mu-plugins/${PLUGIN_NAME:-$DDEV_PROJECT}"
