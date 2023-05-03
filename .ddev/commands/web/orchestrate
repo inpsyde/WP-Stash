@@ -22,10 +22,6 @@ while [ : ]; do
         find "${DDEV_DOCROOT}" -mindepth 1 ! -regex "^${PLUGIN_FOLDER}\(/.*\)?" -delete
         pushd "${DDEV_DOCROOT}"
         ;;
-    -p | --plugin)
-        echo "Processing 'delta' option. Input argument is '$2'"
-        shift 2
-        ;;
     --) shift;
         break
         ;;
