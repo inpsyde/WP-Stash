@@ -1,4 +1,5 @@
 * text eol=lf
+.idea export-ignore
 .gitattributes export-ignore
 .github export-ignore
 .gitignore export-ignore
@@ -7,3 +8,4 @@ phpcs.xml.dist export-ignore
 phpunit.xml.dist export-ignore
 README.md export-ignore
 tests export-ignore
+wp-stash-test-plugin export-ignore

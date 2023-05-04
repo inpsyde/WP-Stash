@@ -1,0 +1,32 @@
+name: wp-stash
+type: php
+docroot: .ddev/wordpress
+php_version: "8.0"
+webserver_type: nginx-fpm
+router_http_port: "80"
+router_https_port: "443"
+xdebug_enabled: true
+additional_hostnames: []
+additional_fqdns: []
+database:
+    type: mariadb
+    version: "10.4"
+nfs_mount_enabled: false
+mutagen_enabled: false
+use_dns_when_possible: true
+composer_version: "2"
+nodejs_version: "16"
+web_environment:
+    - WP_VERSION=6.2
+    - WP_LOCALE=en_US
+    - WP_TITLE=Inpsyde WP Stash
+    - ADMIN_USER=admin
+    - ADMIN_PASS=admin
+    - ADMIN_EMAIL=admin@example.com
+    - PLUGIN_NAME=wp-stash
+
+hooks:
+    pre-start:
+        - exec-host: |
+              mkdir -p .ddev/wordpress/wp-content/mu-plugins/${DDEV_PROJECT}
+              mkdir -p .ddev/wordpress/wp-content/plugins/wp-stash-test-plugin
