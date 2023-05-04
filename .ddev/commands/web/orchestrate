@@ -3,9 +3,6 @@
 ## Usage: orchestrate
 ## Example: "ddev orchestrate"
 
-# Prevent output/interference from plugin package
-export PAYONEER_DEBUG=0
-
 mkdir -p "${DDEV_DOCROOT}"
 pushd "${DDEV_DOCROOT}"
 PLUGIN_FOLDER="${DDEV_DOCROOT}/wp-content/mu-plugins/${PLUGIN_NAME:-$DDEV_PROJECT}"
@@ -24,10 +21,6 @@ while [ : ]; do
         popd
         find "${DDEV_DOCROOT}" -mindepth 1 ! -regex "^${PLUGIN_FOLDER}\(/.*\)?" -delete
         pushd "${DDEV_DOCROOT}"
-        ;;
-    -p | --plugin)
-        echo "Processing 'delta' option. Input argument is '$2'"
-        shift 2
         ;;
     --) shift;
         break
