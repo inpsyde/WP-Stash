@@ -69,6 +69,11 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
       <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/composer" />
+      <path value="$PROJECT_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/filp/whoops" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
