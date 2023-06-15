@@ -1,0 +1,11 @@
+{
+    "name": "playwright",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "@playwright/test": "^1.34.2",
+        "dotenv": "^16.0.3"
+    },
+    "scripts": {}
+}
