@@ -5,12 +5,15 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
+use Inpsyde\WpStash\Generator\KeyGen;
+use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
 
 // phpcs:disable Inpsyde.CodeQuality.VariablesName.SnakeCaseVar
 // phpcs:disable Inpsyde.CodeQuality.ForbiddenPublicProperty.Found
+// phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoSetter
 
 /**
  * Class StashAdapter
@@ -66,6 +69,42 @@ class StashAdapter
         }
 
         return $this->set($key, $data, $expire);
+    }
+
+    /**
+     * Sets multiple items in one call if they do not yet exist
+     *
+     * @param array $data
+     * @param int $expire
+     *
+     * @return array
+     */
+    public function addMultiple(array $data, int $expire = 0): array
+    {
+        $result = [];
+        $keys = array_keys($data);
+        foreach ($this->pool->getItems($keys) as $item) {
+            $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
+            if ($this->pool->hasItem($key)) {
+                $result[$wpCacheKey] = false;
+                continue;
+            }
+            /**
+             * @var ItemInterface $item
+             */
+            $item->set($data[$wpCacheKey]);
+            if ($expire) {
+                $item->expiresAfter($expire);
+            }
+
+            $item->setInvalidationMethod(Invalidation::OLD);
+            $this->pool->saveDeferred($item);
+
+            $result[$key] = true;
+        }
+
+        return $result;
     }
 
     /**
@@ -145,10 +184,41 @@ class StashAdapter
     {
         $result = [];
         foreach ($this->pool->getItems($keys) as $item) {
+            $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
             /**
              * @var ItemInterface $item
              */
-            $result[$item->getKey()] = $this->getValueFromItem($item);
+            $result[$wpCacheKey] = $this->getValueFromItem($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $data
+     * @param int $expire
+     *
+     * @return array
+     */
+    public function setMultiple(array $data, int $expire = 0): array
+    {
+        $result = [];
+        $keys = array_keys($data);
+        foreach ($this->pool->getItems($keys) as $item) {
+            $key = $item->getKey();
+            $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
+            /**
+             * @var ItemInterface $item
+             */
+            $item->set($data[$wpCacheKey]);
+            if ($expire) {
+                $item->expiresAfter($expire);
+            }
+
+            $item->setInvalidationMethod(Invalidation::OLD);
+            $this->pool->saveDeferred($item);
+            $result[$wpCacheKey] = true;
         }
 
         return $result;
@@ -245,5 +315,35 @@ class StashAdapter
     public function __destruct()
     {
         $this->pool->commit();
+    }
+
+    public function deleteMultiple(array $cache_keys): array
+    {
+        $result = [];
+        /**
+         * Pool::deleteItems() unfortunately does not provide the required metadata
+         */
+        foreach ($this->pool->getItems($cache_keys) as $item) {
+            /**
+             * @var ItemInterface $item
+             */
+            $result[$item->getKey()] = $item->clear();
+        }
+
+        return $result;
+    }
+
+    /**
+     * It would be good to be able to do this closer to the Stash API in the future.
+     * For now, there is no other way to access only the non-persistent drivers of a composite.
+     * @return void
+     */
+    public function clearNonPersistent(): void
+    {
+        $driver = $this->pool->getDriver();
+        if (!$driver instanceof PersistenceAwareComposite) {
+            return;
+        }
+        $driver->clearNonPersistent();
     }
 }

@@ -47,6 +47,28 @@ function wp_cache_add($key, $data, $group = '', $expire = 0)
 }
 
 /**
+ * Adds multiple values to the cache in one call.
+ *
+ * @since 6.0.0
+ *
+ * @see WP_Object_Cache::add_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $data   Array of keys and values to be set.
+ * @param string $group  Optional. Where the cache contents are grouped. Default empty.
+ * @param int    $expire Optional. When to expire the cache contents, in seconds.
+ *                       Default 0 (no expiration).
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false if cache key and group already exist.
+ */
+function wp_cache_add_multiple( array $data, $group = '', $expire = 0 ) {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+
+    return $wp_object_cache->add_multiple( $data, $group, $expire );
+}
+
+/**
  * Closes the cache.
  *
  * This function has ceased to do anything since WordPress 2.5. The
@@ -170,7 +192,7 @@ function wp_cache_incr($key, $offset = 1, $group = '')
  */
 function wp_cache_init()
 {
-    $autoloadFile = __DIR__.'/../vendor/autoload.php';
+    $autoloadFile = __DIR__ . '/../vendor/autoload.php';
     if (file_exists($autoloadFile)) {
         require_once $autoloadFile;
     }
@@ -287,11 +309,6 @@ function wp_cache_add_non_persistent_groups($groups)
 function wp_cache_reset()
 {
     _deprecated_function(__FUNCTION__, '3.5');
-
-    global $wp_object_cache;
-    assert($wp_object_cache instanceof ObjectCacheProxy);
-
-    return $wp_object_cache->reset();
 }
 
 /**
@@ -313,4 +330,108 @@ function wp_cache_get_multiple($keys, $group = '', $force = false)
     assert($wp_object_cache instanceof ObjectCacheProxy);
 
     return $wp_object_cache->get_multiple($keys, $group, $force);
+}
+
+/**
+ * Sets multiple values to the cache in one call.
+ *
+ * @since 6.0.0
+ *
+ * @see WP_Object_Cache::set_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $data   Array of keys and values to be set.
+ * @param string $group  Optional. Where the cache contents are grouped. Default empty.
+ * @param int    $expire Optional. When to expire the cache contents, in seconds.
+ *                       Default 0 (no expiration).
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false on failure.
+ */
+function wp_cache_set_multiple( array $data, $group = '', $expire = 0 ) {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+
+    return $wp_object_cache->set_multiple($data, $group, $expire);
+}
+
+/**
+ * Deletes multiple values from the cache in one call.
+ *
+ * @since 6.0.0
+ *
+ * @see WP_Object_Cache::delete_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $keys  Array of keys under which the cache to deleted.
+ * @param string $group Optional. Where the cache contents are grouped. Default empty.
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false if the contents were not deleted.
+ */
+function wp_cache_delete_multiple( array $keys, $group = '' ) {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+
+    return $wp_object_cache->delete_multiple( $keys, $group );
+}
+
+/**
+ * Removes all cache items from the in-memory runtime cache.
+ *
+ * @since 6.0.0
+ *
+ * @see WP_Object_Cache::flush()
+ *
+ * @return bool True on success, false on failure.
+ */
+function wp_cache_flush_runtime() {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+    return $wp_object_cache->flush_runtime();
+}
+
+/**
+ * Removes all cache items in a group, if the object cache implementation supports it.
+ *
+ * Before calling this function, always check for group flushing support using the
+ * `wp_cache_supports( 'flush_group' )` function.
+ *
+ * @since 6.1.0
+ *
+ * @see WP_Object_Cache::flush_group()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param string $group Name of group to remove from cache.
+ * @return bool True if group was flushed, false otherwise.
+ */
+function wp_cache_flush_group( $group ) {
+    global $wp_object_cache;
+    assert($wp_object_cache instanceof ObjectCacheProxy);
+    return $wp_object_cache->flush_group($group);
+}
+
+/**
+ * Determines whether the object cache implementation supports a particular feature.
+ *
+ * @since 6.1.0
+ *
+ * @param string $feature Name of the feature to check for. Possible values include:
+ *                        'add_multiple', 'set_multiple', 'get_multiple', 'delete_multiple',
+ *                        'flush_runtime', 'flush_group'.
+ * @return bool True if the feature is supported, false otherwise.
+ */
+function wp_cache_supports($feature): bool
+{
+
+    switch ($feature) {
+        case 'add_multiple':
+        case 'set_multiple':
+        case 'get_multiple':
+        case 'delete_multiple':
+        case 'flush_runtime':
+        case 'flush_group':
+            return true;
+
+        default:
+            return false;
+    }
 }

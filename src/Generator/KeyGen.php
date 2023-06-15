@@ -14,6 +14,7 @@ namespace Inpsyde\WpStash\Generator;
 interface KeyGen
 {
     public const GLUE = '/';
+    public const DEFAULT_GROUP = 'default';
 
     public function create(string $key, string $group): string;
 }
