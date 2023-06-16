@@ -43,7 +43,7 @@ wp_cache_flush();
         function () {
             $stash = WpStash::instance();
             if (!get_class($stash->driver()) === Composite::class) {
-                throw new Exception("WpStash does not use the expected driver");
+                throw new Exception("WP Stash does not use the expected driver");
             }
         }
     ))->execute();
