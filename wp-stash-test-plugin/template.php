@@ -91,7 +91,7 @@ wp_cache_flush();
     ?>
 </section>
 <section>
-    <h2>Cache groups (unimplemented)</h2>
+    <h2>Cache groups</h2>
     <?php
     $key = 'wp-stash.group';
     $single = wp_cache_get($key);
