@@ -56,6 +56,10 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
 
     public function create(string $key, string $group): string
     {
+        if (empty($group)) {
+            $group = KeyGen::DEFAULT_GROUP;
+        }
+
         $parts = [$group, $key];
         if (! isset($this->globalGroups[$group])) {
             $parts[] = $this->blogId;

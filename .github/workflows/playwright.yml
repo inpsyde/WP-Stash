@@ -1,0 +1,13 @@
+name: Run Playwright tests via DDEV
+on:
+    push:
+    workflow_dispatch:
+jobs:
+    ddev-playwright:
+        uses: inpsyde/reusable-workflows/.github/workflows/ddev-playwright.yml@feature/ddev-playwright
+        secrets:
+            COMPOSER_AUTH_JSON: ${{ secrets.PACKAGIST_AUTH_JSON }}
+        with:
+            DDEV_ORCHESTRATE_CMD: ddev orchestrate
+            PLAYWRIGHT_INSTALL_CMD: ddev playwright-install
+            PLAYWRIGHT_RUN_CMD: ddev playwright test
