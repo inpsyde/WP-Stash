@@ -12,78 +12,54 @@
 
 declare(strict_types=1);
 
-namespace Inpsyde\WpStash;
+namespace Inpsyde\WpStashTest;
+/**
+ * Super tiny autoloading
+ */
+spl_autoload_register(static function ($class) {
+    // project-specific namespace prefix
+    $prefix = __NAMESPACE__ . '\\';
 
-function testWpStash()
-{
-    echo '<h2>Test multi cache</h2>';
-    wp_cache_flush_runtime();
-    $group = 'wp-stash';
-    $multiAdd = [
-        'foo' => 1,
-        'bar' => 1,
-        'baz' => 1,
-    ];
-    echo '<h3>wp_cache_add_multiple</h3>';
-    var_dump($multiAdd);
-    wp_cache_add_multiple(
-        $multiAdd,
-        $group
-    );
-
-    $result = wp_cache_get_multiple([
-        'foo',
-        'bar',
-        'baz',
-    ],
-        $group
-    );
-    echo '<h3>wp_cache_get_multiple</h3>';
-    var_dump($result);
-    wp_cache_delete_multiple([
-        'foo',
-        'bar',
-        'baz',
-    ],
-        $group
-    );
-
-    $result = wp_cache_get_multiple([
-        'foo',
-        'bar',
-        'baz',
-    ],
-        $group
-    );
-    echo '<h3>wp_cache_get_multiple (after delete)</h3>';
-    var_dump($result);
-}
-
-add_action('plugins_loaded', static function () {
-    if (is_admin()) {
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+        // no, move to the next registered autoloader
         return;
     }
-    add_action('template_redirect', static function () {
-        ?>
-        <html lang="en">
-        <head><?php
-            wp_head(); ?></head>
-        <body>
-        <?php
-        wp_body_open(); ?>
-        <div id="wp-stash-test">
-            <h1>WP Stash Test</h1>
-            <pre>
-            <?php
-            testWpStash(); ?>
-                </pre>
-        </div>
-        <?php
-        wp_footer(); ?>
-        </body>
-        </html>
-        <?php
-        exit;
-    });
-});
 
+    // get the relative class name
+    $relativeClass = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = __DIR__ . '/src/' . str_replace('\\', '/', $relativeClass) . '.php';
+
+    // if the file exists, require it
+    file_exists($file) and require $file;
+});
+add_action('template_redirect', function () {
+    $foo=1;
+
+    /**
+     * Super tiny templating just in case..
+     */
+    \Closure::fromCallable(function () {
+        require __DIR__ . '/template.php';
+    })->call(
+        new class ([
+            'foo' => 'bar',
+        ]) {
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function __get($key)
+            {
+                return $this->data[$key];
+            }
+        }
+    );
+    exit;
+});

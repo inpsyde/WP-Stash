@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="Inpsyde\WpStash\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/PHPUnit/Unit" isTestSource="true" packagePrefix="Inpsyde\WpStash\Tests\Unit\" />
+      <sourceFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-includes/sodium_compat/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/antecedent/patchwork" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/automattic/phpcs-neutron-standard" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/automattic/vipwpcs" />
@@ -50,6 +51,11 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/tedivm/stash" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/wp-coding-standards/wpcs" />
+      <excludeFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/filp/whoops" />
+      <excludeFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/pimple/pimple" />
+      <excludeFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/.ddev/wordpress/wp-content/plugins/wps/vendor/psr/log" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

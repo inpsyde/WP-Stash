@@ -5,7 +5,8 @@
 
 mkdir -p "${DDEV_DOCROOT}"
 pushd "${DDEV_DOCROOT}"
-PLUGIN_FOLDER="${DDEV_DOCROOT}/wp-content/mu-plugins/${PLUGIN_NAME:-$DDEV_PROJECT}"
+MUPLUGIN_FOLDER="${DDEV_DOCROOT}/wp-content/mu-plugins/${PLUGIN_NAME:-$DDEV_PROJECT}"
+TEST_PLUGIN_FOLDER="${DDEV_DOCROOT}/wp-content/plugins/wp-stash-test-plugin"
 VALID_ARGS=$(getopt -o fp: --long force,plugin: -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
@@ -19,7 +20,7 @@ while [ : ]; do
         shift
         export RECREATE_ENV=1;
         popd
-        find "${DDEV_DOCROOT}" -mindepth 1 ! -regex "^${PLUGIN_FOLDER}\(/.*\)?" -delete
+        find "${DDEV_DOCROOT}" -mindepth 1 ! -regex "^${MUPLUGIN_FOLDER}\(/.*\)?" ! -regex "^${TEST_PLUGIN_FOLDER}\(/.*\)?" -delete
         pushd "${DDEV_DOCROOT}"
         ;;
     --) shift;
