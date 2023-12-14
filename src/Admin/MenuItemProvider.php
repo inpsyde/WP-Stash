@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Inpsyde\WpStash\Admin;
 
 interface MenuItemProvider
