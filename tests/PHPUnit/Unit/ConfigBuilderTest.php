@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); 
+<?php
+
+declare(strict_types=1);
+
 namespace Inpsyde\WpStash\Tests\Unit;
 
 use Inpsyde\WpStash\Config;
