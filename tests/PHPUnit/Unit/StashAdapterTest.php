@@ -1,5 +1,4 @@
-<?php declare(strict_types=1); # -*- coding: utf-8 -*-
-
+<?php declare(strict_types=1); 
 namespace Inpsyde\WpStash\Tests\Unit;
 
 use Inpsyde\WpStash\StashAdapter;

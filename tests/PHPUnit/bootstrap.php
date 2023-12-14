@@ -1,4 +1,4 @@
-<?php # -*- coding: utf-8 -*-
+<?php
 putenv('TESTS_PATH='.__DIR__);
 putenv('LIBRARY_PATH='.dirname(__DIR__));
 $vendor = dirname(dirname(dirname(__FILE__))).'/vendor/';
