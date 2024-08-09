@@ -33,7 +33,7 @@ class CacheFlusher implements MenuItemProvider
      */
     public function flush_cache()
     {
-        $wpNonce = filter_input(INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING);
+        $wpNonce = filter_input(INPUT_GET, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS);
         if (!$wpNonce || !wp_verify_nonce($wpNonce, self::PURGE_ACTION)) {
             wp_nonce_ays('');
         }
