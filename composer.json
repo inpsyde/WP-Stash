@@ -1,9 +1,15 @@
 {
     "name": "inpsyde/wp-stash",
     "description": "Powerful Object Caching Backend for WordPress",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "type": "wordpress-muplugin",
     "authors": [
+        {
+            "name": "Syde GmbH",
+            "homepage": "https://syde.com/",
+            "email": "hello@syde.com",
+            "role": "Company"
+        },
         {
             "name": "Biont",
             "email": "m.meisselbach@inpsyde.com"

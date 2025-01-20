@@ -9,7 +9,6 @@ declare(strict_types=1);
  * Version: 1.0
  * Author: Moritz Meißelbach
  * Author URI:
- * License: MIT
  */
 
 namespace Inpsyde\WpStash;
