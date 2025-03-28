@@ -90,10 +90,16 @@ WP_STASH_DRIVER=\Stash\Driver\FileSystem
 WP_STASH_DRIVER_ARGS='{"path":"\/var\/www\/cache","dirSplit":1}'
 ```
 
-Caching to a memcached server at `localhost`:
+Caching with a memcached server using the `memcached` host name (e.g. in DDEV):
 ```
 WP_STASH_DRIVER=\Stash\Driver\Memcache
 WP_STASH_DRIVER_ARGS='{"servers":["memcached","11211"]}'
+```
+
+Caching with a Redis server using the `redis` host name (e.g. in DDEV):
+```
+WP_STASH_DRIVER=\Stash\Driver\Redis
+WP_STASH_DRIVER_ARGS='{"servers":[{"server":"redis", "port":6379}]}'
 ```
 
 Don't cache persistently at all (cache lives only within the script lifetime):
