@@ -186,6 +186,7 @@ Now you can visit [https://wp-stash.ddev.site/](https://wp-stash.ddev.site/) and
 * User: `admin`
 * Password: `admin`
 
-## License and Copyright
+## Copyright and License
 
-This repository is a free software, and is released under the terms of the GNU General Public License version 2 or (at your option) any later version. See [LICENSE](./LICENSE) for complete license.
+This package is [free software](https://www.gnu.org/philosophy/free-sw.en.html) distributed under the terms of the GNU General Public License version 2 or (at your option) any later version. For the full license, see [LICENSE](./LICENSE).
+

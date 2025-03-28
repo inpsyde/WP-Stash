@@ -19,7 +19,7 @@ nodejs_version: "16"
 web_environment:
     - WP_VERSION=6.2
     - WP_LOCALE=en_US
-    - WP_TITLE=Inpsyde WP Stash
+    - WP_TITLE=Syde WP Stash
     - ADMIN_USER=admin
     - ADMIN_PASS=admin
     - ADMIN_EMAIL=admin@example.com
