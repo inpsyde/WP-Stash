@@ -25,9 +25,9 @@
         "issues": "https://github.com/inpsyde/WP-Stash/issues"
     },
     "require": {
-        "php": ">=7.1",
-        "tedivm/stash": "^0.17.1",
-        "psr/log": "~1.0"
+        "php": ">=8.0",
+        "tedivm/stash": "^1.2.2",
+        "psr/log": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

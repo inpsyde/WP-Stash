@@ -6,6 +6,7 @@ namespace Inpsyde\WpStash\Debug;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
+use Stringable;
 
 class ActionLogger implements LoggerInterface
 {
@@ -13,7 +14,7 @@ class ActionLogger implements LoggerInterface
 
     public const ACTION = 'wp-stash';
 
-    private $additionalInfo;
+    private array $additionalInfo;
 
     public function __construct(array $additionalInfo = [])
     {
@@ -23,10 +24,9 @@ class ActionLogger implements LoggerInterface
     /**
      * phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
      * @param mixed $level
-     * @param string $message
-     * @param array $context
+     * @param mixed[] $context
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         do_action(self::ACTION . strtolower($level), $message, $context + $this->additionalInfo);
     }
