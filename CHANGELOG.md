@@ -2,6 +2,10 @@
 
 #### dev-master
 
+#### Updated
+* Updated dependencies
+* Minimum PHP version increased from 7.1 to 8.0
+
 #### 3.3.0
 * Make `$cache_hits` public, so tools like Query Monitor can read it
 * Raise dependency versions to be compatible with PHP 8

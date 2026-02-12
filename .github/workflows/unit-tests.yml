@@ -12,7 +12,7 @@ jobs:
         uses: inpsyde/reusable-workflows/.github/workflows/tests-unit-php.yml@main
         strategy:
             matrix:
-                php: ["7.3", "7.4", "8.0", "8.1"]
+                php: ["8.0", "8.1", "8.2"]
         secrets:
             COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
         with:
