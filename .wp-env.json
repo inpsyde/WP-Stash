@@ -1,0 +1,16 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+    "core": "https://wordpress.org/wordpress-7.1.2.zip",
+    "phpVersion": "8.0",
+    "testsEnvironment": false,
+    "mappings": {
+        "wp-content/mu-plugins/wp-stash": ".",
+        "wp-content/mu-plugins/loader.php": "./tests/Playwright/wp-env/mu-loader.php",
+        "wp-content/plugins/wp-stash-test-plugin": "./wp-stash-test-plugin"
+    },
+    "config": {
+        "WP_DEBUG_LOG": true,
+        "WP_DEBUG_DISPLAY": false,
+        "AUTOMATIC_UPDATER_DISABLED": true
+    }
+}

@@ -17,7 +17,7 @@ use_dns_when_possible: true
 composer_version: "2"
 nodejs_version: "16"
 web_environment:
-    - WP_VERSION=6.2
+    - WP_VERSION=7.1.2
     - WP_LOCALE=en_US
     - WP_TITLE=Syde WP Stash
     - ADMIN_USER=admin

@@ -4,14 +4,17 @@
 #
 # This file comes from https://github.com/julienloizelet/ddev-playwright
 #
-# If on arm64 machine, edit to use mcr.microsoft.com/playwright:focal-arm64
-FROM mcr.microsoft.com/playwright:focal
+# Keep the tag in sync with @playwright/test in tests/Playwright/package.json
+FROM mcr.microsoft.com/playwright:v1.63.0-noble
 
 # Debian images by default disable apt caching, so turn it on until we finish
 # the build.
 RUN mv /etc/apt/apt.conf.d/docker-clean /etc/apt/docker-clean-disabled
 
 USER root
+
+# Noble ships an "ubuntu" user with UID 1000, which would clash with the host UID entrypoint.sh gives pwuser
+RUN deluser --remove-home ubuntu || true
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -37,7 +40,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && apt-get install -y icewm xauth
 
 # Install kasmvnc for remote access.
-RUN /bin/bash -c 'if [ $(arch) == "aarch64" ]; then KASM_ARCH=arm64; else KASM_ARCH=amd64; fi; wget https://github.com/kasmtech/KasmVNC/releases/download/v1.1.0/kasmvncserver_bullseye_1.1.0_${KASM_ARCH}.deb'
+RUN /bin/bash -c 'if [ $(arch) == "aarch64" ]; then KASM_ARCH=arm64; else KASM_ARCH=amd64; fi; wget https://github.com/kasmtech/KasmVNC/releases/download/v1.4.0/kasmvncserver_noble_1.4.0_${KASM_ARCH}.deb'
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get install -y ./kasmvncserver*.deb

@@ -1,0 +1,13 @@
+{
+    "name": "wp-stash",
+    "private": true,
+    "license": "GPL-2.0-or-later",
+    "devDependencies": {
+        "@wordpress/env": "^11.16.0"
+    },
+    "scripts": {
+        "wp-env": "wp-env",
+        "test:e2e:setup": "bash tests/Playwright/bin/setup-wp-env.sh",
+        "test:e2e": "cd tests/Playwright && npx playwright install firefox && npx playwright test"
+    }
+}

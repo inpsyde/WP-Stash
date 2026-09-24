@@ -192,6 +192,28 @@ Now you can visit [https://wp-stash.ddev.site/](https://wp-stash.ddev.site/) and
 * User: `admin`
 * Password: `admin`
 
+Alternatively, you can use [wp-env](https://www.npmjs.com/package/@wordpress/env), which is also what CI uses. It requires Docker:
+
+```shell
+npm install
+npx wp-env start
+npm run test:e2e:setup
+```
+
+The site runs at [http://localhost:8888/](http://localhost:8888/) with the same credentials. See [`.wp-env.json`](.wp-env.json) for the WordPress and PHP versions.
+WP Stash is mounted as a must-use plugin and the test plugin in `wp-stash-test-plugin/` is activated.
+`npm run test:e2e:setup` can be run again at any time. It installs the Composer dependencies if `vendor/` is missing, activates the test plugin, checks that the `object-cache.php` drop-in is active, and installs the Playwright project.
+It also creates `tests/Playwright/.env` pointing to `http://localhost:8888` if there isn't one.
+
+### E2E tests
+
+The Playwright tests in `tests/Playwright` open the front page, where the test plugin runs a series of object cache checks.
+
+* **wp-env:** `npm run test:e2e`
+* **DDEV:** `ddev playwright test`. The browsers are installed on every `ddev start` via `ddev playwright-install`. Keep the image tag in `.ddev/playwright-build/Dockerfile` in sync with the `@playwright/test` version.
+
+In CI, [`playwright.yml`](.github/workflows/playwright.yml) runs on every push using the reusable [`test-playwright.yml`](https://github.com/inpsyde/reusable-workflows/blob/main/.github/workflows/test-playwright.yml) workflow. It starts wp-env, runs `npm run test:e2e:setup` and `npm run test:e2e`, and uploads the Playwright report as a build artifact.
+
 ## Copyright and License
 
 This package is [free software](https://www.gnu.org/philosophy/free-sw.en.html) distributed under the terms of the GNU General Public License version 2 or (at your option) any later version. For the full license, see [LICENSE](./LICENSE).
