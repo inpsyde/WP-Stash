@@ -11,7 +11,7 @@ namespace Inpsyde\WpStash\Generator;
  */
 interface MultisiteKeyGen extends KeyGen
 {
-    //phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+    //phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
     public function addGlobalGroups($groups): array;
 
     public function switchToBlog(int $blogId): bool;

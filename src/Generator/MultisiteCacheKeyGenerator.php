@@ -17,7 +17,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
     private $blogId;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $globalGroups;
 
@@ -27,7 +27,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
         $this->globalGroups = $globalGroups;
     }
 
-    //phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+    //phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
     public function addGlobalGroups($groups): array
     {
         $groups = (array) $groups;
@@ -59,7 +59,7 @@ class MultisiteCacheKeyGenerator implements MultisiteKeyGen
         }
 
         $parts = [$group, $key];
-        if (! isset($this->globalGroups[$group])) {
+        if (!isset($this->globalGroups[$group])) {
             $parts[] = $this->blogId;
         }
 

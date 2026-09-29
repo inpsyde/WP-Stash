@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
-use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 
 // because WordPress...
 // phpcs:disable

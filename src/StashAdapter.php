@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
-use Inpsyde\WpStash\Generator\KeyGen;
 use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
 
-// phpcs:disable Inpsyde.CodeQuality.VariablesName.SnakeCaseVar
-// phpcs:disable Inpsyde.CodeQuality.ForbiddenPublicProperty.Found
-// phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoSetter
+// phpcs:disable Syde.NamingConventions.VariableName.SnakeCaseVar
+// phpcs:disable SlevomatCodingStandard.Classes.ForbiddenPublicProperty.ForbiddenPublicProperty
+// phpcs:disable Syde.Classes.DisallowGetterSetter.SetterFound
 
 /**
  * Class StashAdapter
@@ -59,7 +58,7 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function add(string $key, $data, int $expire = 0): bool
     {
@@ -115,7 +114,7 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function set(string $key, $data, int $expire = 0): bool
     {
@@ -148,7 +147,7 @@ class StashAdapter
     public function incr(string $key, int $offset = 1): bool
     {
         $data = $this->get($key);
-        if (! $data || ! is_numeric($data)) {
+        if (!$data || !is_numeric($data)) {
             return false;
         }
 
@@ -162,7 +161,7 @@ class StashAdapter
      *
      * @return bool|mixed
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ReturnTypeDeclaration.NoReturnType
+     * // phpcs:disable Syde.Functions.ReturnTypeDeclaration.NoReturnType
      */
     public function get(string $key)
     {
@@ -177,7 +176,7 @@ class StashAdapter
      * @param array $keys
      *
      * @return array
-     * phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoGetter
+     * phpcs:disable Syde.Classes.DisallowGetterSetter.GetterFound
      */
     public function getMultiple(array $keys): array
     {
@@ -253,7 +252,7 @@ class StashAdapter
     public function decr(string $key, int $offset = 1): bool
     {
         $data = $this->get($key);
-        if (! $data || ! is_numeric($data)) {
+        if (!$data || !is_numeric($data)) {
             return false;
         }
 
@@ -289,12 +288,12 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disabled Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disabled Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function replace(string $key, $data, int $expire = 0): bool
     {
         // Check to see if the data was a miss.
-        if (! $this->pool->hasItem($key)) {
+        if (!$this->pool->hasItem($key)) {
             return false;
         }
 

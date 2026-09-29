@@ -20,7 +20,7 @@ class Config
     private $driverClassName;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $driverArgs;
 
@@ -57,18 +57,17 @@ class Config
             return Ephemeral::class;
         }
 
-        if (! class_exists($className)) {
+        if (!class_exists($className)) {
             return Ephemeral::class;
         }
 
-        // phpcs:disable NeutronStandard.Functions.DisallowCallUserFunc.CallUserFunc
         if (
             !in_array(
                 DriverInterface::class,
                 class_implements($className),
                 true
             )
-            || !call_user_func([$className, 'isAvailable'])
+            || !$className::isAvailable()
         ) {
             return Ephemeral::class;
         }
