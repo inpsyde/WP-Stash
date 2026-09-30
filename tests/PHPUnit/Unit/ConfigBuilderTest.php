@@ -138,6 +138,23 @@ class ConfigBuilderTest extends AbstractUnitTestcase
                 'WP_STASH_PURGE_INTERVAL' => 3600 * 12,
             ],
         ];
+
+        yield 'invalid driver args fall back to empty array' => [
+            'input' => [
+                'WP_STASH_DRIVER' => FileSystem::class,
+                // Neither valid JSON nor a serialized value, e.g. because a tool
+                // that wrote this env var stripped the inner quotes.
+                'WP_STASH_DRIVER_ARGS' => '{path:/tmp/cache}',
+                'WP_STASH_IN_MEMORY_CACHE' => true,
+                'WP_STASH_PURGE_INTERVAL' => 42,
+            ],
+            'expected' => [
+                'WP_STASH_DRIVER' => FileSystem::class,
+                'WP_STASH_DRIVER_ARGS' => [],
+                'WP_STASH_IN_MEMORY_CACHE' => true,
+                'WP_STASH_PURGE_INTERVAL' => 42,
+            ],
+        ];
     }
 
     /**
