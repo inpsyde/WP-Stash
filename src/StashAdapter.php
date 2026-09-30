@@ -62,7 +62,7 @@ class StashAdapter
      */
     public function add(string $key, $data, int $expire = 0): bool
     {
-        if ($this->pool->hasItem($key)) {
+        if ($this->hasItem($key)) {
             return false;
         }
 
@@ -84,7 +84,7 @@ class StashAdapter
         foreach ($this->pool->getItems($keys) as $item) {
             $key = $item->getKey();
             $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
-            if ($this->pool->hasItem($key)) {
+            if ($this->hasItem($key)) {
                 $result[$wpCacheKey] = false;
                 continue;
             }
@@ -158,18 +158,23 @@ class StashAdapter
      * Retrieve a cache item.
      *
      * @param string $key
+     * @param bool|null $found Set to whether the key was found, to tell a stored false from a miss
      *
      * @return bool|mixed
      *
      * // phpcs:disable Syde.Functions.ReturnTypeDeclaration.NoReturnType
      */
-    public function get(string $key)
+    public function get(string $key, ?bool &$found = null)
     {
+        $found = false;
         try {
-            return $this->getValueFromItem($this->pool->getItem($key));
+            $item = $this->readItem($key);
         } catch (\InvalidArgumentException $exception) {
             return false;
         }
+        $found = !$item->isMiss();
+
+        return $this->getValueFromItem($item);
     }
 
     /**
@@ -187,6 +192,7 @@ class StashAdapter
             /**
              * @var ItemInterface $item
              */
+            $item->setInvalidationMethod(Invalidation::NONE);
             $result[$wpCacheKey] = $this->getValueFromItem($item);
         }
 
@@ -220,6 +226,31 @@ class StashAdapter
         }
 
         return $result;
+    }
+
+    /**
+     * Fetches an item for reading with WordPress semantics: a hit until it expires, a miss after.
+     *
+     * Stash defaults to Invalidation::PRECOMPUTE, which reports a miss for the last 40 seconds
+     * before expiration so the caller can regenerate the value early. WordPress callers never do
+     * that, so any entry stored with an expiration of 40 seconds or less would be gone right away.
+     * The invalidation method is a property of the item object, so it is set on the one being read.
+     *
+     * @param string $key
+     *
+     * @return ItemInterface
+     */
+    private function readItem(string $key): ItemInterface
+    {
+        $item = $this->pool->getItem($key);
+        $item->setInvalidationMethod(Invalidation::NONE);
+
+        return $item;
+    }
+
+    private function hasItem(string $key): bool
+    {
+        return !$this->readItem($key)->isMiss();
     }
 
     /**
@@ -293,7 +324,7 @@ class StashAdapter
     public function replace(string $key, $data, int $expire = 0): bool
     {
         // Check to see if the data was a miss.
-        if (!$this->pool->hasItem($key)) {
+        if (!$this->hasItem($key)) {
             return false;
         }
 

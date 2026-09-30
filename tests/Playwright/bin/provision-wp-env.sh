@@ -3,7 +3,9 @@
 # Mirrors .ddev/commands/web/orchestrate.d.
 set -euo pipefail
 
-MU_PLUGIN_DIR=wp-content/mu-plugins/wp-stash
+# The repository is mapped as the mu-plugins directory itself (see .wp-env.json), so WordPress loads
+# wp-stash.php directly and no loader is needed.
+MU_PLUGIN_DIR=wp-content/mu-plugins
 
 # Runtime dependencies only. An existing vendor/ (e.g. from a host `composer install`) is kept as is.
 # There is no composer.lock, so require-dev is resolved too: inpsyde/php-coding-standards ^1.0 pins

@@ -201,16 +201,23 @@ npm run test:e2e:setup
 ```
 
 The site runs at [http://localhost:8888/](http://localhost:8888/) with the same credentials. See [`.wp-env.json`](.wp-env.json) for the WordPress and PHP versions.
-WP Stash is mounted as a must-use plugin and the test plugin in `wp-stash-test-plugin/` is activated.
-`npm run test:e2e:setup` can be run again at any time. It installs the Composer dependencies if `vendor/` is missing, activates the test plugin, checks that the `object-cache.php` drop-in is active, and installs the Playwright project.
+The repository is mounted as the `mu-plugins` directory and the test plugin in `wp-stash-test-plugin/` is activated.
+WP Stash uses the `FileSystem` driver, storing entries in `wp-content/cache/wp-stash`, so the cache persists across requests and is shared with WP-CLI.
+`npm run test:e2e:setup` can be run again at any time. It installs the Composer dependencies if `vendor/` is missing, activates the test plugin, and checks that the `object-cache.php` drop-in is active.
 It also creates `tests/Playwright/.env` pointing to `http://localhost:8888` if there isn't one.
 
 ### E2E tests
 
-The Playwright tests in `tests/Playwright` open the front page, where the test plugin runs a series of object cache checks.
+The Playwright tests in `tests/Playwright` need the wp-env setup above and Node.js 20.12 or later. There are two ways to run them:
 
-* **wp-env:** `npm run test:e2e`
-* **DDEV:** `ddev playwright test`. The browsers are installed on every `ddev start` via `ddev playwright-install`. Keep the image tag in `.ddev/playwright-build/Dockerfile` in sync with the `@playwright/test` version.
+* **Project dependencies:** `npm run test:e2e` installs the Playwright version from `tests/Playwright/yarn.lock` and its Firefox, then runs the suite. This is what CI runs.
+* **Global Playwright:** after a one-time `npm install -g @playwright/test`, run `npm run test:e2e:global`. It installs Firefox for that version if needed and passes extra arguments on to `playwright test`, e.g. `npm run test:e2e:global -- --ui` or `-- --headed`.
+  It stops if `tests/Playwright/node_modules` exists, because Playwright refuses to run with two copies of itself loaded. Remove that directory after using `npm run test:e2e`.
+
+The test plugin exposes the object cache through REST routes under `/wp-json/wp-stash-test/v1/`. Each test writes in one request and reads in the next, so every check goes through the persistent Stash driver instead of the in-memory layer.
+The tests in `flush.spec.js` flush the cache through the admin bar and WP-CLI. They run in a separate Playwright project after all other tests, because a flush would wipe entries that parallel tests are still checking.
+
+`wp stash flush` is not covered: it requests `site_url()` from the WP-CLI container, and `localhost:8888` is not reachable from there.
 
 In CI, [`playwright.yml`](.github/workflows/playwright.yml) runs on every push using the reusable [`test-playwright.yml`](https://github.com/inpsyde/reusable-workflows/blob/main/.github/workflows/test-playwright.yml) workflow. It starts wp-env, runs `npm run test:e2e:setup` and `npm run test:e2e`, and uploads the Playwright report as a build artifact.
 

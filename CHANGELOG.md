@@ -1,6 +1,9 @@
 # Changelog
 
 #### dev-master
+* Fix: Entries with an expiration of 40 seconds or less were treated as missing right after being stored
+* Fix: `wp_cache_get()` now sets `$found`
+* Fix: `wp_cache_incr()` and `wp_cache_decr()` updated the wrong cache entry and returned a bool instead of the new value
 
 #### 3.3.0
 * Make `$cache_hits` public, so tools like Query Monitor can read it
