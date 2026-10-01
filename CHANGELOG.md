@@ -1,6 +1,8 @@
 # Changelog
 
 #### dev-master
+* Fix: `StashAdapter::incr()`/`decr()` no longer treat a stored `0` as missing; they now return the new value like `WP_Object_Cache`, count non-numeric values as `0` and never drop below `0`, [#41](https://github.com/inpsyde/WP-Stash/issues/41)
+* Fix: `StashAdapter::addMultiple()` now returns consistent result keys for existing and new items, [#41](https://github.com/inpsyde/WP-Stash/issues/41)
 
 #### 3.3.0
 * Make `$cache_hits` public, so tools like Query Monitor can read it
