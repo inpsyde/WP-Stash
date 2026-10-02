@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Inpsyde\WpStash;
 
-use Inpsyde\WpStash\Generator\KeyGen;
 use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 use Stash\Interfaces\ItemInterface;
 use Stash\Invalidation;
 use Stash\Pool;
 
-// phpcs:disable Inpsyde.CodeQuality.VariablesName.SnakeCaseVar
-// phpcs:disable Inpsyde.CodeQuality.ForbiddenPublicProperty.Found
-// phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoSetter
+// phpcs:disable Syde.NamingConventions.VariableName.SnakeCaseVar
+// phpcs:disable SlevomatCodingStandard.Classes.ForbiddenPublicProperty.ForbiddenPublicProperty
+// phpcs:disable Syde.Classes.DisallowGetterSetter.SetterFound
 
 /**
  * Class StashAdapter
@@ -59,11 +58,11 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function add(string $key, $data, int $expire = 0): bool
     {
-        if ($this->pool->hasItem($key)) {
+        if ($this->hasItem($key)) {
             return false;
         }
 
@@ -85,7 +84,7 @@ class StashAdapter
         foreach ($this->pool->getItems($keys) as $item) {
             $key = $item->getKey();
             $wpCacheKey = '/' . $key; // Item swallows our first slash with implode
-            if ($this->pool->hasItem($key)) {
+            if ($this->hasItem($key)) {
                 $result[$wpCacheKey] = false;
                 continue;
             }
@@ -115,7 +114,7 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function set(string $key, $data, int $expire = 0): bool
     {
@@ -148,7 +147,7 @@ class StashAdapter
     public function incr(string $key, int $offset = 1): bool
     {
         $data = $this->get($key);
-        if (! $data || ! is_numeric($data)) {
+        if (!$data || !is_numeric($data)) {
             return false;
         }
 
@@ -159,25 +158,30 @@ class StashAdapter
      * Retrieve a cache item.
      *
      * @param string $key
+     * @param bool|null $found Set to whether the key was found, to tell a stored false from a miss
      *
      * @return bool|mixed
      *
-     * // phpcs:disable Inpsyde.CodeQuality.ReturnTypeDeclaration.NoReturnType
+     * // phpcs:disable Syde.Functions.ReturnTypeDeclaration.NoReturnType
      */
-    public function get(string $key)
+    public function get(string $key, ?bool &$found = null)
     {
+        $found = false;
         try {
-            return $this->getValueFromItem($this->pool->getItem($key));
+            $item = $this->readItem($key);
         } catch (\InvalidArgumentException $exception) {
             return false;
         }
+        $found = !$item->isMiss();
+
+        return $this->getValueFromItem($item);
     }
 
     /**
      * @param array $keys
      *
      * @return array
-     * phpcs:disable Inpsyde.CodeQuality.NoAccessors.NoGetter
+     * phpcs:disable Syde.Classes.DisallowGetterSetter.GetterFound
      */
     public function getMultiple(array $keys): array
     {
@@ -188,6 +192,7 @@ class StashAdapter
             /**
              * @var ItemInterface $item
              */
+            $item->setInvalidationMethod(Invalidation::NONE);
             $result[$wpCacheKey] = $this->getValueFromItem($item);
         }
 
@@ -224,6 +229,31 @@ class StashAdapter
     }
 
     /**
+     * Fetches an item for reading with WordPress semantics: a hit until it expires, a miss after.
+     *
+     * Stash defaults to Invalidation::PRECOMPUTE, which reports a miss for the last 40 seconds
+     * before expiration so the caller can regenerate the value early. WordPress callers never do
+     * that, so any entry stored with an expiration of 40 seconds or less would be gone right away.
+     * The invalidation method is a property of the item object, so it is set on the one being read.
+     *
+     * @param string $key
+     *
+     * @return ItemInterface
+     */
+    private function readItem(string $key): ItemInterface
+    {
+        $item = $this->pool->getItem($key);
+        $item->setInvalidationMethod(Invalidation::NONE);
+
+        return $item;
+    }
+
+    private function hasItem(string $key): bool
+    {
+        return !$this->readItem($key)->isMiss();
+    }
+
+    /**
      * @param ItemInterface $item
      *
      * @return false|mixed
@@ -253,7 +283,7 @@ class StashAdapter
     public function decr(string $key, int $offset = 1): bool
     {
         $data = $this->get($key);
-        if (! $data || ! is_numeric($data)) {
+        if (!$data || !is_numeric($data)) {
             return false;
         }
 
@@ -289,12 +319,12 @@ class StashAdapter
      *
      * @return bool
      *
-     * // phpcs:disabled Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * // phpcs:disabled Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      */
     public function replace(string $key, $data, int $expire = 0): bool
     {
         // Check to see if the data was a miss.
-        if (! $this->pool->hasItem($key)) {
+        if (!$this->hasItem($key)) {
             return false;
         }
 

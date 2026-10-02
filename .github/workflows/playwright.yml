@@ -1,13 +1,22 @@
-name: Run Playwright tests via DDEV
+name: Run Playwright tests via wp-env
 on:
     push:
     workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
-    ddev-playwright:
-        uses: inpsyde/reusable-workflows/.github/workflows/ddev-playwright.yml@main
-        secrets:
-            COMPOSER_AUTH_JSON: ${{ secrets.PACKAGIST_AUTH_JSON }}
+    e2e-playwright:
+        name: Run Playwright E2E tests
+        uses: inpsyde/reusable-workflows/.github/workflows/test-playwright.yml@main
         with:
-            DDEV_ORCHESTRATE_CMD: ddev orchestrate
-            PLAYWRIGHT_INSTALL_CMD: ddev playwright-install
-            PLAYWRIGHT_RUN_CMD: ddev playwright test
+            NODE_VERSION: '22'
+            NPM_REGISTRY_DOMAIN: https://registry.npmjs.org/
+            PLAYWRIGHT_BROWSER_ARGS: firefox
+            PRE_SCRIPT: npm run test:e2e:setup
+            PLAYWRIGHT_SCRIPT: test:e2e
+            PLAYWRIGHT_ARTIFACT_PATH: |
+                tests/Playwright/playwright-report/
+                tests/Playwright/test-results/

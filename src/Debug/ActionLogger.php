@@ -13,6 +13,9 @@ class ActionLogger implements LoggerInterface
 
     public const ACTION = 'wp-stash';
 
+    /**
+     * @var array<string, mixed>
+     */
     private $additionalInfo;
 
     public function __construct(array $additionalInfo = [])
@@ -21,7 +24,7 @@ class ActionLogger implements LoggerInterface
     }
 
     /**
-     * phpcs:disable Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType
+     * phpcs:disable Syde.Functions.ArgumentTypeDeclaration.NoArgumentType
      * @param mixed $level
      * @param string $message
      * @param array $context

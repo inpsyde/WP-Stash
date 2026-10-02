@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash\Tests\Unit;
 
 use Inpsyde\WpStash\StashAdapter;
+use Stash\Invalidation;
 use Stash\Item;
 use Stash\Pool;
 
@@ -13,8 +14,12 @@ class StashAdapterTest extends AbstractUnitTestcase
 
     public function testAddItemAlreadyExists()
     {
+        $itemStub = \Mockery::mock(Item::class);
+        $itemStub->expects('setInvalidationMethod')->with(Invalidation::NONE);
+        $itemStub->expects('isMiss')->andReturnFalse();
+
         $poolStub = \Mockery::mock(Pool::class);
-        $poolStub->expects('hasItem')->andReturnTrue();
+        $poolStub->expects('getItem')->andReturn($itemStub);
         $poolStub->expects('commit');
 
         $testee = new StashAdapter($poolStub);
@@ -28,17 +33,21 @@ class StashAdapterTest extends AbstractUnitTestcase
         $expectedData = 'bar';
         $expectedExpired = 1;
 
+        $missStub = \Mockery::mock(Item::class);
+        $missStub->expects('setInvalidationMethod')->with(Invalidation::NONE);
+        $missStub->expects('isMiss')->andReturnTrue();
+
         $itemStub = \Mockery::mock(Item::class);
         $itemStub->expects('set')->with($expectedData);
         $itemStub->shouldReceive('expiresAfter')->with($expectedExpired);
         $itemStub->expects('setInvalidationMethod');
 
         $poolStub = \Mockery::mock(Pool::class);
-        $poolStub->expects('hasItem')->andReturnFalse();
         $poolStub
             ->expects('getItem')
             ->with($expectedKey)
-            ->andReturn($itemStub);
+            ->twice()
+            ->andReturn($missStub, $itemStub);
         $poolStub
             ->expects('save')
             ->with($itemStub);
@@ -58,6 +67,36 @@ class StashAdapterTest extends AbstractUnitTestcase
         $testee = new StashAdapter($poolStub);
 
         static::assertFalse($testee->set('foo', 'bar'));
+    }
+
+    public function testGetReportsFound()
+    {
+        // Stash's default Invalidation::PRECOMPUTE would report short-lived entries as missing
+        $hitStub = \Mockery::mock(Item::class);
+        $hitStub->expects('setInvalidationMethod')->with(Invalidation::NONE);
+        $hitStub->shouldReceive('isMiss')->andReturnFalse();
+        $hitStub->shouldReceive('get')->andReturnFalse();
+
+        $missStub = \Mockery::mock(Item::class);
+        $missStub->expects('setInvalidationMethod')->with(Invalidation::NONE);
+        $missStub->shouldReceive('isMiss')->andReturnTrue();
+
+        $poolStub = \Mockery::mock(Pool::class);
+        $poolStub->shouldReceive('getItem')->with('stored-false')->andReturn($hitStub);
+        $poolStub->shouldReceive('getItem')->with('missing')->andReturn($missStub);
+        $poolStub->shouldReceive('getItem')->with('invalid')->andThrows(\InvalidArgumentException::class);
+        $poolStub->shouldReceive('commit');
+
+        $testee = new StashAdapter($poolStub);
+
+        static::assertFalse($testee->get('stored-false', $found));
+        static::assertTrue($found);
+
+        static::assertFalse($testee->get('missing', $found));
+        static::assertFalse($found);
+
+        static::assertFalse($testee->get('invalid', $found));
+        static::assertFalse($found);
     }
 
     public function testIncrDecr()
