@@ -1,7 +1,7 @@
 name: wp-stash
 type: php
 docroot: .ddev/wordpress
-php_version: "8.0"
+php_version: "8.1"
 webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
@@ -17,7 +17,7 @@ use_dns_when_possible: true
 composer_version: "2"
 nodejs_version: "16"
 web_environment:
-    - WP_VERSION=6.2
+    - WP_VERSION=7.1.2
     - WP_LOCALE=en_US
     - WP_TITLE=Syde WP Stash
     - ADMIN_USER=admin

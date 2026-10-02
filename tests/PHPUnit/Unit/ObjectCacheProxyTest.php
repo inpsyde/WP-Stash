@@ -182,6 +182,28 @@ class ObjectCacheProxyTest extends AbstractUnitTestcase
         );
     }
 
+    public function test_incr_decr(): void
+    {
+        $testee = new ObjectCacheProxy(
+            new StashAdapter(new Pool(new Ephemeral())),
+            new StashAdapter(new Pool(new Ephemeral())),
+            new MultisiteCacheKeyGenerator(1)
+        );
+
+        $this->assertFalse($testee->incr('missing', 1, 'my_group'));
+        $this->assertFalse($testee->decr('missing', 1, 'my_group'));
+
+        $testee->set('counter', 0, 'my_group');
+        $this->assertSame(1, $testee->incr('counter', 1, 'my_group'));
+        $this->assertSame(6, $testee->incr('counter', 5, 'my_group'));
+        $this->assertSame(4, $testee->decr('counter', 2, 'my_group'));
+        $this->assertSame(0, $testee->decr('counter', 10, 'my_group'));
+        $this->assertSame(0, $testee->get('counter', 'my_group'));
+
+        $testee->set('text', 'not a number', 'my_group');
+        $this->assertSame(3, $testee->incr('text', 3, 'my_group'));
+    }
+
     public function default_test_data()
     {
         $args = [

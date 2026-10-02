@@ -28,7 +28,7 @@ class AdminBarMenu
      *
      * @param \WP_Admin_Bar $adminBar
      */
-    public function render(\WP_Admin_Bar $adminBar)
+    public function render(\WP_Admin_Bar $adminBar): void
     {
         $adminBar->add_menu(
             [

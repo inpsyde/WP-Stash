@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Inpsyde\WpStash;
 
 use Inpsyde\WpStash\Generator\KeyGen;
-use Inpsyde\WpStash\Stash\PersistenceAwareComposite;
 
 // because WordPress...
 // phpcs:disable
@@ -285,8 +284,7 @@ class ObjectCacheProxy
      */
     public function decr($key, $offset = 1, $group = 'default')
     {
-        return $this->choose_pool($group)
-            ->decr($key, $offset);
+        return $this->offset_value($key, -(int)$offset, $group);
     }
 
     /**
@@ -346,12 +344,33 @@ class ObjectCacheProxy
      */
     public function incr($key, $offset = 1, $group = 'default')
     {
-        $data = $this->get($key, $group);
-        if (!$data || !is_numeric($data)) {
+        return $this->offset_value($key, (int)$offset, $group);
+    }
+
+    /**
+     * Shared implementation of incr() and decr(), matching WP_Object_Cache:
+     * a missing key fails, a non-numeric value counts as 0 and the result never drops below 0.
+     *
+     * @param int|string $key
+     * @param int $offset
+     * @param string $group
+     *
+     * @return false|int
+     */
+    private function offset_value($key, int $offset, $group)
+    {
+        $found = false;
+        $value = $this->get($key, $group, false, $found);
+        if (!$found) {
             return false;
         }
 
-        return $this->set($key, $group, $data + $offset);
+        $value = is_numeric($value) ? (int)$value : 0;
+        $value = max(0, $value + $offset);
+
+        return $this->set($key, $value, $group)
+            ? $value
+            : false;
     }
 
     /**
@@ -366,6 +385,7 @@ class ObjectCacheProxy
      * @param int|string $key What the contents in the cache are called
      * @param string $group Where the cache contents are grouped
      * @param bool $force Whether to force a refetch rather than relying on the local cache (default is false)
+     * @param bool|null $found Whether the key was found in the cache. Disambiguates a return of false
      *
      * @return bool|mixed False on failure to retrieve contents or the cache
      *        contents on success
@@ -377,7 +397,7 @@ class ObjectCacheProxy
         $cache_key = $this->key_gen->create((string)$key, (string)$group);
 
         $result = $this->choose_pool($group)
-            ->get($cache_key);
+            ->get($cache_key, $found);
 
         $this->cache_hits = $this->persistent->cache_hits + $this->non_persistent->cache_hits;
         $this->cache_misses = $this->persistent->cache_misses + $this->non_persistent->cache_misses;

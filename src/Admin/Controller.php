@@ -22,7 +22,7 @@ class Controller
      * @param CacheFlusher|null $cacheFlusher
      * @param AdminBarMenu|null $adminBarMenu
      */
-    public function __construct(CacheFlusher $cacheFlusher = null, AdminBarMenu $adminBarMenu = null)
+    public function __construct(?CacheFlusher $cacheFlusher = null, ?AdminBarMenu $adminBarMenu = null)
     {
         $this->cacheFlusher = $cacheFlusher ?? new CacheFlusher();
         $this->adminBarMenu = $adminBarMenu ?? new AdminBarMenu([$this->cacheFlusher]);
@@ -31,7 +31,7 @@ class Controller
     /**
      * Setup hooks
      */
-    public function init()
+    public function init(): void
     {
         add_action('admin_bar_menu', [$this->adminBarMenu, 'render']);
         add_action(

@@ -1,6 +1,19 @@
 <?xml version="1.0"?>
-<ruleset name="Inpsyde WPStash">
+<ruleset name="Syde WPStash">
     <arg value="s"/>
     <file>./src</file>
-    <rule ref="Inpsyde"/>
+
+    <!-- Minimum supported PHP version, see composer.json -->
+    <config name="testVersion" value="7.1-"/>
+    <config name="php_version" value="70100"/>
+
+    <rule ref="Syde-Extra"/>
+
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="src" value="Inpsyde\WpStash"/>
+            </property>
+        </properties>
+    </rule>
 </ruleset>

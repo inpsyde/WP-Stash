@@ -32,8 +32,8 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "brain/monkey": "^2",
-        "inpsyde/php-coding-standards": "^1.0",
-        "squizlabs/php_codesniffer": "^3.6"
+        "syde/phpcs": "^1.0",
+        "phpcompatibility/php-compatibility": "^10.0@alpha"
     },
     "autoload": {
         "psr-4": {

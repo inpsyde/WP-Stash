@@ -53,7 +53,7 @@ final class WpStash
     public static function instance(): self
     {
         static $instance;
-        if (! $instance) {
+        if (!$instance) {
             $config = ConfigBuilder::create();
             $instance = new self(__DIR__ . '/../dropin/object-cache.php', $config);
             $instance->init();
@@ -156,7 +156,7 @@ final class WpStash
      *
      * Copy the file if needed
      */
-    public function init()
+    public function init(): void
     {
         if (wp_installing()) {
             return;
@@ -179,11 +179,12 @@ final class WpStash
 
             add_action($scheduledPurgeHook, [$this, 'purge']);
 
-            if (! wp_next_scheduled($scheduledPurgeHook)) {
+            if (!wp_next_scheduled($scheduledPurgeHook)) {
                 wp_schedule_single_event(time() + $this->config->purgeInterval(), $scheduledPurgeHook);
             }
         });
     }
+
     /**
      * Some drivers require that maintenance action be performed regular.
      * The FileSystem and SQLite drivers - for example - need to remove
@@ -194,7 +195,7 @@ final class WpStash
     public function purge(): bool
     {
         global $wp_object_cache;
-        if (! $wp_object_cache instanceof ObjectCacheProxy) {
+        if (!$wp_object_cache instanceof ObjectCacheProxy) {
             return false;
         }
 
@@ -226,13 +227,14 @@ PHPCODE
             $this->dropinPath
         );
 
+        // WP_Filesystem is not available this early, and the drop-in has to be written by PHP itself.
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
         return (bool) file_put_contents($target, $dropIn);
     }
 
     private function isWpCli(): bool
     {
-        return
-        defined('WP_CLI')
+        return defined('WP_CLI')
         && WP_CLI
         && class_exists(\WP_CLI::class)
         && class_exists(\WP_CLI_Command::class);

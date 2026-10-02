@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+    "core": "https://wordpress.org/wordpress-7.1.2.zip",
+    "phpVersion": "8.1",
+    "testsEnvironment": false,
+    "mappings": {
+        "wp-content/mu-plugins": ".",
+        "wp-content/plugins/wp-stash-test-plugin": "./wp-stash-test-plugin"
+    },
+    "config": {
+        "WP_DEBUG_LOG": true,
+        "WP_DEBUG_DISPLAY": false,
+        "AUTOMATIC_UPDATER_DISABLED": true,
+        "WP_STASH_DRIVER": "Stash\\Driver\\FileSystem",
+        "WP_STASH_DRIVER_ARGS": "eyJwYXRoIjoiL3Zhci93d3cvaHRtbC93cC1jb250ZW50L2NhY2hlL3dwLXN0YXNoIn0="
+    }
+}

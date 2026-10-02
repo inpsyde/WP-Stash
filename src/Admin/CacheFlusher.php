@@ -31,7 +31,7 @@ class CacheFlusher implements MenuItemProvider
      * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
      * @return void
      */
-    public function flush_cache()
+    public function flush_cache(): void
     {
         $wpNonce = filter_input(INPUT_GET, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS);
         if (!$wpNonce || !wp_verify_nonce($wpNonce, self::PURGE_ACTION)) {

@@ -14,6 +14,7 @@ use Stash\Driver\Ephemeral;
 final class ConfigBuilder
 {
     private const PURGE_INTERVAL = 3600 * 12;
+
     /**
      * Reads configuration data from the following constants:
      * WP_STASH_DRIVER
@@ -34,7 +35,7 @@ final class ConfigBuilder
             return self::fromConstants();
         }
 
-        if (! ! getenv('WP_STASH_DRIVER')) {
+        if (!!getenv('WP_STASH_DRIVER')) {
             return self::fromEnv();
         }
 
@@ -48,7 +49,7 @@ final class ConfigBuilder
     {
 
         $purgeInterval = \defined('WP_STASH_PURGE_INTERVAL')
-            ? (int)WP_STASH_PURGE_INTERVAL
+            ? (int) WP_STASH_PURGE_INTERVAL
             : self::PURGE_INTERVAL;
 
         $usingMemoryCache = \defined('WP_STASH_IN_MEMORY_CACHE')
@@ -74,7 +75,7 @@ final class ConfigBuilder
     public static function fromEnv(): Config
     {
         $purgeInterval = \getenv('WP_STASH_PURGE_INTERVAL')
-            ? (int)\getenv('WP_STASH_PURGE_INTERVAL')
+            ? (int) \getenv('WP_STASH_PURGE_INTERVAL')
             : self::PURGE_INTERVAL;
 
         $usingMemoryCache = \getenv('WP_STASH_IN_MEMORY_CACHE')

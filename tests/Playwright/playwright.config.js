@@ -1,7 +1,15 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
+const path = require('path');
 
-require('dotenv').config({ path: '.env' });
+// Built into Node instead of dotenv, so a global Playwright installation needs no local packages
+try {
+    process.loadEnvFile(path.join(__dirname, '.env'));
+} catch (error) {
+    if (error.code !== 'ENOENT') {
+        throw error;
+    }
+}
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -35,6 +43,14 @@ module.exports = defineConfig({
         {
             name: 'firefox',
             use: { ...devices['Desktop Firefox'] },
-        }
+            testIgnore: /flush\.spec\.js/,
+        },
+        {
+            // Flushing wipes the whole cache, so it must not overlap with the tests above
+            name: 'firefox-flush',
+            use: { ...devices['Desktop Firefox'] },
+            testMatch: /flush\.spec\.js/,
+            dependencies: ['firefox'],
+        },
     ]
 });
