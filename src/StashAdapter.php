@@ -99,7 +99,7 @@ class StashAdapter
             $item->setInvalidationMethod(Invalidation::OLD);
             $this->pool->saveDeferred($item);
 
-            $result[$key] = true;
+            $result[$wpCacheKey] = true;
         }
 
         return $result;
@@ -139,19 +139,17 @@ class StashAdapter
     /**
      * Increase a numeric cache value by the specified amount.
      *
+     * Behaves like WP_Object_Cache::incr(): a missing key fails, a non-numeric
+     * value counts as 0 and the result never drops below 0.
+     *
      * @param string $key
      * @param int $offset
      *
-     * @return bool
+     * @return false|int False on failure, the item's new value on success.
      */
-    public function incr(string $key, int $offset = 1): bool
+    public function incr(string $key, int $offset = 1)
     {
-        $data = $this->get($key);
-        if (!$data || !is_numeric($data)) {
-            return false;
-        }
-
-        return $this->set($key, $data + $offset);
+        return $this->offsetValue($key, $offset);
     }
 
     /**
@@ -275,19 +273,40 @@ class StashAdapter
     /**
      * Decrease a numeric cache item by the specified amount.
      *
+     * Behaves like WP_Object_Cache::decr(): a missing key fails, a non-numeric
+     * value counts as 0 and the result never drops below 0.
+     *
      * @param string $key
      * @param int $offset
      *
-     * @return bool
+     * @return false|int False on failure, the item's new value on success.
      */
-    public function decr(string $key, int $offset = 1): bool
+    public function decr(string $key, int $offset = 1)
     {
-        $data = $this->get($key);
-        if (!$data || !is_numeric($data)) {
+        return $this->offsetValue($key, -$offset);
+    }
+
+    /**
+     * Shared implementation of incr() and decr(), matching WP_Object_Cache:
+     * a missing key fails, a non-numeric value counts as 0 and the result
+     * never drops below 0.
+     *
+     * @param string $key
+     * @param int $offset
+     *
+     * @return false|int False on failure, the item's new value on success.
+     */
+    private function offsetValue(string $key, int $offset)
+    {
+        if (! $this->hasItem($key)) {
             return false;
         }
 
-        return $this->set($key, $data - $offset);
+        $value = $this->get($key);
+        $value = is_numeric($value) ? (int) $value : 0;
+        $value = max(0, $value + $offset);
+
+        return $this->set($key, $value) ? $value : false;
     }
 
     /**
