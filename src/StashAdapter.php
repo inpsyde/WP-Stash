@@ -298,7 +298,7 @@ class StashAdapter
      */
     private function offsetValue(string $key, int $offset)
     {
-        if (! $this->hasItem($key)) {
+        if (!$this->hasItem($key)) {
             return false;
         }
 
