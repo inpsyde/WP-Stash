@@ -1,6 +1,8 @@
 # Changelog
 
 #### dev-master
+* Fix: `StashAdapter::incr()`/`decr()` no longer treat a stored `0` as missing; they now return the new value like `WP_Object_Cache`, count non-numeric values as `0` and never drop below `0`, [#41](https://github.com/inpsyde/WP-Stash/issues/41)
+* Fix: `StashAdapter::addMultiple()` now returns consistent result keys for existing and new items, [#41](https://github.com/inpsyde/WP-Stash/issues/41)
 * Fix: Entries with an expiration of 40 seconds or less were treated as missing right after being stored
 * Fix: `wp_cache_get()` now sets `$found`
 * Fix: `wp_cache_incr()` and `wp_cache_decr()` updated the wrong cache entry and returned a bool instead of the new value
