@@ -8,8 +8,17 @@ class CacheFlusher implements MenuItemProvider
 {
     public const PURGE_ACTION = 'purge_cache';
 
-    public function item(): MenuItem
+    /**
+     * Filter name for the capability required to flush the object cache.
+     */
+    public const FLUSH_CAPABILITY_FILTER = 'wp_stash_flush_cache_capability';
+
+    public function item(): ?MenuItem
     {
+        if (!$this->userCanFlush()) {
+            return null;
+        }
+
         $referer = '';
         if (isset($_SERVER, $_SERVER['REQUEST_URI'])) {
             //phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -28,6 +37,25 @@ class CacheFlusher implements MenuItemProvider
     }
 
     /**
+     * Whether the current user is allowed to flush the object cache.
+     *
+     * @return bool
+     */
+    public function userCanFlush(): bool
+    {
+        $default = is_multisite() ? 'manage_network_options' : 'manage_options';
+
+        /**
+         * Filter the capability required to flush the object cache.
+         *
+         * @param string $capability The required capability.
+         */
+        $capability = (string) apply_filters(self::FLUSH_CAPABILITY_FILTER, $default);
+
+        return current_user_can($capability);
+    }
+
+    /**
      * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
      * @return void
      */
@@ -36,6 +64,10 @@ class CacheFlusher implements MenuItemProvider
         $wpNonce = filter_input(INPUT_GET, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS);
         if (!$wpNonce || !wp_verify_nonce($wpNonce, self::PURGE_ACTION)) {
             wp_nonce_ays('');
+        }
+
+        if (!$this->userCanFlush()) {
+            wp_die('You do not have permission to flush the object cache.', 403);
         }
 
         wp_cache_flush();

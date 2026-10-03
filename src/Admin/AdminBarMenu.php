@@ -30,6 +30,18 @@ class AdminBarMenu
      */
     public function render(\WP_Admin_Bar $adminBar): void
     {
+        $items = [];
+        foreach ($this->menuItemProviders as $provider) {
+            $item = $provider->item();
+            if ($item !== null) {
+                $items[] = $item;
+            }
+        }
+
+        if (!$items) {
+            return;
+        }
+
         $adminBar->add_menu(
             [
                 'id' => self::PARENT_ID,
@@ -41,8 +53,7 @@ class AdminBarMenu
                 ],
             ]
         );
-        foreach ($this->menuItemProviders as $provider) {
-            $item = $provider->item();
+        foreach ($items as $item) {
             $adminBar->add_menu(
                 [
                     'id' => $item->id(),
