@@ -98,8 +98,8 @@ final class ConfigBuilder
     /**
      * Reads arguments from WP_STASH_DRIVER_ARGS.
      * If it's JSON, return the json_decoded result,
-     * If not try to unserialize it.
-     * If that fails, return an empty array
+     * If it looks serialized, try to unserialize it.
+     * If that fails, or the value is neither, return an empty array
      *
      * @param string $args
      *
@@ -121,13 +121,36 @@ final class ConfigBuilder
             return $fromJson;
         }
 
-        // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
-        $fromUnserialize = unserialize($args, ['allowed_classes' => false]);
+        // Only attempt to unserialize strings that look like PHP's serialized
+        // format. A misconfigured value that is neither JSON nor serialized
+        // (e.g. an unquoted string written by a tool that strips quotes) would
+        // otherwise reach unserialize() and raise a notice/warning while still
+        // silently falling back to an empty array below.
+        if (self::looksSerialized($args)) {
+            // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+            $fromUnserialize = @unserialize($args, ['allowed_classes' => false]);
 
-        if (\is_array($fromUnserialize)) {
-            return $fromUnserialize;
+            if (\is_array($fromUnserialize)) {
+                return $fromUnserialize;
+            }
         }
 
         return [];
+    }
+
+    /**
+     * Checks whether a string has the shape of PHP's serialize() output,
+     * without fully parsing it. This only needs to be a good enough filter to
+     * avoid feeding an obviously-not-serialized string to unserialize(); the
+     * \is_array() check after unserialize() still rejects anything that isn't
+     * a serialized array.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    private static function looksSerialized(string $value): bool
+    {
+        return $value === 'N;' || (bool) preg_match('/^[aOs]:\d+:/', $value);
     }
 }
