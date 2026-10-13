@@ -90,8 +90,14 @@ async function sessionToken(context) {
     if (!loginCookie) {
         throw new Error('No logged-in cookie found for the current session');
     }
-    // Cookie value is username|expiration|token|hmac.
-    return loginCookie.value.split('|')[2];
+    // The decoded cookie value is username|expiration|token|hmac. Playwright
+    // hands the value over URL-encoded, so the separators arrive as "%7C" and
+    // splitting the raw value finds no token at all.
+    const token = decodeURIComponent(loginCookie.value).split('|')[2];
+    if (!token) {
+        throw new Error('No session token found in the logged-in cookie');
+    }
+    return token;
 }
 
 function forgeNonce(username, token) {
