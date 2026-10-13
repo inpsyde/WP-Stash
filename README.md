@@ -119,6 +119,7 @@ WP Stash has the following CLI commands:
 
 `wp stash flush`:  An improved version of `wp cache flush`. This command ensures that `wp_cache_flush()` is called by the web server, not the CLI process (which might run as a different user, or with a different configuration). 
 This ensures compatibility with all caching back-ends.
+If the site URL is not reachable from WP-CLI, e.g. in a container setup, or the web root is read-only, `wp stash flush --local` flushes the cache in the WP-CLI process itself instead. That works for all back-ends that are not tied to the web server process (APCu is, most others are not).
 
 `wp stash purge`:   Some drivers require that maintenance action be performed regularly. The FileSystem and SQLite drivers, for example, need to remove old data as they can't do it automatically. While this is automatically performed via WP cron, you can trigger the process manually with this command.
 
@@ -217,7 +218,7 @@ The Playwright tests in `tests/Playwright` need the wp-env setup above and Node.
 The test plugin exposes the object cache through REST routes under `/wp-json/wp-stash-test/v1/`. Each test writes in one request and reads in the next, so every check goes through the persistent Stash driver instead of the in-memory layer.
 The tests in `flush.spec.js` flush the cache through the admin bar and WP-CLI. They run in a separate Playwright project after all other tests, because a flush would wipe entries that parallel tests are still checking.
 
-`wp stash flush` is not covered: it requests `site_url()` from the WP-CLI container, and `localhost:8888` is not reachable from there.
+The default `wp stash flush` is not covered: it requests `site_url()` from the WP-CLI container, and `localhost:8888` is not reachable from there. `wp stash flush --local` is covered in `flush.spec.js`, because it flushes in the WP-CLI process itself and needs no HTTP request.
 
 In CI, [`playwright.yml`](.github/workflows/playwright.yml) runs on every push using the reusable [`test-playwright.yml`](https://github.com/inpsyde/reusable-workflows/blob/main/.github/workflows/test-playwright.yml) workflow. It starts wp-env, runs `npm run test:e2e:setup` and `npm run test:e2e`, and uploads the Playwright report as a build artifact.
 
