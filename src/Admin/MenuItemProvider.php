@@ -6,5 +6,8 @@ namespace Inpsyde\WpStash\Admin;
 
 interface MenuItemProvider
 {
-    public function item(): MenuItem;
+    /**
+     * @return MenuItem|null Null when the provider has no item for the current user.
+     */
+    public function item(): ?MenuItem;
 }
