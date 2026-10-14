@@ -39,6 +39,18 @@ test('flushing requires a valid nonce', async ({page}, testInfo) => {
     expect(await api.get([key])).toEqual({[key]: {found: true, value: 'value'}});
 });
 
+test('wp stash flush --local flushes the cache from the WP-CLI process', async ({}, testInfo) => {
+    const key = uniqueKey(testInfo, 'local-flush');
+    await api.set({[key]: 'value'});
+
+    // The WP-CLI container cannot reach the site URL (see the README), so the
+    // default HTTP-based flush cannot work here. --local must not need it.
+    const output = wpCli('stash', 'flush', '--local');
+
+    expect(output).toContain('Success: WP object cache flushed successfully');
+    expect(await api.get([key])).toEqual({[key]: {found: false, value: false}});
+});
+
 test('WP-CLI and web requests share the cache', async ({}, testInfo) => {
     const key = uniqueKey(testInfo, 'cli');
     await api.set({[key]: 'from the web'}, {group: 'cli'});

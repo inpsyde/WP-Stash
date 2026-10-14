@@ -38,7 +38,18 @@ class WpCliCommand extends \WP_CLI_Command
      * That way, wp_cache_flush() is called via web request and from the http user, so it will work with all caching
      * backends
      *
+     * The HTTP request is a problem when the site URL is not reachable from the WP-CLI process,
+     * e.g. in container setups, or when the web root is read-only. Most cache backends are not
+     * tied to the web server process and can be flushed from WP-CLI directly, see the --local
+     * option below.
+     *
      * Errors if the object cache can't be flushed.
+     *
+     * ## OPTIONS
+     *
+     * [--local]
+     * : Flush the object cache in the WP-CLI process itself instead of via an HTTP request to
+     *   the site URL. Does not work for backends that store their data per process, like APCu.
      *
      * ## EXAMPLES
      *
@@ -46,10 +57,20 @@ class WpCliCommand extends \WP_CLI_Command
      *     $ wp stash flush
      *     Success: WP object cache flushed successfully.
      *
+     *     # Flush cache in the WP-CLI process, without an HTTP request.
+     *     $ wp stash flush --local
+     *     Success: WP object cache flushed successfully.
+     *
      * @throws WP_CLI\ExitException
      */
     public function flush($args, $assocArgs)
     {
+        if (!empty($assocArgs['local'])) {
+            wp_cache_flush();
+            WP_CLI::success('WP object cache flushed successfully');
+
+            return;
+        }
 
         $script = md5(microtime()) . '.php';
         $scriptFilename = trailingslashit(ABSPATH) . $script;
