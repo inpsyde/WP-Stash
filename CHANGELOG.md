@@ -1,6 +1,7 @@
 # Changelog
 
 #### dev-master
+* Add: `wp stash flush --stage` only places the temporary flush script and prints its URL, so another process that can reach the site URL — like the E2E test runner — can request it instead of WP-CLI, [#40](https://github.com/inpsyde/WP-Stash/issues/40)
 * Fix: Flushing the object cache from the admin bar no longer works for users without the `manage_options` capability (`manage_network_options` on multisite, filterable via `wp_stash_flush_cache_capability`), [#39](https://github.com/inpsyde/WP-Stash/issues/39)
 * Fix: `StashAdapter::incr()`/`decr()` no longer treat a stored `0` as missing; they now return the new value like `WP_Object_Cache`, count non-numeric values as `0` and never drop below `0`, [#41](https://github.com/inpsyde/WP-Stash/issues/41)
 * Fix: `StashAdapter::addMultiple()` now returns consistent result keys for existing and new items, [#41](https://github.com/inpsyde/WP-Stash/issues/41)

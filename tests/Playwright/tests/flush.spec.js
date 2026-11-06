@@ -39,6 +39,25 @@ test('flushing requires a valid nonce', async ({page}, testInfo) => {
     expect(await api.get([key])).toEqual({[key]: {found: true, value: 'value'}});
 });
 
+test('wp stash flush --stage stages the script for the test runner to call', async ({request}, testInfo) => {
+    const key = uniqueKey(testInfo, 'staged-flush');
+    await api.set({[key]: 'value'});
+
+    // The WP-CLI container cannot reach the site URL (see the README), so the
+    // default HTTP-based flush cannot work here. --stage only places the script
+    // and prints its URL, and the runner — on the host — makes the request.
+    const output = wpCli('stash', 'flush', '--stage');
+    const url = output.replace(/^Success:\s*/, '').trim();
+
+    const response = await request.get(url);
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain('WP object cache flushed successfully');
+    expect(await api.get([key])).toEqual({[key]: {found: false, value: false}});
+
+    // The script deletes itself after a successful flush, so a second hit fails.
+    expect((await request.get(url)).status()).toBe(404);
+});
+
 test('WP-CLI and web requests share the cache', async ({}, testInfo) => {
     const key = uniqueKey(testInfo, 'cli');
     await api.set({[key]: 'from the web'}, {group: 'cli'});
