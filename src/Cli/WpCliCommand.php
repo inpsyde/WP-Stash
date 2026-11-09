@@ -38,7 +38,19 @@ class WpCliCommand extends \WP_CLI_Command
      * That way, wp_cache_flush() is called via web request and from the http user, so it will work with all caching
      * backends
      *
+     * The HTTP request is a problem when the site URL is not reachable from the WP-CLI process,
+     * e.g. in container setups. The --stage option below only places the script and prints
+     * its URL, so another process that can reach the site — like the E2E test runner —
+     * can make the request instead. The staged script deletes itself after a
+     * successful flush, so it is not left behind.
+     *
      * Errors if the object cache can't be flushed.
+     *
+     * ## OPTIONS
+     *
+     * [--stage]
+     * : Only place the temporary flush script and print its URL instead of calling it.
+     *   The script deletes itself after a successful flush.
      *
      * ## EXAMPLES
      *
@@ -46,11 +58,14 @@ class WpCliCommand extends \WP_CLI_Command
      *     $ wp stash flush
      *     Success: WP object cache flushed successfully.
      *
+     *     # Only stage the flush script and print its URL.
+     *     $ wp stash flush --stage
+     *     Success: https://example.com/3d2f1a4b5c6d7e8f9a0b1c2d3e4f5a6b.php
+     *
      * @throws WP_CLI\ExitException
      */
     public function flush($args, $assocArgs)
     {
-
         $script = md5(microtime()) . '.php';
         $scriptFilename = trailingslashit(ABSPATH) . $script;
         $scriptUrl = trailingslashit(site_url()) . $script;
@@ -70,6 +85,9 @@ class WpCliCommand extends \WP_CLI_Command
 
             if (function_exists("wp_cache_flush")) {
                 wp_cache_flush();
+                // The staged script removes itself, so a flush that actually
+                // happens leaves nothing behind in the web root.
+                unlink(__FILE__);
                 header("WP-Stash: Success");
                 echo "WP object cache flushed successfully";
                 exit;
@@ -83,12 +101,23 @@ class WpCliCommand extends \WP_CLI_Command
         if (! $result) {
             WP_CLI::error('Could not place the temporary cache flusher script . Please review your file permissions');
         }
+
+        if (!empty($assocArgs['stage'])) {
+            WP_CLI::success($scriptUrl);
+
+            return;
+        }
+
         // Fix potential SSL_shutdown:shutdown while in init in nginx
         add_filter('https_ssl_verify', '__return_false');
 
         $response = wp_remote_post($scriptUrl);
 
-        unlink($scriptFilename);
+        // The script deletes itself after a successful flush, so it may
+        // already be gone by the time we get here.
+        if (file_exists($scriptFilename)) {
+            unlink($scriptFilename);
+        }
 
         if (is_wp_error($response)) {
             WP_CLI::error($response->get_error_message());
