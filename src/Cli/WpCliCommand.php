@@ -67,6 +67,15 @@ class WpCliCommand extends \WP_CLI_Command
     public function flush($args, $assocArgs)
     {
         $script = md5(microtime()) . '.php';
+        if (!empty($assocArgs['stage'])) {
+            $pattern = trailingslashit(ABSPATH) . str_repeat('?', 32) . '.php';
+            foreach ((array) glob($pattern) as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            $script = md5('wp-stash-flush') . '.php';
+        }
         $scriptFilename = trailingslashit(ABSPATH) . $script;
         $scriptUrl = trailingslashit(site_url()) . $script;
         $result = file_put_contents(
