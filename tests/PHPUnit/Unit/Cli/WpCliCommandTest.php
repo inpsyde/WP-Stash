@@ -40,10 +40,11 @@ class WpCliCommandTest extends AbstractUnitTestcase
         $message = null;
         $wpCli = Mockery::mock('alias:WP_CLI');
         $wpCli->shouldReceive('success')
-            ->once()
+            ->twice()
             ->with(Mockery::capture($message));
 
         try {
+            (new WpCliCommand())->flush([], ['stage' => true]);
             (new WpCliCommand())->flush([], ['stage' => true]);
 
             static::assertStringStartsWith('https://example.test/', $message);
