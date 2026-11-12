@@ -42,7 +42,9 @@ class WpCliCommand extends \WP_CLI_Command
      * e.g. in container setups. The --stage option below only places the script and prints
      * its URL, so another process that can reach the site — like the E2E test runner —
      * can make the request instead. The staged script deletes itself after a
-     * successful flush, so it is not left behind.
+     * successful flush, so it is not left behind. Scripts staged by earlier runs
+     * that were never requested are removed before a new one is placed, so they
+     * do not pile up in the web root.
      *
      * Errors if the object cache can't be flushed.
      *
@@ -69,6 +71,17 @@ class WpCliCommand extends \WP_CLI_Command
         $script = md5(microtime()) . '.php';
         $scriptFilename = trailingslashit(ABSPATH) . $script;
         $scriptUrl = trailingslashit(site_url()) . $script;
+
+        // Remove flush scripts staged by earlier runs that were never
+        // requested, so they do not pile up in the web root. A staged
+        // script is recognised by the success header it sends.
+        foreach (glob(trailingslashit(ABSPATH) . '*.php') ?: [] as $stagedScript) {
+            $stagedContents = file_get_contents($stagedScript);
+            if ($stagedContents !== false && strpos($stagedContents, 'WP-Stash: Success') !== false) {
+                unlink($stagedScript);
+            }
+        }
+
         $result = file_put_contents(
             $scriptFilename,
             '<?php
