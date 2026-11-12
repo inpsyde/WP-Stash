@@ -59,6 +59,52 @@ class WpCliCommandTest extends AbstractUnitTestcase
             }
         }
     }
+        /**
+           * Staging twice must not pile up flush scripts: the script staged by
+           * the first run is removed when the second run stages a new one, while
+           * unrelated PHP files in ABSPATH are left alone.
+       */
+    public function testFlushStageRemovesPreviouslyStagedScripts(): void
+    {
+        $dir = sys_get_temp_dir() . '/wp-stash-stage-test/';
+        if (!is_dir($dir)) {
+           mkdir($dir);
+        }
+        if (!defined('ABSPATH')) {
+            define('ABSPATH', $dir);
+        }
+
+        Functions\when('site_url')->justReturn('https://example.test');
+        Functions\when('trailingslashit')->alias(function ($string) {
+            return rtrim($string, '/') . '/';
+        });
+        Functions\expect('wp_remote_post')->never();
+
+        $messages = [];
+        $wpCli = Mockery::mock('alias:WP_CLI');
+        $wpCli->shouldReceive('success')
+            ->twice()
+                ->andReturnUsing(function ($message) use (&$messages) {
+                    $messages[] = $message;
+                });
+
+        try {
+            (new WpCliCommand())->flush([], ['stage' => true]);
+            file_put_contents($dir . 'keep.php', '<?php // unrelated file');
+            (new WpCliCommand())->flush([], ['stage' => true]);
+
+            static::assertCount(2, $messages);
+            static::assertFileExists($dir . 'keep.php');
+            $scripts = array_filter(glob($dir . '*.php'), function ($file) {
+                return strpos(file_get_contents($file), 'WP-Stash: Success') !== false;
+            });
+            static::assertCount(1, $scripts);
+        } finally {
+            foreach (glob($dir . '*.php') as $file) {
+                unlink($file);
+            }
+        }
+    }
 
     /**
      * The default path is unchanged: it still calls the staged script over
